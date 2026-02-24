@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-#include "stats.h"
+#include "H_stats.h"
 
 
 using namespace std;

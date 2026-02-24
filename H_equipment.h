@@ -2,6 +2,8 @@
 #ifndef _EQUIPMENT_
 #define _EQUIPMENT_
 
+#include "H_Character.h"
+
 
 #include <iostream>
 #include <string>
@@ -13,7 +15,7 @@ using namespace std;
 
 
 
-class equipment
+class equipment : Character
 {
     private:
     // Member variables

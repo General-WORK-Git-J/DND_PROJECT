@@ -3,15 +3,17 @@
 #include <iostream>
 #include <string>
 
-#include "stats.h"
-#include "Character.h"
-#include "equipment.h"
+#include "H_stats.h"
+#include "H_Character.h"
+#include "H_equipment.h"
 
 using namespace std;
 
 
 int main()
 {
+
+cout << "OUTPUT TEST START";
 
 // Test for stats input and display functions 
 Player_stats stat_1(15,14,13,12,10,8,5,8); // Test custom constructs using 5e standard array  
@@ -42,6 +44,9 @@ char_1.getDetails();
 char_1.getStatObj().displayAbilityScores(); // Display all stats via the character objects
 
 weapon_1.displayEquipmentDetails();
+
+
+cout << "OUTPUT TEST FINISH";
 
 
 

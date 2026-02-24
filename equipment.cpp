@@ -1,4 +1,4 @@
-#include "equipment.h"
+#include "H_equipment.h"
 
 // Constructors definitions
 equipment::equipment()

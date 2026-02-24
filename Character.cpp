@@ -1,5 +1,5 @@
-#include "Character.h"
-#include "stats.h"
+#include "H_Character.h"
+#include "H_stats.h"
 
 
 //Constructor definitions
