@@ -11,6 +11,8 @@
                 "${workspaceFolder}\\stats.cpp",
                 "${workspaceFolder}\\Character.cpp",
                 "${workspaceFolder}\\equipment.cpp",
+                "${workspaceFolder}\\spells.cpp",
+                
                 "-o",
                 "${workspaceFolder}\\DND_PROJECT.exe"
             ],
