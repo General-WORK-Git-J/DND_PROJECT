@@ -55,6 +55,7 @@ weapon_1.displayEquipmentDetails(); // Display equipment details
 
 spell_1.DisplaySpellProperties(); // Display spell details
 
+cout << "COMPILER CHECK" << endl;
 cout << "OUTPUT TEST FINISH" << endl;
 
 
