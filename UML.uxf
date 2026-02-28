@@ -1,0 +1,96 @@
+<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><element><id>UMLClass</id><coordinates><x>432</x><y>0</y><w>440</w><h>504</h></coordinates><panel_attributes>Character class
+--
+Member variables:
+string Name;
+string Class;
+string Race; 
+int Age;
+int Weight;
+int Level;
+
+Player_stats Character_stats;
+--
+Constructors:
+Character();
+Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS);
+
+--
+Member Functions:
+
+Setters
+
+    void setCharName(string n);
+    void setCharClass(string c);
+    void setRace(string r);
+    void setAge(int a);
+    void setWeight(int w);
+    void setLevel(int level);
+    void setStatObj(Player_stats stat);
+
+Getters 
+
+    string getCharName();
+    string getCharClass();
+    string getRace();
+    int getAge();
+    int getWeight();
+    int getLevel();
+    Player_stats&amp; getStatObj();
+
+Display functions
+
+    void getDetails();
+    void getStats();
+
+
+
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>112</x><y>544</y><w>264</w><h>200</h></coordinates><panel_attributes>Equipment tracker class
+--
+Member variables:
+
+vector &lt;equipment&gt; character_items;
+--
+Constructors:
+
+Equipment_tracker();
+Equipment_tracker(vector &lt;equipment&gt; item);
+--
+Member functions:
+
+    void addItem(equipment item);
+    void removeItem(size_t item_index);
+
+    void DisplayItems();
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>232</x><y>496</y><w>368</w><h>64</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;440;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>128</x><y>800</y><w>208</w><h>352</h></coordinates><panel_attributes>Equipment class
+--
+Member variables:
+
+    string name;
+    string use;
+
+--
+Constructors:
+
+equipment();
+equipment(string n, string u);
+
+--
+Member functions:
+
+Setters 
+
+    void setEquipmentName(string n);
+    void setEquipmentUse(string u);
+
+Getters
+
+    string getEquipmentName();
+    string getEquipmentuse();
+
+
+ Display functions
+    void displayEquipmentDetails();
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>224</x><y>736</y><w>24</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element></diagram>
