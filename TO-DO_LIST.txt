@@ -8,7 +8,7 @@ work on ui and user input functions.
 
 1. Code to track ability scores, bonuses, proficiencys, initiative, inspiration. [Done]
 
-2. Code to track equipment, weapons, items, tools.[WIP]
+2. Code to track equipment, weapons, items, tools.[DONE]
 
 3. Code to track spells, spell slots.[WIP]
 
@@ -21,7 +21,7 @@ work on ui and user input functions.
 7. Add function to auto update stat object assigned to character object. [Done]
     (function now refers to actual object not just a copy of an object)
 
-8. Add Classes and functions for managing equipment and spell objects (trackers for spell slots should be included in this class)
+8. Add Class and functions for managing spell objects (trackers for spell slots should be included in this class) [WIP]
 
 This list is a rough guide to how the different aspects of a character should be split up and is subject to change
 as the project developes.
