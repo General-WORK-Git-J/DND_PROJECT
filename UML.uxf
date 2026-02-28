@@ -64,7 +64,7 @@ Member functions:
     void removeItem(size_t item_index);
 
     void DisplayItems();
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>232</x><y>496</y><w>368</w><h>64</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;440;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>128</x><y>800</y><w>208</w><h>352</h></coordinates><panel_attributes>Equipment class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>232</x><y>496</y><w>368</w><h>64</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;440;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>128</x><y>800</y><w>208</w><h>328</h></coordinates><panel_attributes>Equipment class
 --
 Member variables:
 
@@ -76,7 +76,6 @@ Constructors:
 
 equipment();
 equipment(string n, string u);
-
 --
 Member functions:
 
@@ -93,4 +92,45 @@ Getters
 
  Display functions
     void displayEquipmentDetails();
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>224</x><y>736</y><w>24</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>224</x><y>736</y><w>24</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>512</x><y>600</y><w>296</w><h>432</h></coordinates><panel_attributes>Stats class
+--
+Member variables:
+int Strength
+int Dexterity
+int Constitution
+int Inteligence
+int Wisdom
+int Charisma
+int Initiative
+int Proficiency
+
+string Ability_scores[6] = {"S: ", "D:  ", "C: ", "I: ", "W: ", "C: "};
+--
+Constructors:
+
+Player_stats();
+Player_stats(int s, int d, int c, int i, int w, int ch, int in, int p);
+--
+Member functions:
+
+Setters
+
+    void setAbility(int AS, int Ability);
+    void setProficiency(int p);
+    void setInitiative(int in);
+
+Getters
+
+    int getAbility(int Ability);
+    int getAbilityModifier(int a);
+    int getProficiency();
+    int getInitiative();
+
+Diplay functions
+
+    void displayAbilityScores();
+
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>656</x><y>496</y><w>24</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;130;10;10</additional_attributes></element></diagram>
