@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><element><id>UMLClass</id><coordinates><x>432</x><y>0</y><w>440</w><h>504</h></coordinates><panel_attributes>Character class
+<diagram program="umletino" version="15.1"><zoom_level>6</zoom_level><element><id>UMLClass</id><coordinates><x>480</x><y>0</y><w>330</w><h>378</h></coordinates><panel_attributes>Character class
 --
 Member variables:
 string Name;
@@ -12,7 +12,8 @@ Player_stats Character_stats;
 --
 Constructors:
 Character();
-Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS);
+Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS,
+Equipment_Tracker eq, Spell_tracker spells);
 
 --
 Member Functions:
@@ -47,7 +48,7 @@ Display functions
 
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>112</x><y>544</y><w>264</w><h>200</h></coordinates><panel_attributes>Equipment tracker class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>252</x><y>174</y><w>198</w><h>150</h></coordinates><panel_attributes>Equipment tracker class
 --
 Member variables:
 
@@ -56,7 +57,7 @@ vector &lt;equipment&gt; character_items;
 Constructors:
 
 Equipment_tracker();
-Equipment_tracker(vector &lt;equipment&gt; item);
+Equipment_tracker(vector &lt;equipment&gt; char_items);
 --
 Member functions:
 
@@ -64,7 +65,7 @@ Member functions:
     void removeItem(size_t item_index);
 
     void DisplayItems();
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>232</x><y>496</y><w>368</w><h>64</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;440;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>128</x><y>800</y><w>208</w><h>328</h></coordinates><panel_attributes>Equipment class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>342</x><y>132</y><w>144</w><h>54</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;70;220;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>258</x><y>366</y><w>156</w><h>246</h></coordinates><panel_attributes>Equipment class
 --
 Member variables:
 
@@ -92,7 +93,7 @@ Getters
 
  Display functions
     void displayEquipmentDetails();
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>224</x><y>736</y><w>24</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>512</x><y>600</y><w>296</w><h>432</h></coordinates><panel_attributes>Stats class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>318</y><w>18</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>540</x><y>402</y><w>222</w><h>324</h></coordinates><panel_attributes>Stats class
 --
 Member variables:
 int Strength
@@ -133,4 +134,78 @@ Diplay functions
 
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>656</x><y>496</y><w>24</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;130;10;10</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>648</x><y>372</y><w>18</w><h>42</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>888</x><y>192</y><w>168</w><h>156</h></coordinates><panel_attributes>Spell Tracker class
+--
+Member variables:
+
+vector &lt;Spell&gt; character_spells;
+--
+Constructors:
+
+Spell_tracker();
+Spell_tracker(vector &lt;equipment&gt; char_spells);
+--
+Member functions:
+
+	void addSpell(Spell new_spell);
+	void removeSpell(size_t Spell_index);
+	
+	void DisplaySpells();
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>804</x><y>132</y><w>162</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>250;100;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>870</x><y>378</y><w>228</w><h>462</h></coordinates><panel_attributes>Spell class
+--
+Member variables:
+
+    string Spell_Name;
+    string Spell_Type;
+    string Spell_Effect;
+    int Spell_Level;
+    string Spell_Time;
+    string Spell_Range;
+    string Spell_Components;
+    string Spell_Duration;
+    string Spell_Saving_Throw;
+    string Spell_Description;
+--
+Constructors:
+
+Spell();
+Spell(string s_n, string s_t, string s_e, int s_l, string s_ti, string s_r,
+ string s_c, string s_d, string s_s, string s_de);
+--
+Member functions:
+
+Setters
+
+    void setSpellName(string s_n);
+    void setSpellType(string s_t);
+    void setSpellEffect(string s_e);
+    void setSpellLevel(int s_l);
+    void setSpellTime(string s_t);
+    void setSpellRange(string s_r);
+    void setSpellComponents(string s_c);
+    void setSpellDuration(string s_d);
+    void setSpellSavingThrow(string s_s);
+    void setSpellDescription(string s_d);
+
+Getters
+
+    string getSpellName();
+    string getSpellType();
+    string getSpellEffect();
+    int getSpellLevel();
+    string getSpellTime();
+    string getSpellRange();
+    string getSpellComponents();
+    string getSpellDuration();
+    string getSpellSavingThrow();
+    string getSpellDescription();
+
+Display Spell Properties
+
+    void DisplaySpellProperties();
+
+
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>972</x><y>342</y><w>18</w><h>48</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element></diagram>
