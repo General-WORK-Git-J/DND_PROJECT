@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>6</zoom_level><element><id>UMLClass</id><coordinates><x>480</x><y>0</y><w>330</w><h>378</h></coordinates><panel_attributes>Character class
+<diagram program="umletino" version="15.1"><zoom_level>6</zoom_level><element><id>UMLClass</id><coordinates><x>312</x><y>0</y><w>330</w><h>378</h></coordinates><panel_attributes>Character class
 --
 Member variables:
 string Name;
@@ -48,7 +48,7 @@ Display functions
 
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>252</x><y>174</y><w>198</w><h>150</h></coordinates><panel_attributes>Equipment tracker class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>60</x><y>174</y><w>198</w><h>150</h></coordinates><panel_attributes>Equipment tracker class
 --
 Member variables:
 
@@ -65,7 +65,7 @@ Member functions:
     void removeItem(size_t item_index);
 
     void DisplayItems();
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>342</x><y>132</y><w>144</w><h>54</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;70;220;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>258</x><y>366</y><w>156</w><h>246</h></coordinates><panel_attributes>Equipment class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>138</y><w>168</w><h>48</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;260;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>66</x><y>366</y><w>156</w><h>246</h></coordinates><panel_attributes>Equipment class
 --
 Member variables:
 
@@ -93,7 +93,7 @@ Getters
 
  Display functions
     void displayEquipmentDetails();
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>330</x><y>318</y><w>18</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>540</x><y>402</y><w>222</w><h>324</h></coordinates><panel_attributes>Stats class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>138</x><y>318</y><w>18</w><h>60</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;80;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>240</x><y>438</y><w>222</w><h>324</h></coordinates><panel_attributes>Stats class
 --
 Member variables:
 int Strength
@@ -134,7 +134,7 @@ Diplay functions
 
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>648</x><y>372</y><w>18</w><h>42</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>888</x><y>192</y><w>168</w><h>156</h></coordinates><panel_attributes>Spell Tracker class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>348</x><y>378</y><w>30</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;100;30;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>774</x><y>162</y><w>168</w><h>156</h></coordinates><panel_attributes>Spell Tracker class
 --
 Member variables:
 
@@ -152,7 +152,7 @@ Member functions:
 	
 	void DisplaySpells();
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>804</x><y>132</y><w>162</w><h>72</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>250;100;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>870</x><y>378</y><w>228</w><h>462</h></coordinates><panel_attributes>Spell class
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>636</x><y>132</y><w>234</w><h>42</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>370;50;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>756</x><y>366</y><w>228</w><h>462</h></coordinates><panel_attributes>Spell class
 --
 Member variables:
 
@@ -208,4 +208,23 @@ Display Spell Properties
 
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>972</x><y>342</y><w>18</w><h>48</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>858</x><y>312</y><w>18</w><h>66</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;90;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>510</x><y>438</y><w>192</w><h>216</h></coordinates><panel_attributes>Skills and Attributes Tracker class
+--
+Member variables:
+
+	vector &lt;Skill_or_Attribute&gt; Skills_and_Attribute
+--
+Constructors:
+
+	Skill_Tracker();
+	Skill_Tracker(&lt;Skill_or_Attribute&gt; Skills_and_Attribute );
+--
+Member functions:
+
+	void addSkill_Or_Attribute(Skill_Or_Attribute S_or_A);
+	void removeSkill_Or_Attribute(int S_or_A_Index);
+
+	voidDisplaySkil_Or_Attribute();
+
+
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>564</x><y>372</y><w>24</w><h>78</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>20;110;10;10</additional_attributes></element></diagram>
