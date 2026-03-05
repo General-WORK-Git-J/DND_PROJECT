@@ -7,6 +7,7 @@
 #include <string>
 
 #include "H_stats.h"
+#include "H_equipment_tracker.h"
 
 
 using namespace std;
@@ -25,6 +26,7 @@ class Character
     int Level;
 
     Player_stats Character_stats;
+    Equipment_tracker Character_equipment;
     
     
 
@@ -32,7 +34,7 @@ class Character
 
     // Constructors
     Character();
-    Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS); // Set up character object with an assigned stats object
+    Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS, Equipment_tracker ET); // Set up character object with an assigned stats object
 
     // Setters 
     void setCharName(string n);
@@ -51,6 +53,7 @@ class Character
     int getWeight();
     int getLevel();
     Player_stats& getStatObj();
+    Equipment_tracker& getEquipmentTrackerObj();
     void getDetails();
     void getStats();
 

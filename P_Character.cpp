@@ -1,5 +1,6 @@
 #include "H_Character.h"
 #include "H_stats.h"
+#include "H_equipment_tracker.h"
 
 
 //Constructor definitions
@@ -11,7 +12,7 @@ Character::Character()
     Level = 1;
 }
 
-Character::Character(string name,string char_class,string race, int age, int weight, int level, Player_stats AS)
+Character::Character(string name,string char_class,string race, int age, int weight, int level, Player_stats AS, Equipment_tracker ET)
 {
     Name = name;
     Class = char_class;
@@ -19,6 +20,7 @@ Character::Character(string name,string char_class,string race, int age, int wei
     Weight = weight;
     Level = level;
     Character_stats = AS;
+    Character_equipment = ET;
 }
 
 
@@ -93,6 +95,11 @@ int Character::getLevel()
 Player_stats& Character::getStatObj()
 {
     return Character_stats;
+}
+
+Equipment_tracker& Character::getEquipmentTrackerObj()
+{
+    return Character_equipment;
 }
 
 void Character::getDetails()
