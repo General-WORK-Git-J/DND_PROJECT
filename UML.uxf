@@ -227,4 +227,13 @@ Member functions:
 	voidDisplaySkil_Or_Attribute();
 
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>564</x><y>372</y><w>24</w><h>78</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>20;110;10;10</additional_attributes></element></diagram>
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>564</x><y>372</y><w>24</w><h>78</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>20;110;10;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>546</x><y>684</y><w>126</w><h>114</h></coordinates><panel_attributes>Skill or attributes class
+--
+Member variables:
+
+string S_A_Name;
+string S_A_Effect;
+string S_A_Source;
+--
+Constructors:
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>606</x><y>648</y><w>18</w><h>48</h></coordinates><panel_attributes>lt=&lt;&lt;.</panel_attributes><additional_attributes>10;60;10;10</additional_attributes></element></diagram>
