@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <bits/stdc++.h>
+#include <algorithm>
 
 #include "H_equipment.h"
 
@@ -15,6 +16,7 @@ class Equipment_tracker
     private:
 
     vector <equipment> character_items;
+    vector <equipment*> character_item_ptrs;
 
     public:
 
@@ -23,8 +25,8 @@ class Equipment_tracker
     Equipment_tracker(vector <equipment> item);
 
     // add and remove from equipment list 
-    void addItem(equipment item);
-    void removeItem(size_t item_index);
+    void addItem(equipment* item);
+    void removeItem(int item_index);
 
     // Display items in characters possession
 

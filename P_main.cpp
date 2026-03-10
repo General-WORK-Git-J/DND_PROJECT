@@ -18,9 +18,12 @@ cout << "OUTPUT TEST START" << endl;
 
 // Test for stats input and display functions 
 Player_stats stat_1(15,14,13,12,10,8,5,8); // Test custom constructs using 5e standard array for testing  
+
+ //Create equipment tracker object for testing functions
 Equipment_tracker track_1;
 
-Character char_1("Paul","Warlock","Human",15,0,1, stat_1, track_1); // assign stat object to character object to test functions
+//Create character object to test functions
+Character char_1("Paul","Warlock","Human",15,0,1, stat_1, track_1);
 
 equipment weapon_1; // Create equipment object for testing functions
 
@@ -28,7 +31,6 @@ equipment weapon_2; //
 
 Spell spell_1; // Create spell object for testing functions
 
- // Create equipment tracker object for testing functions
 
 
 // Test setters and getters for character details
@@ -53,8 +55,9 @@ char_1.getStatObj().setAbility(26, 2); // Check for improper changing
 
 
 // Test getters and setters for equipment objects
-weapon_1.setEquipmentName("Greatsword");
+weapon_1.setEquipmentName("Great axe");
 weapon_1.setEquipmentUse("2d6 + 4 slash damage");
+weapon_1.setEquipmentName("Greatsword");
 weapon_2.setEquipmentName("fist");
 weapon_2.setEquipmentUse("punch");
 
@@ -72,10 +75,11 @@ spell_1.setSpellEffect("I Dont care how big the room is, I said cast fireball!")
 
 
 // Test Functions for adding and removing item objects assigned to a character
-char_1.getEquipmentTrackerObj().addItem(weapon_1);
-char_1.getEquipmentTrackerObj().addItem(weapon_2);
+char_1.getEquipmentTrackerObj().addItem(&weapon_1);
+char_1.getEquipmentTrackerObj().addItem(&weapon_2);
 
-char_1.getEquipmentTrackerObj().removeItem(2); // Currently uses item index to remove, will be improved later to remove by element
+
+char_1.getEquipmentTrackerObj().removeItem(1); // Currently uses item index to remove, will be improved later to remove by element
 
 
 
