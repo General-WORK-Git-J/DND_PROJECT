@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 
 using namespace std;
 
@@ -29,6 +30,8 @@ class Player_stats
     void setAbility(int AS, int Ability);
     void setProficiency(int p);
     void setInitiative(int in);
+
+    void setAllScores();
 
     // Getters
     int getAbility(int Ability);

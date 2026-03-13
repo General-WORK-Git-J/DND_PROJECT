@@ -60,7 +60,11 @@ void Player_stats::setAbility(int AS, int Ability)
         }
     }
     else 
+    {
     cout << "Ability score must be between 1 and 20" << endl;
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
 }
 
 void Player_stats::setProficiency(int p)
@@ -73,6 +77,62 @@ void Player_stats::setInitiative(int in)
     Initiative = in;
 }
 
+void Player_stats::setAllScores()
+{
+    
+    for (int i = 0; i < 6; i++)
+    {
+        int new_AS;
+        cout << "What is your " << Ability_scores[i] << endl;
+        cin >> new_AS;
+        if (new_AS <= 20 && new_AS > 0)
+        {
+        setAbility(new_AS, i + 1);
+        }
+        else 
+        {
+            cout << "Not a suitable ability score. enter values again: " << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            i--;
+        }
+    }
+
+    int init;
+    int prof;
+
+    cout << "What is your initiative: " << endl;
+    cin >> init;
+    setInitiative(init);
+
+    bool prof_not_set = true;
+    while(prof_not_set == true)
+    {
+    cout << "What is your proficiency: " << endl;
+    cin >> prof;
+   
+
+    
+        if (prof >= 2)
+        {
+        setProficiency(prof); 
+        prof_not_set = false;
+        }
+        else if (prof < 2)
+        {
+            cout << "Proficiency is minimum +2, and cannot be set lower! " << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+        else 
+        {
+            cout << "Not a suitable value, please re-enter values: " << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+
+}
 
 //Getter definitions
 int Player_stats::getAbility(int Ability)

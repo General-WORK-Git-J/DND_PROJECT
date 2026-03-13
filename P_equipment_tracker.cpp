@@ -16,7 +16,7 @@ void Equipment_tracker::addItem(equipment* item)
 
 void Equipment_tracker::removeItem(int item_index)
 {
-    size_t iterator = item_index;
+    size_t iterator = item_index - 1;
     equipment* remove_ptr = character_item_ptrs[iterator];
     
     character_item_ptrs.erase(remove(character_item_ptrs.begin(),character_item_ptrs.end(), remove_ptr), character_item_ptrs.end());

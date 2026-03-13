@@ -26,7 +26,10 @@ class Character
     int Level;
 
     Player_stats Character_stats;
+    Player_stats* Character_stat_ptr;
+
     Equipment_tracker Character_equipment;
+    Equipment_tracker* Character_equip_ptr;
     
     
 
@@ -44,6 +47,9 @@ class Character
     void setWeight(int w);
     void setLevel(int level);
     void setStatObj(Player_stats stat);
+    void setEquipmentTrackObj(Equipment_tracker equip);
+
+    void setCharacterComponents();
 
     // Getters
     string getCharName();
@@ -52,8 +58,8 @@ class Character
     int getAge();
     int getWeight();
     int getLevel();
-    Player_stats& getStatObj();
-    Equipment_tracker& getEquipmentTrackerObj();
+    Player_stats* getStatObj();
+    Equipment_tracker* getEquipmentTrackerObj();
     void getDetails();
     void getStats();
 

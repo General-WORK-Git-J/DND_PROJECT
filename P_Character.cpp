@@ -57,9 +57,49 @@ void Character::setLevel(int l)
 
 void Character::setStatObj(Player_stats stat)
 {
-    Character_stats = stat;
+    
+    Character_stat_ptr = &stat;
 }
 
+void Character::setEquipmentTrackObj(Equipment_tracker equip)
+{
+    Character_equip_ptr = &equip;
+}
+
+void Character::setCharacterComponents()
+{
+    string name;
+    string char_class;
+    string race;
+    int age;
+    int weight;
+    int level;
+
+    cout << "Enter character name: ";
+    cin >> name;
+    setCharName(name);
+
+    cout << "Enter character class: ";
+    cin >> char_class;
+    setCharClass(char_class);
+
+    cout << "Enter character race: ";
+    cin >> race;
+    setRace(race);
+
+    cout << "Enter character age: ";
+    cin >> age;
+    setAge(age);
+
+    cout << "Enter character weight (kg): ";
+    cin >> weight;
+    setWeight(weight);
+
+    cout << "Enter character level: ";
+    cin >> level;
+    setLevel(level);
+    
+    }
 
 //Getter definitions
 string Character::getCharName()
@@ -92,14 +132,14 @@ int Character::getLevel()
     return Level;
 }
 
-Player_stats& Character::getStatObj()
+Player_stats* Character::getStatObj()
 {
-    return Character_stats;
+    return Character_stat_ptr;
 }
 
-Equipment_tracker& Character::getEquipmentTrackerObj()
+Equipment_tracker* Character::getEquipmentTrackerObj()
 {
-    return Character_equipment;
+    return Character_equip_ptr;
 }
 
 void Character::getDetails()
