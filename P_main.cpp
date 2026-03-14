@@ -15,24 +15,30 @@ using namespace std;
 int main()
 {
     map<string, unique_ptr<Character>> Characters;
+    map<string, unique_ptr<equipment>> Equipment_item;
 
     while (true)
     {
         int choice;
 
+        bool Character_exists;
+        string current_char_id;
+        
+
         cout << "1. Create Character\n";
-        cout << "2. Exit\n";
+        cout << "2. Create item\n";
+        cout << "3. Exit\n";
         cin >> choice;
 
         if (choice == 1)
         {
-            string name;
+            string char_id;
             cout << "Enter character name: ";
-            cin >> name;
+            cin >> char_id;
 
-            Characters.emplace(name, std::make_unique<Character>());
+            Characters.emplace(char_id, std::make_unique<Character>());
 
-            auto& character = Characters[name];
+            auto& character = Characters[char_id];
 
             character->setCharacterComponents();
 
@@ -42,13 +48,45 @@ int main()
             character->setStatObj(stat_1);
             character->setEquipmentTrackObj(track_1);
 
-            character->getStatObj()->setAllScores();
+            Character_exists = true;
+
+            character->getStatObj().setAllScores();
 
             character->getDetails();
-            character->getStatObj()->displayAbilityScores();
+            character->getStatObj().displayAbilityScores();
+
+            current_char_id = char_id;
+
+
+
+
+
         }
 
+
         else if (choice == 2)
+        {
+            if (Character_exists == true)
+            {
+                cout << "item is able to be created!\n"; 
+                
+                
+
+                
+            }
+
+            else
+            {
+                cout << "item cannot be created, no character exists!\n";
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+               
+            }
+
+        }
+
+        else if (choice == 3)
         {
             break;
         }
