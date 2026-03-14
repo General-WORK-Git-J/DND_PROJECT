@@ -6,6 +6,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 #include <algorithm>
+#include <memory> 
 
 #include "H_equipment.h"
 
@@ -17,6 +18,7 @@ class Equipment_tracker
 
     vector <equipment> character_items;
     vector <equipment*> character_item_ptrs;
+    
 
     public:
 

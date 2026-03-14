@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
 
 #include "H_stats.h"
 #include "H_Character.h"
@@ -13,8 +14,53 @@ using namespace std;
 
 int main()
 {
-    int x;
+    map<string, unique_ptr<Character>> Characters;
 
+    while (true)
+    {
+        int choice;
+
+        cout << "1. Create Character\n";
+        cout << "2. Exit\n";
+        cin >> choice;
+
+        if (choice == 1)
+        {
+            string name;
+            cout << "Enter character name: ";
+            cin >> name;
+
+            Characters.emplace(name, std::make_unique<Character>());
+
+            auto& character = Characters[name];
+
+            character->setCharacterComponents();
+
+            Player_stats stat_1;
+            Equipment_tracker track_1;
+
+            character->setStatObj(stat_1);
+            character->setEquipmentTrackObj(track_1);
+
+            character->getStatObj()->setAllScores();
+
+            character->getDetails();
+            character->getStatObj()->displayAbilityScores();
+        }
+
+        else if (choice == 2)
+        {
+            break;
+        }
+
+        else
+        {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+
+    /*
     cout << "OUTPUT TEST START" << endl;
 
     // Test for stats input and display functions 
@@ -36,14 +82,8 @@ int main()
     char_1.setStatObj(stat_1);
 
     char_1.getStatObj()->setAllScores();
+    char_1.setCharacterComponents();
 
-    // Test setters and getters for character details
-    char_1.setCharName("Thrikna");
-    char_1.setCharClass("Fighter");
-    char_1.setRace("Orc");
-    char_1.setAge(20);
-    char_1.setWeight(80);
-    char_1.setLevel(5);
 
 
     // Test getters and setters for equipment objects
@@ -100,7 +140,7 @@ int main()
 
 
 
-
-    cin >> x;
+    */
+   
     cin.get();
 }
