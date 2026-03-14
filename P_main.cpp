@@ -50,10 +50,10 @@ int main()
 
             Character_exists = true;
 
-            character->getStatObj().setAllScores();
+            character->getStatObj()->setAllScores();
 
             character->getDetails();
-            character->getStatObj().displayAbilityScores();
+            character->getStatObj()->displayAbilityScores();
 
             current_char_id = char_id;
 
