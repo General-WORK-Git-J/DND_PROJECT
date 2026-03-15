@@ -5,6 +5,8 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 #include "H_stats.h"
 #include "H_equipment_tracker.h"
@@ -24,6 +26,8 @@ class Character
     int Age;
     int Weight;
     int Level;
+
+    vector <equipment*> equipment_items;
 
     Player_stats Character_stats;
     Player_stats* Character_stat_ptr;
@@ -49,6 +53,9 @@ class Character
     void setStatObj(Player_stats stat);
     void setEquipmentTrackObj(Equipment_tracker equip);
 
+
+
+
     void setCharacterComponents();
 
     // Getters
@@ -62,6 +69,13 @@ class Character
     Equipment_tracker* getEquipmentTrackerObj();
     void getDetails();
     void getStats();
+
+
+    void addItem(equipment* item);
+    void removeItem(int item_index);
+
+
+    void displayEquipment();
 
 
 

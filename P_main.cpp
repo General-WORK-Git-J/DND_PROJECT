@@ -57,6 +57,12 @@ int main()
 
             current_char_id = char_id;
 
+            equipment item_new("test_name", "test_use");
+
+            character->addItem(&item_new);
+
+            character->displayEquipment();
+
 
 
 

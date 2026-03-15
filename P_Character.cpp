@@ -158,3 +158,26 @@ void Character::getStats()
      
     Character_stats.displayAbilityScores();
 }
+
+void Character::addItem(equipment* item)
+{
+    equipment_items.push_back(item);
+}
+
+void Character::removeItem(int item_index)
+{
+    size_t iterator = item_index - 1;
+    equipment* remove_ptr = equipment_items[iterator];
+    
+    equipment_items.erase(remove(equipment_items.begin(),equipment_items.end(), remove_ptr), equipment_items.end());
+}
+
+void Character::displayEquipment()
+{
+      for (size_t i = 0; i < size(equipment_items); ++i)
+    {
+        cout << i + 1 << ": " << endl;
+        equipment_items[i]->displayEquipmentDetails();
+    }
+}
+
