@@ -8,11 +8,11 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${workspaceFolder}\\P_main.cpp",
-                "${workspaceFolder}\\P_stats.cpp",
                 "${workspaceFolder}\\P_Character.cpp",
-                "${workspaceFolder}\\P_equipment.cpp",
+                "${workspaceFolder}\\P_CharacterManager.cpp",
+                "${workspaceFolder}\\P_Inventory.cpp",
+                "${workspaceFolder}\\P_Item.cpp",
                 "${workspaceFolder}\\P_spells.cpp",
-                
                 "-o",
                 "${workspaceFolder}\\DND_PROJECT.exe"
             ],

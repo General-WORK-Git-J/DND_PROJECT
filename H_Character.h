@@ -1,93 +1,72 @@
-#ifndef _CHARACTER_
-#define _CHARACTER_
+#ifndef CHARACTER_H
+#define CHARACTER_H
 
-
-
-#include <iostream>
 #include <string>
-#include <vector>
-#include <algorithm>
-#include <memory>
-#include <map>
-#include <cctype>
+#include <fstream>
+#include <limits>
 
-#include "H_stats.h"
-#include "H_equipment.h"
+#include "H_Inventory.h"
 
-
-
-using namespace std;
-
-
-class Character
-{
-    private:
-
-    // Member variables
-    string Name;
-    string Class;
-    string Race; 
-    int Age;
-    int Weight;
-    int Level;
-
-    vector <equipment*> equipment_items;
+class Character {
+private:
+    std::string name;
+    std::string race;
+    std::string characterClass;
+    int strength;
+    int dexterity;
+    int constitution;
+    int intelligence;
+    int wisdom;
+    int charisma;
+    int Initiative;
+    int proficiency;
 
 
+    Inventory inventory;
 
-    map<string, unique_ptr<equipment>> Equipment_item;
+public:
+    Character(std::string n, std::string r, std::string c, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
 
-    Player_stats Character_stats;
-    Player_stats* Character_stat_ptr;
-
-    
-    
-    
-
-    public:
-
-    // Constructors
-    Character();
-    Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS); // Set up character object with an assigned stats object
-
-    // Setters 
-    void setCharName(string n);
-    void setCharClass(string c);
-    void setRace(string r);
-    void setAge(int a);
-    void setWeight(int w);
-    void setLevel(int level);
-    void setStatObj(Player_stats stat);
-   
-
-
-
-
-    void setCharacterComponents(string name);
+    void display() const;
 
     // Getters
-    string getCharName();
-    string getCharClass();
-    string getRace();
-    int getAge();
-    int getWeight();
-    int getLevel();
-    Player_stats* getStatObj();
-   
-    void getDetails();
-    void getStats();
+    std::string getName() const;
+    std::string getRace() const;
+    std::string getClass() const;
+    int getStrength() const;
+    int getDexterity() const;
+    int getConstitution() const;
+    int getIntelligence() const;
+    int getWisdom() const;
+    int getCharisma() const;
+    int getInitiative() const;
+    int getProficiency() const;
 
+    int getAbilityModifier(int ability_score);
 
+    // Setters
+    void setName(const std::string& n);
+    void setRace(const std::string& r);
+    void setClass(const std::string& c);
+    void setStrength(int str);
+    void setDexterity(int dex);
+    void setConstitution(int con);
+    void setIntelligence(int intl);
+    void setWisdom(int wis);
+    void setCharisma(int cha);
+    void setInitiative(int init);
+    void setProficiency(int prof);
 
-    void addItem_to_Map(string new_item_id);
-    void display_items_in_map();
+    void setStats(int new_AS, int ability_to_change);
 
-    bool IsString(const string& input);
-    
+    // Inventory
+    void addItem(const Item& item);
+    void removeItem(int index);
+    void showInventory() const;
+    void clearInventory();
 
-
-
-
+    // File functions
+    void save(std::ofstream& file) const;
 };
 
 #endif
