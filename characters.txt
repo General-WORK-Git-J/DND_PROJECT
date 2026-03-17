@@ -1,0 +1,6 @@
+1
+Thrikna
+Orc
+Fighter
+18 16 16 11 10 11 3 3
+0
