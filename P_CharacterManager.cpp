@@ -35,11 +35,13 @@ void CharacterManager::createCharacter() {
     wis = new_AS[4];
     cha = new_AS[5];
 
-    cout << "Enter initiative: " << endl;
+    cout << "Enter initiative: " ;
     cin >> init;
+    cout << endl;
 
-    cout << "Enter proficiency: " << endl;
+    cout << "Enter proficiency: ";
     cin >> prof;
+    cout << endl;
 
 
 

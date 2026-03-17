@@ -8,8 +8,8 @@ void Inventory::addItem(const Item& item) {
 }
 
 void Inventory::removeItem(int index) {
-    if (index >= 0 && index < items.size()) {
-        items.erase(items.begin() + index);
+    if (index - 1 >= 0 && index - 1 < items.size()) {
+        items.erase(items.begin() + index - 1);
     }
 }
 
@@ -20,7 +20,7 @@ void Inventory::display() const {
     }
 
     for (size_t i = 0; i < items.size(); i++) {
-        cout << i << ": ";
+        cout << i + 1 << ": ";
         items[i].display();
     }
 }
@@ -30,5 +30,5 @@ int Inventory::size() const {
 }
 
 Item Inventory::getItem(int index) const {
-    return items[index];
+    return items[index - 1];
 }
