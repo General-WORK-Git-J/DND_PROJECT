@@ -6,16 +6,19 @@
 #include "H_stats.h"
 #include "H_Character.h"
 #include "H_equipment.h"
-#include "H_equipment_tracker.h"
+
 #include "H_spells.h"
 
 using namespace std;
 
 
+
+
+
 int main()
 {
     map<string, unique_ptr<Character>> Characters;
-    map<string, unique_ptr<equipment>> Equipment_item;
+    
 
     while (true)
     {
@@ -26,8 +29,7 @@ int main()
         
 
         cout << "1. Create Character\n";
-        cout << "2. Create item\n";
-        cout << "3. Exit\n";
+        cout << "2. Exit\n";
         cin >> choice;
 
         if (choice == 1)
@@ -40,13 +42,13 @@ int main()
 
             auto& character = Characters[char_id];
 
-            character->setCharacterComponents();
+            character->setCharacterComponents(char_id);
 
             Player_stats stat_1;
-            Equipment_tracker track_1;
+           
 
             character->setStatObj(stat_1);
-            character->setEquipmentTrackObj(track_1);
+           
 
             Character_exists = true;
 
@@ -55,14 +57,43 @@ int main()
             character->getDetails();
             character->getStatObj()->displayAbilityScores();
 
-            current_char_id = char_id;
+            while (Character_exists == true)
+            {
+                int choice;
+                cout << "what would you like to do: " << endl;
+                cout << "1. Create new item\n";
+                cout << "2. View Current items\n";
+                cout << "3. Exit\n";
 
-            equipment item_new("test_name", "test_use");
+                cin >> choice;
 
-            character->addItem(&item_new);
+                if (choice == 1)
+                {
 
-            character->displayEquipment();
+                
+                string new_id;
+                cout << "enter new item name: ";
+                cin >> new_id;
+                character->addItem_to_Map(new_id);
+                
 
+                }
+                else if (choice == 2)
+                {
+                character->display_items_in_map();
+                }
+
+                else if (choice == 3)
+                {
+                    break;
+                }
+
+                else 
+                {
+                    cin.clear();
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                }
+            }
 
 
 
@@ -71,28 +102,6 @@ int main()
 
 
         else if (choice == 2)
-        {
-            if (Character_exists == true)
-            {
-                cout << "item is able to be created!\n"; 
-                
-                
-
-                
-            }
-
-            else
-            {
-                cout << "item cannot be created, no character exists!\n";
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-
-               
-            }
-
-        }
-
-        else if (choice == 3)
         {
             break;
         }

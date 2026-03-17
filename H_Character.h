@@ -7,9 +7,13 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <memory>
+#include <map>
+#include <cctype>
 
 #include "H_stats.h"
-#include "H_equipment_tracker.h"
+#include "H_equipment.h"
+
 
 
 using namespace std;
@@ -29,11 +33,14 @@ class Character
 
     vector <equipment*> equipment_items;
 
+
+
+    map<string, unique_ptr<equipment>> Equipment_item;
+
     Player_stats Character_stats;
     Player_stats* Character_stat_ptr;
 
-    Equipment_tracker Character_equipment;
-    Equipment_tracker* Character_equip_ptr;
+    
     
     
 
@@ -41,7 +48,7 @@ class Character
 
     // Constructors
     Character();
-    Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS, Equipment_tracker ET); // Set up character object with an assigned stats object
+    Character(string name, string char_class,string race, int age, int weight,int level, Player_stats AS); // Set up character object with an assigned stats object
 
     // Setters 
     void setCharName(string n);
@@ -51,12 +58,12 @@ class Character
     void setWeight(int w);
     void setLevel(int level);
     void setStatObj(Player_stats stat);
-    void setEquipmentTrackObj(Equipment_tracker equip);
+   
 
 
 
 
-    void setCharacterComponents();
+    void setCharacterComponents(string name);
 
     // Getters
     string getCharName();
@@ -66,16 +73,17 @@ class Character
     int getWeight();
     int getLevel();
     Player_stats* getStatObj();
-    Equipment_tracker* getEquipmentTrackerObj();
+   
     void getDetails();
     void getStats();
 
 
-    void addItem(equipment* item);
-    void removeItem(int item_index);
 
+    void addItem_to_Map(string new_item_id);
+    void display_items_in_map();
 
-    void displayEquipment();
+    bool IsString(const string& input);
+    
 
 
 
