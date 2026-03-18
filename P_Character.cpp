@@ -3,6 +3,7 @@
 
 using namespace std;
 
+// Constructor
 Character::Character(string n, string r, string c, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
     name = n;
     race = r;
@@ -119,7 +120,7 @@ void Character::clearInventory() {
     }
 }
 
-
+// Ability scores
 void Character::setStats(int AS, int Ability)
 {
     if(AS <= 20 && AS > 0)

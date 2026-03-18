@@ -1,5 +1,8 @@
 #include "H_spells.h"
 
+//-----------------------------------------------------//
+// Constructors
+
 Spell::Spell()
 {
     Spell_Name = "";
@@ -27,7 +30,8 @@ Spell::Spell(string s_n, string s_t, string s_e, int s_l, string s_ti, string s_
     Spell_Saving_Throw = s_s;
     Spell_Description = s_de;
 }
-
+//-----------------------------------------------------//
+// Setters
 void Spell::setSpellName(string s_n)
 {
     Spell_Name = s_n;
@@ -79,6 +83,7 @@ void Spell::setSpellDescription(string s_de)
 }
 
 //-----------------------------------------------------//
+// Getters
 
 string Spell::getSpellName()
 {
@@ -131,6 +136,7 @@ string Spell::getSpellDescription()
 }
 
 //-----------------------------------------------------//
+// Display 
 
 void Spell::DisplaySpellProperties()
 {

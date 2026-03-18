@@ -27,6 +27,7 @@ private:
 public:
     Character(std::string n, std::string r, std::string c, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
 
+    // Display functions
     void display() const;
 
     // Getters

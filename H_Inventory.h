@@ -9,6 +9,8 @@ private:
     std::vector<Item> items;
 
 public:
+
+    // Item management
     void addItem(const Item& item);
     void removeItem(int index);
     void display() const;

@@ -6,18 +6,22 @@
 
 class CharacterManager {
 private:
-    std::vector<Character> characters;
 
+    std::vector<Character> characters;
     std::string Ability_scores[6] = {"Strength: ", "Dexterity: ", "Constitution: ", "Intelligence: ", "Wisdom: ", "Charisma: "};
 
 public:
+
+    // Character management
     void createCharacter();
     void viewCharacters() const;
     void editCharacter();
 
+    // Save/Load
     void saveToFile(const std::string& filename) const;
     void loadFromFile(const std::string& filename);
 
+    // Inventory
     void manageInventory(Character& c);
 };
 

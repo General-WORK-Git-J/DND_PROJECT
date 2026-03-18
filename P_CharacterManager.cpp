@@ -107,6 +107,12 @@ void CharacterManager::editCharacter() {
             cin >> val;
             c.setStats(val, abil);
         }
+        else 
+        {
+            cout << "Not an ability score! " << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
 
     } while (choice != 0);
 }

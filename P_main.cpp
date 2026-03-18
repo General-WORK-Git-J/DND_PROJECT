@@ -8,7 +8,7 @@ using namespace std;
 int main() {
     CharacterManager manager;
     int choice;
-
+    
     do {
         cout << "\n=== DnD Manager ===\n";
         cout << "1. Create\n";
