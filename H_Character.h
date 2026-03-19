@@ -15,6 +15,8 @@ private:
     std::string name;
     std::string race;
     std::string characterClass;
+    std::string background;
+    std::string alignment;
     int level;
     int age;
     int weight;
@@ -33,7 +35,7 @@ private:
     Inventory inventory;
 
 public:
-    Character(std::string n, std::string r, std::string c, int lvl, int age, int weight, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
+    Character(std::string n, std::string r, std::string c, std::string b, std::string a, int lvl, int age, int weight, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
 
     // Display functions
     void display() const;
@@ -42,6 +44,8 @@ public:
     std::string getName() const;
     std::string getRace() const;
     std::string getClass() const;
+    std::string getBackground() const;
+    std::string getAlignment() const;
     int getLevel() const;
     int getAge() const;
     int getWeight();
@@ -60,6 +64,8 @@ public:
     void setName(const std::string& n);
     void setRace(const std::string& r);
     void setClass(const std::string& c);
+    void setBackground(const std::string& b);
+    void setAlignment(const std::string& a);
     void setLevel(int lvl);
     void setAge(int age);
     void setWeight(int weight);

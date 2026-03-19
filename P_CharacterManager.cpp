@@ -5,7 +5,7 @@
 using namespace std;
 
 void CharacterManager::createCharacter() {
-    string name, race, characterClass;
+    string name, race, characterClass, background, alignment;
     int lvl, age, weight;
     int str, dex, con, intl, wis, cha, init, prof;
 
@@ -19,6 +19,14 @@ void CharacterManager::createCharacter() {
 
     cout << "Enter class: ";
     cin >> characterClass;
+
+    cout << "Enter background: ";
+    cin >> background;
+
+    cin.clear();
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cout << "Enter alignment: ";
+    getline(cin, alignment);
 
     cout << "Enter level: ";
     cin >> lvl;
@@ -47,7 +55,6 @@ void CharacterManager::createCharacter() {
 
     cout << "Enter initiative: " ;
     cin >> init;
-    cout << endl;
 
     cout << "Enter proficiency: ";
     cin >> prof;
@@ -55,7 +62,7 @@ void CharacterManager::createCharacter() {
 
 
 
-    characters.emplace_back(name, race, characterClass, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof);
+    characters.emplace_back(name, race, characterClass, background, alignment, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof);
 
     cout << "Character created!\n";
 }
@@ -67,7 +74,7 @@ void CharacterManager::viewCharacters() const {
     }
 
     for (size_t i = 0; i < characters.size(); i++) {
-        cout << "\nIndex: " << i << endl;
+        cout << "\nIndex: " << i + 1 << endl;
         characters[i].display();
     }
 }
@@ -159,13 +166,15 @@ void CharacterManager::loadFromFile(const string& filename) {
     file.ignore();
 
     for (int i = 0; i < count; i++) {
-        string name, race, characterClass;
+        string name, race, characterClass, background, alignment;
         int lvl, age, weight;
         int str, dex, con, intl, wis, cha, init, prof;
 
         getline(file, name);
         getline(file, race);
         getline(file, characterClass);
+        getline(file, background);
+        getline(file, alignment);
         
         file >> lvl;
         file >> age;
@@ -174,7 +183,7 @@ void CharacterManager::loadFromFile(const string& filename) {
         file >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         file.ignore();
 
-        Character c(name, race, characterClass, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof );
+        Character c(name, race, characterClass, background, alignment, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof );
     
 
     // --- INVENTORY ---

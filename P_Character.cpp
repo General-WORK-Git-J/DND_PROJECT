@@ -4,10 +4,12 @@
 using namespace std;
 
 // Constructor
-Character::Character(string n, string r, string c,int lvl, int new_age, int new_weight, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
+Character::Character(string n, string r, string c,string b, string a, int lvl, int new_age, int new_weight, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
     name = n;
     race = r;
     characterClass = c;
+    background = b;
+    alignment = a;
     level = lvl;
     age = new_age;
     weight = new_weight;
@@ -28,6 +30,8 @@ void Character::save(ofstream& file) const {
     file << name << endl;
     file << race << endl;
     file << characterClass << endl;
+    file << background << endl;
+    file << alignment << endl;
     file << level << " "
          << age << " "
          << weight << endl;
@@ -60,6 +64,8 @@ void Character::display() const {
     cout << "Class: " << characterClass << endl;
     cout << "Level: " << level << endl;
     cout << "Age: " << age << endl;
+    cout << "Background: " << background << endl;
+    cout << "Alignment: " << alignment << endl;
     cout << "Weight: " << weight << endl;
     cout << "STR: " << strength << "(" << ((strength/2)-5)  << ")" << endl;
     cout << "DEX: " << dexterity << "(" << ((dexterity/2)-5) << ")" <<endl;
@@ -78,7 +84,9 @@ void Character::display() const {
 string Character::getName() const { return name; }
 string Character::getRace() const { return race; }
 string Character::getClass() const { return characterClass; }
-int Character::getLevel() const{return level;}
+string Character::getBackground() const{return background;}
+string Character::getAlignment() const{return alignment;}
+int Character::getLevel() const { return level; }
 int Character::getAge() const{return age;}
 int Character::getWeight(){return weight;}
 int Character::getStrength() const { return strength; }
@@ -103,6 +111,8 @@ int Character::getAbilityModifier(int& ability_score)
 void Character::setName(const string& n) { name = n; }
 void Character::setRace(const string& r) { race = r; }
 void Character::setClass(const string& c) { characterClass = c; }
+void Character::setBackground(const string& b) { background = b;}
+void Character::setAlignment(const string& a) {alignment = a;}
 void Character::setLevel(int lvl){level = lvl;}
 void Character::setAge(int age){age = age;}
 void Character::setWeight(int weight){weight = weight;}

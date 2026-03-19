@@ -2,6 +2,8 @@
 paul
 human
 warlock
-5 22 80
-18 16 15 14 13 12 2 2
+wanderer
+chaotic neutral
+5 20 100
+1 1 1 1 1 1 1 2
 0
