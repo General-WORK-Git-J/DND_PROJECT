@@ -6,6 +6,7 @@ using namespace std;
 
 void CharacterManager::createCharacter() {
     string name, race, characterClass;
+    int lvl, age, weight;
     int str, dex, con, intl, wis, cha, init, prof;
 
     int new_AS[6];
@@ -18,6 +19,15 @@ void CharacterManager::createCharacter() {
 
     cout << "Enter class: ";
     cin >> characterClass;
+
+    cout << "Enter level: ";
+    cin >> lvl;
+
+    cout << "Enter age: ";
+    cin >> age;
+
+    cout << "Enter weight: ";
+    cin >> weight;
 
     for (int i = 0; i < 6; i++)
     {
@@ -45,7 +55,7 @@ void CharacterManager::createCharacter() {
 
 
 
-    characters.emplace_back(name, race, characterClass, str, dex, con, intl, wis, cha, init, prof);
+    characters.emplace_back(name, race, characterClass, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof);
 
     cout << "Character created!\n";
 }
@@ -150,16 +160,21 @@ void CharacterManager::loadFromFile(const string& filename) {
 
     for (int i = 0; i < count; i++) {
         string name, race, characterClass;
+        int lvl, age, weight;
         int str, dex, con, intl, wis, cha, init, prof;
 
         getline(file, name);
         getline(file, race);
         getline(file, characterClass);
+        
+        file >> lvl;
+        file >> age;
+        file >> weight;
 
         file >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         file.ignore();
 
-        Character c(name, race, characterClass, str, dex, con, intl, wis, cha, init, prof );
+        Character c(name, race, characterClass, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof );
     
 
     // --- INVENTORY ---

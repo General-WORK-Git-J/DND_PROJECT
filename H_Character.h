@@ -10,9 +10,16 @@
 
 class Character {
 private:
+
+    // Character details
     std::string name;
     std::string race;
     std::string characterClass;
+    int level;
+    int age;
+    int weight;
+
+    // Stats
     int strength;
     int dexterity;
     int constitution;
@@ -26,7 +33,7 @@ private:
     Inventory inventory;
 
 public:
-    Character(std::string n, std::string r, std::string c, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
+    Character(std::string n, std::string r, std::string c, int lvl, int age, int weight, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
 
     // Display functions
     void display() const;
@@ -35,6 +42,9 @@ public:
     std::string getName() const;
     std::string getRace() const;
     std::string getClass() const;
+    int getLevel() const;
+    int getAge() const;
+    int getWeight();
     int getStrength() const;
     int getDexterity() const;
     int getConstitution() const;
@@ -50,6 +60,9 @@ public:
     void setName(const std::string& n);
     void setRace(const std::string& r);
     void setClass(const std::string& c);
+    void setLevel(int lvl);
+    void setAge(int age);
+    void setWeight(int weight);
     void setStrength(int str);
     void setDexterity(int dex);
     void setConstitution(int con);

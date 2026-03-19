@@ -1,11 +1,7 @@
-2
-Thrikna
-Orc
-Fighter
-18 16 16 11 10 11 3 3
-0
+1
 paul
 human
 warlock
-1 1 1 1 1 1 2 2
+5 22 80
+18 16 15 14 13 12 2 2
 0
