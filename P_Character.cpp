@@ -45,16 +45,19 @@ void Character::save(ofstream& file) const {
 
 // Display
 void Character::display() const {
+
+
+
     cout << "\n=== Character Sheet ===\n";
     cout << "Name: " << name << endl;
     cout << "Race: " << race << endl;
     cout << "Class: " << characterClass << endl;
-    cout << "STR: " << strength << "(" << ((strength-10) /2) << ")" << endl;
-    cout << "DEX: " << dexterity << "(" << ((dexterity-10) /2) << ")" <<endl;
-    cout << "CON: " << constitution << "(" << ((constitution-10) /2) << ")" << endl;
-    cout << "INT: " << intelligence << "(" << ((intelligence-10) /2) << ")" << endl;
-    cout << "WIS: " << wisdom << "(" << ((wisdom-10) /2) << ")" << endl;
-    cout << "CHA: " << charisma << "(" << ((charisma-10) /2) << ")" <<endl;
+    cout << "STR: " << strength << "(" << ((strength/2)-5)  << ")" << endl;
+    cout << "DEX: " << dexterity << "(" << ((dexterity/2)-5) << ")" <<endl;
+    cout << "CON: " << constitution << "(" << ((constitution/2)-5)<< ")" << endl;
+    cout << "INT: " << intelligence << "(" << ((intelligence/2)-5) << ")" << endl;
+    cout << "WIS: " << wisdom << "(" << ((wisdom/2)-5) << ")" << endl;
+    cout << "CHA: " << charisma << "(" <<((charisma/2)-5) << ")" <<endl;
     cout << "INIT: " << Initiative << endl;
     cout << "PROF: " << proficiency << endl;
     cout << "=======================\n";
@@ -76,7 +79,7 @@ int Character::getCharisma() const { return charisma; }
 int Character::getInitiative() const { return Initiative; }
 int Character::getProficiency() const { return proficiency; }
 
-int Character::getAbilityModifier(int ability_score)
+int Character::getAbilityModifier(int& ability_score)
 {
     int Ab_mod;
     int Ab_check = ability_score;

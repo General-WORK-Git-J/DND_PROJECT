@@ -109,7 +109,7 @@ void CharacterManager::editCharacter() {
         }
         else 
         {
-            cout << "Not an ability score! " << endl;
+            cout << "Exiting edit menu " << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }

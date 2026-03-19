@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <limits>
+#include <cmath>
 
 #include "H_Inventory.h"
 
@@ -43,7 +44,7 @@ public:
     int getInitiative() const;
     int getProficiency() const;
 
-    int getAbilityModifier(int ability_score);
+    int getAbilityModifier(int& ability_score);
 
     // Setters
     void setName(const std::string& n);
