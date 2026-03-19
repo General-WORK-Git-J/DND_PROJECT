@@ -1,13 +1,24 @@
 
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 #include "H_CharacterManager.h"
+#include "H_Colours.h"
 
 using namespace std;
 
 int main() {
     CharacterManager manager;
+
+    // Get console handle and set text colour. Colour codes are in H_Colours.h (e.g. red = 4)
+    HANDLE console_color;
+    console_color = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(console_color, 4);
+
+
     int choice;
+
+
     
     do {
         cout << "\n=== DnD Manager ===\n";
@@ -18,6 +29,7 @@ int main() {
         cout << "5. Load\n";
         cout << "0. Exit\n";
         cout << "Choice: ";
+        
         cin >> choice;
 
         switch (choice) {
