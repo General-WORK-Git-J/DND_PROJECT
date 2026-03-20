@@ -53,8 +53,17 @@ void CharacterManager::createCharacter() {
         int new_score;
         cout << "Enter " << Ability_scores[i];
         cin >> new_score;
-
+        if (new_score >= 1 && new_score <= 20)
+        {
         new_AS[i] = new_score;
+        }
+        else
+        {
+           cout << "Ability score must be between 1 and 20, please re-enter! " << endl;
+           cin.clear();
+           cin.ignore(numeric_limits<streamsize>::max(), '\n') ;
+           i--;
+        }
     }
 
     str = new_AS[0];
