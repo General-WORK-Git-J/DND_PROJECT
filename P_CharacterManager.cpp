@@ -73,12 +73,38 @@ void CharacterManager::createCharacter() {
     wis = new_AS[4];
     cha = new_AS[5];
 
+    bool initiative_set = false;
+    bool proficiency_set = false;
+
+    while (initiative_set == false)
+    {
     cout << "Enter initiative: " ;
     cin >> init;
+        if (init > 0 || init < 0){ initiative_set = true;}
 
+        else 
+        {
+            cout << "Invalid initiative value, please re-enter! " << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+
+    while ( proficiency_set == false)
+    {
+        
     cout << "Enter proficiency: ";
     cin >> prof;
-    cout << endl;
+    if (prof >=3)
+    {proficiency_set = true;}
+
+    else 
+    {
+        cout << "Proficiency must be minimum +3, please enter valid value! " << endl;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    }
+    }
 
 
 
