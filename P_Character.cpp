@@ -4,7 +4,7 @@
 using namespace std;
 
 // Constructor
-Character::Character(string n, string r, string c,string b, string a, int lvl, int new_age, int new_weight, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
+Character::Character(string n, string r, string c,string b, string a, int lvl, int new_age, int new_weight,int c_hp, int m_hp,int t_hp, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
     name = n;
     race = r;
     characterClass = c;
@@ -13,6 +13,9 @@ Character::Character(string n, string r, string c,string b, string a, int lvl, i
     level = lvl;
     age = new_age;
     weight = new_weight;
+    current_hp = c_hp;
+    max_hp = m_hp;
+    temp_hp = t_hp;
     strength = str;
     dexterity = dex;
     constitution = con;
@@ -35,6 +38,9 @@ void Character::save(ofstream& file) const {
     file << level << " "
          << age << " "
          << weight << endl;
+    file << current_hp << " "
+         << max_hp << " "
+         << temp_hp << endl;
     file << strength << " "
          << dexterity << " "
          << constitution << " "
@@ -67,6 +73,8 @@ void Character::display() const {
     cout << "Background: " << background << endl;
     cout << "Alignment: " << alignment << endl;
     cout << "Weight: " << weight << endl;
+    cout << "Current HP/Max HP: " << current_hp << "/" << max_hp << endl;
+    cout << "Temp HP: " << temp_hp << endl;
     cout << "STR: " << strength << "(" << ((strength/2)-5)  << ")" << endl;
     cout << "DEX: " << dexterity << "(" << ((dexterity/2)-5) << ")" <<endl;
     cout << "CON: " << constitution << "(" << ((constitution/2)-5)<< ")" << endl;
@@ -88,7 +96,10 @@ string Character::getBackground() const{return background;}
 string Character::getAlignment() const{return alignment;}
 int Character::getLevel() const { return level; }
 int Character::getAge() const{return age;}
-int Character::getWeight(){return weight;}
+int Character::getWeight() const{return weight;}
+int Character::getCurrentHP() const{return current_hp;}
+int Character::getMaxHP() const{return max_hp;}
+int Character::getTempHP() const{return temp_hp;}
 int Character::getStrength() const { return strength; }
 int Character::getDexterity() const { return dexterity; }
 int Character::getConstitution() const { return constitution; }
@@ -114,16 +125,19 @@ void Character::setClass(const string& c) { characterClass = c; }
 void Character::setBackground(const string& b) { background = b;}
 void Character::setAlignment(const string& a) {alignment = a;}
 void Character::setLevel(int lvl){level = lvl;}
-void Character::setAge(int age){age = age;}
-void Character::setWeight(int weight){weight = weight;}
-void Character::setStrength(int str) { strength = str; }
-void Character::setDexterity(int dex) { dexterity = dex; }
-void Character::setConstitution(int con) { constitution = con; }
-void Character::setIntelligence(int intl) { intelligence = intl; }
-void Character::setWisdom(int wis) { wisdom = wis; }
-void Character::setCharisma(int cha) { charisma = cha; }
-void Character::setInitiative(int init) { Initiative = init; }
-void Character::setProficiency(int prof) { proficiency = prof; }
+void Character::setAge(int a){age = a;}
+void Character::setWeight(int w){weight = w;}
+void Character::setCurrentHP(int c_hp){current_hp = c_hp;}
+void Character::setMaxHP(int m_hp){max_hp = m_hp;}
+void Character::setTempHP(int t_hp){temp_hp = t_hp;}
+void Character::setStrength(int str) {strength = str;}
+void Character::setDexterity(int dex) {dexterity = dex;}
+void Character::setConstitution(int con) {constitution = con;}
+void Character::setIntelligence(int intl) {intelligence = intl;}
+void Character::setWisdom(int wis) {wisdom = wis;}
+void Character::setCharisma(int cha) {charisma = cha;}
+void Character::setInitiative(int init) {Initiative = init;}
+void Character::setProficiency(int prof) {proficiency = prof;}
 
 
 

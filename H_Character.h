@@ -21,6 +21,15 @@ private:
     int age;
     int weight;
 
+    // Health
+    int current_hp;
+    int max_hp;
+    int temp_hp;
+
+    //Hit die
+    int hit_die_num;
+    std::string hit_die;
+
     // Stats
     int strength;
     int dexterity;
@@ -35,7 +44,8 @@ private:
     Inventory inventory;
 
 public:
-    Character(std::string n, std::string r, std::string c, std::string b, std::string a, int lvl, int age, int weight, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
+    Character(std::string n, std::string r, std::string c, std::string b, std::string a,
+         int lvl, int age, int weight,int c_hp, int m_hp, int t_hp, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
 
     // Display functions
     void display() const;
@@ -48,7 +58,10 @@ public:
     std::string getAlignment() const;
     int getLevel() const;
     int getAge() const;
-    int getWeight();
+    int getWeight() const;
+    int getCurrentHP() const;
+    int getMaxHP() const;
+    int getTempHP() const;
     int getStrength() const;
     int getDexterity() const;
     int getConstitution() const;
@@ -69,6 +82,9 @@ public:
     void setLevel(int lvl);
     void setAge(int age);
     void setWeight(int weight);
+    void setCurrentHP(int c_hp);
+    void setMaxHP(int m_hp);
+    void setTempHP(int t_hp);
     void setStrength(int str);
     void setDexterity(int dex);
     void setConstitution(int con);

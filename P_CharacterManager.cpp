@@ -7,6 +7,7 @@ using namespace std;
 void CharacterManager::createCharacter() {
     string name, race, characterClass, background, alignment;
     int lvl, age, weight;
+    int c_hp, m_hp, t_hp;
     int str, dex, con, intl, wis, cha, init, prof;
 
     int new_AS[6];
@@ -37,6 +38,16 @@ void CharacterManager::createCharacter() {
     cout << "Enter weight: ";
     cin >> weight;
 
+    cout << "Enter Temporary health (if applicable, otherwise enter 0): ";
+    cin >> t_hp;
+
+    cout << "Enter Max Health: ";
+    cin >> m_hp;
+    c_hp = m_hp;
+
+
+    
+
     for (int i = 0; i < 6; i++)
     {
         int new_score;
@@ -62,7 +73,7 @@ void CharacterManager::createCharacter() {
 
 
 
-    characters.emplace_back(name, race, characterClass, background, alignment, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof);
+    characters.emplace_back(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, str, dex, con, intl, wis, cha, init, prof);
 
     cout << "Character created!\n";
 }
@@ -168,6 +179,7 @@ void CharacterManager::loadFromFile(const string& filename) {
     for (int i = 0; i < count; i++) {
         string name, race, characterClass, background, alignment;
         int lvl, age, weight;
+        int c_hp, m_hp, t_hp;
         int str, dex, con, intl, wis, cha, init, prof;
 
         getline(file, name);
@@ -179,11 +191,14 @@ void CharacterManager::loadFromFile(const string& filename) {
         file >> lvl;
         file >> age;
         file >> weight;
+        file >> c_hp;
+        file >> m_hp;
+        file >> t_hp;
 
         file >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         file.ignore();
 
-        Character c(name, race, characterClass, background, alignment, lvl, age, weight, str, dex, con, intl, wis, cha, init, prof );
+        Character c(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, str, dex, con, intl, wis, cha, init, prof );
     
 
     // --- INVENTORY ---
