@@ -4,7 +4,8 @@
 using namespace std;
 
 // Constructor
-Character::Character(string n, string r, string c,string b, string a, int lvl, int new_age, int new_weight,int c_hp, int m_hp,int t_hp, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
+Character::Character(string n, string r, string c,string b, string a,
+     int lvl, int new_age, int new_weight,int c_hp, int m_hp,int t_hp, string h_dice, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
     name = n;
     race = r;
     characterClass = c;
@@ -16,6 +17,7 @@ Character::Character(string n, string r, string c,string b, string a, int lvl, i
     current_hp = c_hp;
     max_hp = m_hp;
     temp_hp = t_hp;
+    hit_dice = h_dice;
     strength = str;
     dexterity = dex;
     constitution = con;
@@ -41,6 +43,7 @@ void Character::save(ofstream& file) const {
     file << current_hp << " "
          << max_hp << " "
          << temp_hp << endl;
+    file << hit_dice << endl;
     file << strength << " "
          << dexterity << " "
          << constitution << " "
@@ -75,6 +78,7 @@ void Character::display() const {
     cout << "Weight: " << weight << endl;
     cout << "Current HP/Max HP: " << current_hp << "/" << max_hp << endl;
     cout << "Temp HP: " << temp_hp << endl;
+    cout << "Hit dice: " << level << hit_dice << endl;
     cout << "STR: " << strength << "(" << ((strength/2)-5)  << ")" << endl;
     cout << "DEX: " << dexterity << "(" << ((dexterity/2)-5) << ")" <<endl;
     cout << "CON: " << constitution << "(" << ((constitution/2)-5)<< ")" << endl;

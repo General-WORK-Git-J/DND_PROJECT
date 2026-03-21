@@ -8,6 +8,7 @@ void CharacterManager::createCharacter() {
     string name, race, characterClass, background, alignment;
     int lvl, age, weight;
     int c_hp, m_hp, t_hp;
+    string h_dice;
     int str, dex, con, intl, wis, cha, init, prof;
 
     int new_AS[6];
@@ -44,6 +45,9 @@ void CharacterManager::createCharacter() {
     cout << "Enter Max Health: ";
     cin >> m_hp;
     c_hp = m_hp;
+
+    cout << "Enter hit dice: ";
+    cin >> h_dice;
 
 
     
@@ -108,7 +112,7 @@ void CharacterManager::createCharacter() {
 
 
 
-    characters.emplace_back(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, str, dex, con, intl, wis, cha, init, prof);
+    characters.emplace_back(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, h_dice, str, dex, con, intl, wis, cha, init, prof);
 
     cout << "Character created!\n";
 }
@@ -215,6 +219,7 @@ void CharacterManager::loadFromFile(const string& filename) {
         string name, race, characterClass, background, alignment;
         int lvl, age, weight;
         int c_hp, m_hp, t_hp;
+        string h_dice;
         int str, dex, con, intl, wis, cha, init, prof;
 
         getline(file, name);
@@ -229,11 +234,12 @@ void CharacterManager::loadFromFile(const string& filename) {
         file >> c_hp;
         file >> m_hp;
         file >> t_hp;
+        file >> h_dice;
 
         file >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         file.ignore();
 
-        Character c(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, str, dex, con, intl, wis, cha, init, prof );
+        Character c(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, h_dice, str, dex, con, intl, wis, cha, init, prof );
     
 
     // --- INVENTORY ---

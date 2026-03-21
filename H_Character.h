@@ -28,7 +28,7 @@ private:
 
     //Hit die
     int hit_die_num;
-    std::string hit_die;
+    std::string hit_dice;
 
     // Stats
     int strength;
@@ -45,7 +45,7 @@ private:
 
 public:
     Character(std::string n, std::string r, std::string c, std::string b, std::string a,
-         int lvl, int age, int weight,int c_hp, int m_hp, int t_hp, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
+         int lvl, int age, int weight,int c_hp, int m_hp, int t_hp, std::string h_dice, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
 
     // Display functions
     void display() const;
@@ -59,9 +59,12 @@ public:
     int getLevel() const;
     int getAge() const;
     int getWeight() const;
+
     int getCurrentHP() const;
     int getMaxHP() const;
     int getTempHP() const;
+
+
     int getStrength() const;
     int getDexterity() const;
     int getConstitution() const;
