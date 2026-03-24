@@ -53,9 +53,9 @@ void Character::save(ofstream& file) const {
          << Initiative << " "
          << proficiency << endl;
     file << inventory.size() << endl;
-    for (int i = 0; i < inventory.size(); i++) 
+    for (size_t i = 0; i < inventory.size(); i++) 
     {
-        Item item = inventory.getItem(i);
+        Item item = inventory.getItem(i + 1);
         file << item.getName() << endl;
         file << item.getType() << endl;
         file << item.getValue() << endl;
