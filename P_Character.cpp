@@ -206,3 +206,4 @@ void Character::setStats(int AS, int Ability)
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 }
+

@@ -148,20 +148,33 @@ void CharacterManager::editCharacter() {
 
     int choice;
     do {
-        cout << "\n1.Name 2.Inventory 3.Ability scores 0.Back\nChoice: ";
+        cout << "\n1.Character details 2.Inventory 3.Ability scores 0.Back\nChoice: ";
         cin >> choice;
 
         if (choice == 1) {
-            string val;
-            cout << "New name: ";
-            cin >> val;
-            c.setName(val);
+            int char_edit_choice;
+            cout << "What would you like to change?: " << endl;
+            for (int i = 0; i < size(EditCharDetailsArray); i++)
+            cout << i + 1 << EditCharDetailsArray[i] << endl;
+            switch (char_edit_choice)
+
+            case 1: //Name
+            {
+            string new_name;
+            cout << "Enter new name: " << endl;
+            cin  >> new_name;
+            c.setName(new_name);
+            break;
+            }
+
+            
+            
         }
 
-        else if (choice == 2) {
+        else if (choice == 3) {
             manageInventory(c);
         }
-        else if (choice == 3) {
+        else if (choice == 4) {
             cout << "What stat would you like to change? "  << endl;
             for (int i = 0; i < 6; i++)
             {
@@ -183,6 +196,8 @@ void CharacterManager::editCharacter() {
 
     } while (choice != 0);
 }
+
+
 
 void CharacterManager::saveToFile(const string& filename) const {
     ofstream file(filename);
