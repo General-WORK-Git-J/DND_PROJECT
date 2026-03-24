@@ -18,7 +18,8 @@ public:
     void createCharacter();
     void viewCharacters() const;
     void editCharacter();
-    void displayEditMenu();
+    bool isValidString(const std::string& input);
+    
     
 
     // Save/Load
@@ -28,6 +29,8 @@ public:
 
     // Inventory
     void manageInventory(Character& c);
+
+
 };
 
 #endif
