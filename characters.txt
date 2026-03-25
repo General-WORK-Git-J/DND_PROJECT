@@ -3,7 +3,7 @@ paul
 human
 warlock
 wanderer
-chaotic neutral
+lawful good
 5 21 100
 66 66 0
 d10
@@ -12,4 +12,3 @@ d10
 sword
 weapon
 20
-

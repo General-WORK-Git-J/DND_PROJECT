@@ -59,14 +59,14 @@ void CharacterManager::createCharacter() {
         std::cin >> new_score;
         if (new_score >= 1 && new_score <= 20)
         {
-        new_AS[i] = new_score;
+            new_AS[i] = new_score;
         }
         else
         {
-           std::cout << "Ability score must be between 1 and 20, please re-enter! " << endl;
-           std::cin.clear();
-           std::cin.ignore(numeric_limits<streamsize>::max(), '\n') ;
-           i--;
+            Invalidinput();
+            std::cout << "Ability score must be between 1 and 20, please re-enter! " << endl;
+           
+            i--;
         }
     }
 
@@ -88,9 +88,9 @@ void CharacterManager::createCharacter() {
 
         else 
         {
+            Invalidinput();
             std::cout << "Invalid initiative value, please re-enter! " << endl;
-            std::cin.clear();
-            std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            
         }
     }
 
@@ -104,9 +104,9 @@ void CharacterManager::createCharacter() {
 
     else 
     {
+        Invalidinput();
         std::cout << "Proficiency must be minimum +3, please enter valid value! " << endl;
-        std::cin.clear();
-        std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        
     }
     }
 
@@ -151,12 +151,13 @@ void CharacterManager::editCharacter() {
         std::cout << "\n1.Character details 2.Inventory 3.Ability scores 0.Back\nChoice: ";
         std::cin >> choice;
 
-        if (choice == 1) {
+        if (choice == 1) 
+        {
             int char_edit_choice;
             std::cout << "What would you like to change? " << endl;
             for (int i = 0; i < size(EditCharDetailsArray); i++)
             {
-            std::cout << i + 1 << EditCharDetailsArray[i] << endl;
+                std::cout << i + 1 << "." << EditCharDetailsArray[i] << endl;
             }
             std::cout << "Choice: ";
             std::cin >> char_edit_choice;
@@ -170,21 +171,18 @@ void CharacterManager::editCharacter() {
 
                     while (name_set == false)
                     {
-                    std::cout << "Enter new name: " << endl;
-                    std::cin  >> new_name;
-                    if (isValidString(new_name))
-                    {
-                        std::cout << "New Name Set! " << endl;
-                        c.setName(new_name);
-                        name_set = true;
-                    }
-                    else 
-                    {
-                        std::cout << "Not a valid Name!" << endl;
-                        std::cin.clear();
-                        std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                    }
-                    
+                        std::cout << "Enter new name: " << endl;
+                        std::getline(std::cin,new_name);
+                        if (isValidString(new_name))
+                        {
+                            std::cout << "New Name Set! " << endl;
+                            c.setName(new_name);
+                            name_set = true;
+                        }
+                        else 
+                        {
+                            Invalidinput();
+                        }
                     }
                     break;
                 }
@@ -196,7 +194,7 @@ void CharacterManager::editCharacter() {
                     while (race_set == false)
                     {
                         std::cout << "Enter new race: " << endl;
-                        std::cin >> new_race;
+                        std::getline(std::cin,new_race);
                         if (isValidString(new_race))
                         {
                             std::cout << "New Race Set! " << endl;
@@ -205,9 +203,7 @@ void CharacterManager::editCharacter() {
                         }
                         else 
                         {
-                            std::cout << "Not a valid Race!" << endl;
-                            std::cin.clear();
-                            std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                            Invalidinput();
                         } 
                     }
                     break;
@@ -215,30 +211,108 @@ void CharacterManager::editCharacter() {
                   
             case 3: //Class
                 {
-                    string new_class;
+                    std::string new_class;
                     bool class_set = false;
                     while(class_set == false)
                     {
                         std::cout << "Enter new Class" << endl;
-                        std::cin >> new_class;
+                        std::getline(std::cin,new_class);
                         if (isValidString(new_class))
                         {
-                        c.setClass(new_class);
+                            c.setClass(new_class);
+                            class_set = true;
                         }
                         else
                         {
-                            std::cout << "Not a valid Class!" << endl;
-                            std::cin.clear();
-                            std::cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+                            Invalidinput();
                         }
                     }
                     break;
                 }
             
-            case 4:
+            case 4: //Background
                 {
+                    std::string new_background;
+                    bool background_set = false;
+                    while (background_set == false)
+                    {
+                        std::cout << "Enter new Background" << endl;
+                        std::getline(std::cin, new_background);
+                        if (isValidString(new_background))
+                        {
+                            c.setBackground(new_background);
+                            background_set = true;
+                        }
+                        else
+                        {
+                            Invalidinput();
+                        }
+                    }
+                    break;
+
                     
-                }    
+                }
+                case 5: //Alignment
+                {
+                    std::string new_alignment;
+                    bool alignment_set = false;
+                    while (alignment_set == false)
+                    {
+                        std::cout << "Enter new Alignment" << endl;
+                        std::getline(std::cin,new_alignment);
+                        if (isValidString(new_alignment))
+                        {
+                            c.setAlignment(new_alignment);
+                            alignment_set = true;
+                        }
+                        else 
+                        {
+                            Invalidinput();
+                        }
+                    }
+                }
+                case 6: //Age
+                {
+                    int new_age;
+                    bool age_set = false;
+                    while (age_set == false)
+                    {
+                        std::cout << "Enter new age" << endl;
+                        if (new_age >= 0)
+                        {
+                            c.setAge(new_age);
+                            age_set = true;
+                        }
+                        else
+                        {
+                            Invalidinput();
+                            cout << "Age must be greater than/equal to 0" << endl;
+                        }
+                    }
+                }
+
+                case 7: //Weight
+                {
+                    int new_weight;
+                    bool weight_set = false;
+                    while (weight_set == false)
+                    {
+                        std::cout << "Enter new weight" << endl;
+                        if (new_weight > 0)
+                        {
+                            c.setWeight(new_weight);
+                            weight_set = true;
+                        }
+                        else 
+                        {
+                            Invalidinput();
+                            cout << "Weight must be greater than 0" << endl;
+                        }
+                    }
+
+                }
+                
+                
 
         
             }
@@ -282,6 +356,14 @@ bool CharacterManager::isValidString(const std::string &input)
         if (std::isdigit(c)) return false;
     }
     return true;
+}
+
+void CharacterManager::Invalidinput()
+{
+    std::cout << "Not a valid Input!" << endl;
+    std::cin.clear();
+    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
 }
 
 void CharacterManager::saveToFile(const string& filename) const {

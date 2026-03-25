@@ -9,7 +9,7 @@ private:
 
     std::vector<Character> characters;
     std::string Ability_scores[6] = {"Strength: ", "Dexterity: ", "Constitution: ", "Intelligence: ", "Wisdom: ", "Charisma: "};
-    std::string EditCharDetailsArray[7] = {"Name", "Race", "Class", "Background", "Alignment", "Level", "Age"};
+    std::string EditCharDetailsArray[7] = {"Name", "Race", "Class", "Background", "Alignment", "Age", "Weight"};
     std::string EditHpArray[6] = {"Max Hp", "Current Hp", "Temperary Hp", "Hit Dice"};
 
 public:
@@ -18,7 +18,10 @@ public:
     void createCharacter();
     void viewCharacters() const;
     void editCharacter();
+
+    // Utilities
     bool isValidString(const std::string& input);
+    void Invalidinput();
     
     
 
