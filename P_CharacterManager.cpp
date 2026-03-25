@@ -278,6 +278,7 @@ void CharacterManager::editCharacter() {
                     while (age_set == false)
                     {
                         std::cout << "Enter new age" << endl;
+                        std::cin >> new_age;
                         if (new_age >= 0)
                         {
                             c.setAge(new_age);
@@ -298,6 +299,7 @@ void CharacterManager::editCharacter() {
                     while (weight_set == false)
                     {
                         std::cout << "Enter new weight" << endl;
+                        std::cin >> new_weight;
                         if (new_weight > 0)
                         {
                             c.setWeight(new_weight);
@@ -311,6 +313,28 @@ void CharacterManager::editCharacter() {
                     }
 
                 }
+
+                case 8: //Level
+                {
+                    int new_level;
+                    bool level_set = false;
+                    while (level_set == false)
+                    {
+                        std::cout << "Enter new Level" << endl;
+                        std::cin >> new_level;
+                        if (new_level >=1 && new_level <= 20)
+                        {
+                            c.setLevel(new_level);
+                            level_set = true;
+                        }
+                        else 
+                        {
+                            Invalidinput();
+                            std::cout << "Level must be between 1 and 20! " << endl; 
+                        }
+
+                    }
+                }
                 
                 
 
@@ -321,10 +345,12 @@ void CharacterManager::editCharacter() {
             
         }
 
-        else if (choice == 3) {
+        else if (choice == 3) 
+        {
             manageInventory(c);
         }
-        else if (choice == 4) {
+        else if (choice == 4) 
+        {
             std::cout << "What stat would you like to change? "  << endl;
             for (int i = 0; i < 6; i++)
             {
@@ -352,7 +378,8 @@ bool CharacterManager::isValidString(const std::string &input)
    if (input.empty()) return false;
 
     // Returns false if any character is a digit
-    for (char c : input) {
+    for (char c : input) 
+    {
         if (std::isdigit(c)) return false;
     }
     return true;
