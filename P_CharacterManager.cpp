@@ -148,7 +148,7 @@ void CharacterManager::editCharacter() {
 
     int choice;
     do {
-        std::cout << "\n1.Character details 2.Inventory 3.Ability scores 0.Back\nChoice: ";
+        std::cout << "\n1.Character details 2.Character health 3.Inventory 4.Ability scores 0.Back\nChoice: ";
         std::cin >> choice;
 
         if (choice == 1) 
@@ -252,7 +252,7 @@ void CharacterManager::editCharacter() {
 
                     
                 }
-                case 5: //Alignment
+            case 5: //Alignment
                 {
                     std::string new_alignment;
                     bool alignment_set = false;
@@ -270,8 +270,9 @@ void CharacterManager::editCharacter() {
                             Invalidinput();
                         }
                     }
+                    break;
                 }
-                case 6: //Age
+            case 6: //Age
                 {
                     int new_age;
                     bool age_set = false;
@@ -290,6 +291,7 @@ void CharacterManager::editCharacter() {
                             cout << "Age must be greater than/equal to 0" << endl;
                         }
                     }
+                    break;
                 }
 
                 case 7: //Weight
@@ -311,6 +313,7 @@ void CharacterManager::editCharacter() {
                             cout << "Weight must be greater than 0" << endl;
                         }
                     }
+                    break;
 
                 }
 
@@ -334,6 +337,7 @@ void CharacterManager::editCharacter() {
                         }
 
                     }
+                    break;
                 }
                 
                 
@@ -342,6 +346,75 @@ void CharacterManager::editCharacter() {
             }
 
             
+            
+        }
+        else if (choice == 2)
+        {
+            int health_edit_choice;
+            std::cout << "What would you like to change? " << endl;
+            for (int i = 0; i < size(EditHpArray); i++)
+            {
+                std::cout << i + 1 << "." << EditHpArray[i] << endl;
+            }
+            std::cout << "Choice: ";
+            std::cin >> health_edit_choice;
+
+            switch(health_edit_choice)
+            {
+                case 1: //Max Health
+                {
+                    int new_max_health;
+                    bool max_health_set = false;
+                    while (max_health_set == false)
+                    {
+                        cout << "Enter new Max health" << endl;
+                        cin >> new_max_health;
+                        if ( new_max_health > 1)
+                        {
+                            c.setMaxHP(new_max_health);
+                            cout << "Max health set" << endl;
+                            max_health_set = true;
+                        }
+                        else 
+                        {
+                            Invalidinput();
+                            cout << "Max health must be an integer greater than 1" << endl;
+                        }
+
+                    }
+                }
+                case 2: //Current Health
+                {
+                    int new_current_health;
+                    bool current_health_set = false;
+                    while (current_health_set == false)
+                    {
+                        cout << "Enter new current health " << endl;
+                        cin >> new_current_health;
+                        if (new_current_health > 1 && new_current_health < c.getMaxHP())
+                        {
+                            c.setCurrentHP(new_current_health);
+                            cout << "Current health set" << endl;
+                            current_health_set = true;
+                        }
+                        else if (new_current_health > c.getMaxHP())
+                        {
+                            Invalidinput();
+                            cout << "Current health cannot exceed Max health" << endl;
+                            
+                        }
+                        else 
+                        {
+                            Invalidinput();
+                            std::cout << "Current health must be an integer greater than 1 and cannot exceed max health" << endl;
+                        }
+                        
+                    }
+                }
+                case 3: //Temporary Health
+                case 4: //Hit Dice
+            }
+
             
         }
 
