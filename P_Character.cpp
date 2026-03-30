@@ -104,6 +104,7 @@ int Character::getWeight() const{return weight;}
 int Character::getCurrentHP() const{return current_hp;}
 int Character::getMaxHP() const{return max_hp;}
 int Character::getTempHP() const{return temp_hp;}
+std::string Character::getHitDice() const{return hit_dice;}
 int Character::getStrength() const { return strength; }
 int Character::getDexterity() const { return dexterity; }
 int Character::getConstitution() const { return constitution; }
@@ -134,7 +135,8 @@ void Character::setWeight(int w){weight = w;}
 void Character::setCurrentHP(int c_hp){current_hp = c_hp;}
 void Character::setMaxHP(int m_hp){max_hp = m_hp;}
 void Character::setTempHP(int t_hp){temp_hp = t_hp;}
-void Character::setStrength(int str) {strength = str;}
+void Character::setHitDice(const string& new_hit_dice){hit_dice = new_hit_dice;}
+void Character::setStrength(int str) { strength = str; }
 void Character::setDexterity(int dex) {dexterity = dex;}
 void Character::setConstitution(int con) {constitution = con;}
 void Character::setIntelligence(int intl) {intelligence = intl;}

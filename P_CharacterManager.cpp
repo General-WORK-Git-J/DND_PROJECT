@@ -166,166 +166,61 @@ void CharacterManager::editCharacter() {
 
             case 1: //Name
                 {
-                    string new_name;
-                    bool name_set = false;
-
-                    while (name_set == false)
-                    {
-                        std::cout << "Enter new name: " << endl;
-                        std::getline(std::cin,new_name);
-                        if (isValidString(new_name))
-                        {
-                            std::cout << "New Name Set! " << endl;
-                            c.setName(new_name);
-                            name_set = true;
-                        }
-                        else 
-                        {
-                            Invalidinput();
-                        }
-                    }
+                    std::string new_name = getValidStringInput("Name");
+                    c.setName(new_name);
                     break;
                 }
 
             case 2: //Race
                 {
-                    string new_race;
-                    bool race_set = false;
-                    while (race_set == false)
-                    {
-                        std::cout << "Enter new race: " << endl;
-                        std::getline(std::cin,new_race);
-                        if (isValidString(new_race))
-                        {
-                            std::cout << "New Race Set! " << endl;
-                            c.setRace(new_race);
-                            race_set = true;
-                        }
-                        else 
-                        {
-                            Invalidinput();
-                        } 
-                    }
+                    std::string new_race = getValidStringInput("Race");
+                    c.setRace(new_race);
                     break;
                 }
                   
             case 3: //Class
                 {
-                    std::string new_class;
-                    bool class_set = false;
-                    while(class_set == false)
-                    {
-                        std::cout << "Enter new Class" << endl;
-                        std::getline(std::cin,new_class);
-                        if (isValidString(new_class))
-                        {
-                            c.setClass(new_class);
-                            class_set = true;
-                        }
-                        else
-                        {
-                            Invalidinput();
-                        }
-                    }
+                    std::string new_class = getValidStringInput("Class");
+                    c.setClass(new_class);
                     break;
                 }
             
             case 4: //Background
                 {
-                    std::string new_background;
-                    bool background_set = false;
-                    while (background_set == false)
-                    {
-                        std::cout << "Enter new Background" << endl;
-                        std::getline(std::cin, new_background);
-                        if (isValidString(new_background))
-                        {
-                            c.setBackground(new_background);
-                            background_set = true;
-                        }
-                        else
-                        {
-                            Invalidinput();
-                        }
-                    }
+                    std::string new_background = getValidStringInput("Background");
+                    c.setBackground(new_background);
                     break;
-
                     
                 }
             case 5: //Alignment
                 {
-                    std::string new_alignment;
-                    bool alignment_set = false;
-                    while (alignment_set == false)
-                    {
-                        std::cout << "Enter new Alignment" << endl;
-                        std::getline(std::cin,new_alignment);
-                        if (isValidString(new_alignment))
-                        {
-                            c.setAlignment(new_alignment);
-                            alignment_set = true;
-                        }
-                        else 
-                        {
-                            Invalidinput();
-                        }
-                    }
+                    std::string new_alignment = getValidStringInput("Alignment");
+                    c.setAlignment(new_alignment);
+                    std::cout << "Alignment set" << std::endl;
                     break;
                 }
             case 6: //Age
                 {
-                    int new_age;
-                    bool age_set = false;
-                    while (age_set == false)
-                    {
-                        std::cout << "Enter new age" << endl;
-                        std::cin >> new_age;
-                        if (new_age >= 0)
-                        {
-                            c.setAge(new_age);
-                            age_set = true;
-                        }
-                        else
-                        {
-                            Invalidinput();
-                            cout << "Age must be greater than/equal to 0" << endl;
-                        }
-                    }
+                    int new_age = getValidIntegerInput("Age");
+                    c.setAge(new_age);
+                    std::cout << "New age set" << std::endl;
                     break;
                 }
 
                 case 7: //Weight
                 {
-                    int new_weight;
-                    bool weight_set = false;
-                    while (weight_set == false)
-                    {
-                        std::cout << "Enter new weight" << endl;
-                        std::cin >> new_weight;
-                        if (new_weight > 0)
-                        {
-                            c.setWeight(new_weight);
-                            weight_set = true;
-                        }
-                        else 
-                        {
-                            Invalidinput();
-                            cout << "Weight must be greater than 0" << endl;
-                        }
-                    }
-                    break;
+                    int new_weight = getValidIntegerInput("Weight");
+                    
 
                 }
 
                 case 8: //Level
                 {
-                    int new_level;
                     bool level_set = false;
                     while (level_set == false)
                     {
-                        std::cout << "Enter new Level" << endl;
-                        std::cin >> new_level;
-                        if (new_level >=1 && new_level <= 20)
+                        int new_level = getValidIntegerInput("Level");
+                        if (new_level >= 1 && new_level <=20)
                         {
                             c.setLevel(new_level);
                             level_set = true;
@@ -333,9 +228,8 @@ void CharacterManager::editCharacter() {
                         else 
                         {
                             Invalidinput();
-                            std::cout << "Level must be between 1 and 20! " << endl; 
+                            std::cout << "Level must be between 1 and 20" << std::endl;
                         }
-
                     }
                     break;
                 }
@@ -363,56 +257,59 @@ void CharacterManager::editCharacter() {
             {
                 case 1: //Max Health
                 {
-                    int new_max_health;
-                    bool max_health_set = false;
-                    while (max_health_set == false)
+                    int new_max_health = getValidIntegerInput("Max health");
+                    int max_hp_diff = c.getMaxHP() - new_max_health; 
+              
+                    if (new_max_health < c.getMaxHP()) // Check to se if max health is being reduced 
                     {
-                        cout << "Enter new Max health" << endl;
-                        cin >> new_max_health;
-                        if ( new_max_health > 1)
-                        {
-                            c.setMaxHP(new_max_health);
-                            cout << "Max health set" << endl;
-                            max_health_set = true;
-                        }
-                        else 
-                        {
-                            Invalidinput();
-                            cout << "Max health must be an integer greater than 1" << endl;
-                        }
+                        c.setMaxHP(new_max_health);
 
+                        // Do Calc to adjust current health accordingly
+                        int adjust_current_hp = c.getCurrentHP() - max_hp_diff;
+                        c.setCurrentHP(adjust_current_hp);
                     }
+                    else 
+                    {
+                        c.setMaxHP(new_max_health);
+                    }
+                    std::cout << "New max health set" << std::endl;
+
+                    break;
                 }
                 case 2: //Current Health
                 {
-                    int new_current_health;
+                 
                     bool current_health_set = false;
                     while (current_health_set == false)
                     {
-                        cout << "Enter new current health " << endl;
-                        cin >> new_current_health;
-                        if (new_current_health > 1 && new_current_health < c.getMaxHP())
+                        int new_current_health = getValidIntegerInput("Current health");
+                        if (new_current_health <= c.getMaxHP())
                         {
                             c.setCurrentHP(new_current_health);
-                            cout << "Current health set" << endl;
                             current_health_set = true;
-                        }
-                        else if (new_current_health > c.getMaxHP())
-                        {
-                            Invalidinput();
-                            cout << "Current health cannot exceed Max health" << endl;
-                            
                         }
                         else 
                         {
                             Invalidinput();
-                            std::cout << "Current health must be an integer greater than 1 and cannot exceed max health" << endl;
+                            std::cout << "Current health cannot exceed max health (Max health: " << c.getMaxHP() << ")" << std::endl;
                         }
-                        
                     }
+                    break;
                 }
                 case 3: //Temporary Health
+                {
+                    int new_temp_health = getValidIntegerInput("Temporary Heath");
+                    c.setTempHP(new_temp_health);
+                    cout << "New temp health set" << endl;
+                    break;
+                }
                 case 4: //Hit Dice
+                {
+                    std::string new_hit_dice = getValidHitDiceInput();
+                    c.setHitDice(new_hit_dice);
+                    std::cout << "New hit dice set" << endl;
+                    break;
+                }
             }
 
             
@@ -446,6 +343,26 @@ void CharacterManager::editCharacter() {
     } while (choice != 0);
 }
 
+std::string CharacterManager::getValidStringInput(const std::string& value_to_get)
+{
+    std::string new_input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while (true)
+    {
+        std::cout << "Enter new " << value_to_get << std::endl;
+        std::getline(std::cin, new_input);
+        if (isValidString(new_input))
+        {
+            return new_input;
+        }
+        else
+        {
+            Invalidinput();
+            std::cout << "Invalid " << value_to_get << std::endl;
+        }
+    }
+}
+
 bool CharacterManager::isValidString(const std::string &input)
 {
    if (input.empty()) return false;
@@ -458,9 +375,60 @@ bool CharacterManager::isValidString(const std::string &input)
     return true;
 }
 
+bool CharacterManager::isValidHitDice(const std::string& input)
+{
+    // Must start with 'd' and be followed by at least one digit (e.g. d6, d12, d100)
+    if (input.size() < 2 || input[0] != 'd') return false;
+    for (size_t i = 1; i < input.size(); i++)
+    {
+        if (!std::isdigit(input[i])) return false;
+    }
+    return true;
+}
+
+std::string CharacterManager::getValidHitDiceInput()
+{
+    std::string new_input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while (true)
+    {
+        std::cout << "Enter new Hit Dice (e.g. d6, d8, d12): " << std::endl;
+        std::getline(std::cin, new_input);
+        if (isValidHitDice(new_input))
+        {
+            return new_input;
+        }
+        else
+        {
+            Invalidinput();
+            std::cout << "Hit Dice must be in the format dN (e.g. d12)" << std::endl;
+        }
+    }
+}
+
+int CharacterManager::getValidIntegerInput(const std::string& value_to_get)
+{
+    int new_input;
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    while (true)
+    {
+        std::cout << "Enter new " << value_to_get << endl;
+        std::cin >> new_input;
+        if (new_input > 0)
+        {
+            return new_input;
+        }
+        else
+        {
+            Invalidinput();
+            std::cout << value_to_get << " must be a positive integer greater than 0" << endl;
+        }
+    }
+}
+
 void CharacterManager::Invalidinput()
 {
-    std::cout << "Not a valid Input!" << endl;
+    std::cout << "Not a valid Input!" << std::endl;
     std::cin.clear();
     std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
 

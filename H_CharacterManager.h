@@ -20,8 +20,12 @@ public:
     void editCharacter();
 
     // Utilities
-    bool isValidString(const std::string& input);
-    void Invalidinput();
+    std::string getValidStringInput(const std::string& value_to_get); // Re-usable method to get a string input with built in error checking
+    std::string getValidHitDiceInput(); // Gets a valid hit dice input in the format dN (e.g. d12)
+    int getValidIntegerInput(const std::string& value_to_get); // Re-usable method to get a postive non-zero integer input
+    bool isValidString(const std::string& input); // Checks to see if an input is a valid string then returns a bool
+    bool isValidHitDice(const std::string& input); // Checks for hit dice format: 'd' followed by digits (e.g. d6, d12)
+    void Invalidinput(); // Re-usable method to clear the input buffer fo invalid inputs;
     
     
 

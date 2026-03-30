@@ -63,6 +63,7 @@ public:
     int getCurrentHP() const;
     int getMaxHP() const;
     int getTempHP() const;
+    std::string getHitDice() const;
 
 
     int getStrength() const;
@@ -85,9 +86,12 @@ public:
     void setLevel(int lvl);
     void setAge(int age);
     void setWeight(int weight);
+
     void setCurrentHP(int c_hp);
     void setMaxHP(int m_hp);
     void setTempHP(int t_hp);
+    void setHitDice(const std::string& new_hit_dice);
+
     void setStrength(int str);
     void setDexterity(int dex);
     void setConstitution(int con);
