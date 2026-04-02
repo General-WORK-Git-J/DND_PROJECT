@@ -21,16 +21,16 @@ int main() {
 
     
     do {
-        cout << "\n=== DnD Manager ===\n";
-        cout << "1. Create\n";
-        cout << "2. View\n";
-        cout << "3. Edit\n";
-        cout << "4. Save\n";
-        cout << "5. Load\n";
-        cout << "0. Exit\n";
-        cout << "Choice: ";
+        std::cout << "\n=== DnD Manager ===\n";
+        std::cout << "1. Create\n";
+        std::cout << "2. View\n";
+        std::cout << "3. Edit\n";
+        std::cout << "4. Save\n";
+        std::cout << "5. Load\n";
+        std::cout << "0. Exit\n";
+        std::cout << "Choice: ";
         
-        cin >> choice;
+        std::cin >> choice;
 
         switch (choice) {
             case 1: manager.createCharacter(); break;
