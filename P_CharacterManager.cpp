@@ -148,7 +148,7 @@ void CharacterManager::editCharacter() {
 
     int choice;
     do {
-        std::cout << "\n1.Character details 2.Character health 3.Inventory 4.Ability scores 4.Spells 0.Back\nChoice: ";
+        std::cout << "\n1.Character details 2.Character health 3.Inventory 4.Ability scores 5.Spells 0.Back\nChoice: ";
         std::cin >> choice;
 
         if (choice == 1) 
@@ -333,7 +333,7 @@ void CharacterManager::editCharacter() {
             std::cin >> val;
             c.setStats(val, abil);
         }
-        else if (choice == 4){
+        else if (choice == 5){
         int spellChoice;
 
             do {
