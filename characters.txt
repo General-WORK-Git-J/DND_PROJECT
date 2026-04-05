@@ -1,11 +1,25 @@
-2
+3
 Thrikna
 Orc
 Fighter
 18 16 16 11 10 11 3 3
 0
+SPELLBOOK
+0
+SPELLSLOTS
 paul
 human
 warlock
 1 1 1 1 1 1 2 2
 0
+SPELLBOOK
+0
+SPELLSLOTS
+Jack
+Harengon
+Ranger
+9 20 14 10 16 13 7 2
+0
+SPELLBOOK
+0
+SPELLSLOTS

@@ -2,12 +2,15 @@
 #include <iostream>
 #include <fstream>
 #include "H_CharacterManager.h"
+#include "H_SpellBook.h"
 
 using namespace std;
 
 int main() {
     CharacterManager manager;
     int choice;
+    Spellbook globalSpellbook;
+    globalSpellbook.loadSpellbook("SpellBook.txt");
     
     do {
         cout << "\n=== DnD Manager ===\n";

@@ -41,6 +41,23 @@ void Character::save(ofstream& file) const {
         file << item.getType() << endl;
         file << item.getValue() << endl;
     }
+    // --- SPELLBOOK ---
+    file << "SPELLBOOK\n";
+
+    // Save spellbook to temp file
+    spellbook.saveSpellbook("temp_spell.txt");
+
+    // Copy into main file
+    ifstream temp("temp_spell.txt");
+    string line;
+    while (getline(temp, line))
+    {
+        file << line << endl;
+    }
+    temp.close();
+
+    // --- SPELLSLOTS (placeholder for now) ---
+    file << "SPELLSLOTS\n";
 }
 
 // Display
@@ -164,4 +181,25 @@ void Character::setStats(int AS, int Ability)
     cin.clear();
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
+}
+
+//-----------------------------------------------------//
+// Spellbook
+Spellbook& Character::getSpellbook()
+{
+    return spellbook;
+}
+
+SpellSlots& Character::getSpellSlots()
+{
+    return spellSlots;
+}
+
+void Character::showSpells() const
+{
+    std::cout << "\n=== Spellbook ===\n";
+    spellbook.displayAllSpells();
+
+    std::cout << "\n=== Spell Slots ===\n";
+    spellSlots.displaySlots();
 }

@@ -81,7 +81,7 @@ void CharacterManager::editCharacter() {
 
     int choice;
     do {
-        cout << "\n1.Name 2.Inventory 3.Ability scores 0.Back\nChoice: ";
+        cout << "\n1.Name 2.Inventory 3.Ability scores 4.Spells 0.Back\nChoice: ";
         cin >> choice;
 
         if (choice == 1) {
@@ -106,6 +106,80 @@ void CharacterManager::editCharacter() {
             cout << "New " << Ability_scores[abil - 1]<< endl;
             cin >> val;
             c.setStats(val, abil);
+        }
+        else if (choice == 4){
+        int spellChoice;
+
+            do {
+                cout << "\n=== Spells ===\n";
+                cout << "1. View Spells\n";
+                cout << "2. Create New Spell\n";
+                cout << "3. Add Existing Spell to Character\n";
+                cout << "0. Back\n";
+                cin >> spellChoice;
+
+                if (spellChoice == 1)
+                {
+                    c.showSpells();
+                }
+                else if (spellChoice == 2)
+                {
+                    string name, type, effect, time, range, comp, duration, save, desc;
+                    int level;
+
+                    cout << "Spell name: "; cin >> name; //Name of spell
+                    cout << "Type: "; cin >> type; //Abjuration, Conjuration, Divination, Enchantment, Evocation, Illusion, Necromancy, Transmutation
+                    cout << "Effect: "; cin >> effect; //Damage, Healing, Utility, Control, Summoning, Buff, Debuff
+                    cout << "Level: "; cin >> level; //Spell level (0 for cantrips)
+                    cout << "Cast time: "; cin >> time; //Action, Bonus Action, Reaction, etc.
+                    cout << "Range: "; cin >> range; //Touch, Self, 30 ft, 60 ft, etc.
+                    cout << "Components: "; cin >> comp; //V, S, M (with optional material description)
+                    cout << "Duration: "; cin >> duration; //Instantaneous, Concentration (up to 1 minute), etc.
+                    cout << "Saving throw: "; cin >> save; //None, Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma
+                    cout << "Description: "; cin >> desc; //Detailed spell description
+
+                    Spell s(name, type, effect, level, time, range, comp, duration, save, desc);
+                    // Save to Spellbook
+                    Spellbook global;
+                    global.loadSpellbook("SpellBook.txt");
+
+                    global.addSpell(s);
+                    global.saveSpellbook("SpellBook.txt");
+
+                    cout << "Spell added to global spellbook!\n";
+                }
+                else if (spellChoice == 3)
+                {
+                    Spellbook global;
+                    global.loadSpellbook("SpellBook.txt");
+
+                    cout << "\n=== Global Spell List ===\n";
+                    global.displayAllSpells();
+
+                    string spellName;
+                    cout << "Enter spell name to add: ";
+                    cin >> spellName;
+
+                    // Find spell
+                    auto spells = global.getSpellsByLevel(0);
+
+                    bool found = false;
+
+                    for (const auto& s : spells)
+                    {
+                        if (s.getSpellName() == spellName)
+                        {
+                            c.getSpellbook().addSpell(s);
+                            cout << "Spell added to character!\n";
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        cout << "Spell not found.\n";
+                    }
+                }
+            } while (spellChoice != 0);
         }
         else 
         {
@@ -179,7 +253,26 @@ void CharacterManager::loadFromFile(const string& filename) {
             c.addItem(Item(itemName, itemType, itemValue));
         }
 
+        // --- SPELLBOOK ---
+        string marker;
+        getline(file, marker);
+
+        if (marker == "SPELLBOOK")
+        {
+            ofstream temp("temp_spell.txt");
+
+            string line;
+            while (getline(file, line) && line != "SPELLSLOTS")
+            {
+                temp << line << endl;
+            }
+
+            temp.close();
+            c.getSpellbook().loadSpellbook("temp_spell.txt");
+        }
+
         characters.push_back(c);
+        
     }
 
     cout << "Loaded successfully.\n";

@@ -7,6 +7,8 @@
 #include <cmath>
 
 #include "H_Inventory.h"
+#include "H_SpellBook.h"
+#include "H_SpellSlots.h"
 
 class Character {
 private:
@@ -24,6 +26,8 @@ private:
 
 
     Inventory inventory;
+    Spellbook spellbook;
+    SpellSlots spellSlots;
 
 public:
     Character(std::string n, std::string r, std::string c, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
@@ -66,6 +70,11 @@ public:
     void removeItem(int index);
     void showInventory() const;
     void clearInventory();
+
+    // Spellbook
+    Spellbook& getSpellbook();
+    SpellSlots& getSpellSlots();
+    void showSpells() const;
 
     // File functions
     void save(std::ofstream& file) const;

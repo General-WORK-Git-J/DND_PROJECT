@@ -12,7 +12,9 @@
                 "${workspaceFolder}\\P_CharacterManager.cpp",
                 "${workspaceFolder}\\P_Inventory.cpp",
                 "${workspaceFolder}\\P_Item.cpp",
-                "${workspaceFolder}\\P_spells.cpp",
+                "${workspaceFolder}\\P_Spells.cpp",
+                "${workspaceFolder}\\P_SpellBook.cpp",
+                "${workspaceFolder}\\P_SpellSlots.cpp",
                 "-o",
                 "${workspaceFolder}\\DND_PROJECT.exe"
             ],
