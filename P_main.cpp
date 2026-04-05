@@ -1,27 +1,37 @@
 
 #include <iostream>
 #include <fstream>
+#include <windows.h>
 #include "H_CharacterManager.h"
 #include "H_SpellBook.h"
+#include "H_Colours.h"
 
 using namespace std;
 
 int main() {
     CharacterManager manager;
+
+    // Get console handle and set text colour. Colour codes are in H_Colours.h (e.g. red = 4)
+    HANDLE console_color;
+    console_color = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(console_color, 4);
+
+
     int choice;
     Spellbook globalSpellbook;
     globalSpellbook.loadSpellbook("SpellBook.txt");
     
     do {
-        cout << "\n=== DnD Manager ===\n";
-        cout << "1. Create\n";
-        cout << "2. View\n";
-        cout << "3. Edit\n";
-        cout << "4. Save\n";
-        cout << "5. Load\n";
-        cout << "0. Exit\n";
-        cout << "Choice: ";
-        cin >> choice;
+        std::cout << "\n=== DnD Manager ===\n";
+        std::cout << "1. Create\n";
+        std::cout << "2. View\n";
+        std::cout << "3. Edit\n";
+        std::cout << "4. Save\n";
+        std::cout << "5. Load\n";
+        std::cout << "0. Exit\n";
+        std::cout << "Choice: ";
+        
+        std::cin >> choice;
 
         switch (choice) {
             case 1: manager.createCharacter(); break;

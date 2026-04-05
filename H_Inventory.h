@@ -16,7 +16,7 @@ public:
     void display() const;
 
     int size() const;
-    Item getItem(int index) const;
+    Item getItem(int index) const; 
 };
 
 #endif
