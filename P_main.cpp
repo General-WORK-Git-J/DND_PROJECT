@@ -6,8 +6,6 @@
 #include "H_SpellBook.h"
 #include "H_Colours.h"
 
-using namespace std;
-
 int main() {
     CharacterManager manager;
 

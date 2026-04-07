@@ -2,33 +2,20 @@
 #include <iostream>
 #include <fstream>
 
-using namespace std;
-
 void CharacterManager::createCharacter() {
-    string name, race, characterClass, background, alignment;
+    std::string name, race, characterClass, background, alignment;
     int lvl, age, weight;
     int c_hp, m_hp, t_hp;
-    string h_dice;
+    std::string h_dice;
     int str, dex, con, intl, wis, cha, init, prof;
 
     int new_AS[6];
 
-    std::cout << "\nEnter name: ";
-    std::cin >> name;
-
-    std::cout << "Enter race: ";
-    std::cin >> race;
-
-    std::cout << "Enter class: ";
-    std::cin >> characterClass;
-
-    std::cout << "Enter background: ";
-    std::cin >> background;
-
-    std::cin.clear();
-    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
-    std::cout << "Enter alignment: ";
-    std::getline(cin, alignment);
+    name = getValidStringInput("name");
+    race = getValidStringInput("race");
+    characterClass = getValidStringInput("class");
+    background = getValidStringInput("background");
+    alignment = getValidStringInput("alignment");
 
     std::cout << "Enter level: ";
     std::cin >> lvl;
@@ -63,9 +50,8 @@ void CharacterManager::createCharacter() {
         }
         else
         {
+            std::cout << "Ability score must be between 1 and 20, please re-enter! " << std::endl;
             Invalidinput();
-            std::cout << "Ability score must be between 1 and 20, please re-enter! " << endl;
-           
             i--;
         }
     }
@@ -84,12 +70,12 @@ void CharacterManager::createCharacter() {
     {
     std::cout << "Enter initiative: " ;
     std::cin >> init;
-        if (init > 0 || init < 0){ initiative_set = true;}
+        if (std::cin){ initiative_set = true;}
 
         else 
         {
             Invalidinput();
-            std::cout << "Invalid initiative value, please re-enter! " << endl;
+            std::cout << "Invalid initiative value, please re-enter! " << std::endl;
             
         }
     }
@@ -99,13 +85,13 @@ void CharacterManager::createCharacter() {
         
     std::cout << "Enter proficiency: ";
     std::cin >> prof;
-    if (prof >=3)
+    if (prof >= 2)
     {proficiency_set = true;}
 
-    else 
+    else
     {
         Invalidinput();
-        std::cout << "Proficiency must be minimum +3, please enter valid value! " << endl;
+        std::cout << "Proficiency must be minimum +2, please enter valid value! " << std::endl;
         
     }
     }
@@ -124,7 +110,7 @@ void CharacterManager::viewCharacters() const {
     }
 
     for (size_t i = 0; i < characters.size(); i++) {
-        std::cout << "\nIndex: " << i + 1 << endl;
+        std::cout << "\nIndex: " << i + 1 << std::endl;
         characters[i].display();
     }
 }
@@ -154,10 +140,10 @@ void CharacterManager::editCharacter() {
         if (choice == 1) 
         {
             int char_edit_choice;
-            std::cout << "What would you like to change? " << endl;
+            std::cout << "What would you like to change? " << std::endl;
             for (int i = 0; i < size(EditCharDetailsArray); i++)
             {
-                std::cout << i + 1 << "." << EditCharDetailsArray[i] << endl;
+                std::cout << i + 1 << "." << EditCharDetailsArray[i] << std::endl;
             }
             std::cout << "Choice: ";
             std::cin >> char_edit_choice;
@@ -210,8 +196,9 @@ void CharacterManager::editCharacter() {
                 case 7: //Weight
                 {
                     int new_weight = getValidIntegerInput("Weight");
-                    
-
+                    c.setWeight(new_weight);
+                    std::cout << "New weight set" << std::endl;
+                    break;
                 }
 
                 case 8: //Level
@@ -245,10 +232,10 @@ void CharacterManager::editCharacter() {
         else if (choice == 2)
         {
             int health_edit_choice;
-            std::cout << "What would you like to change? " << endl;
+            std::cout << "What would you like to change? " << std::endl;
             for (int i = 0; i < size(EditHpArray); i++)
             {
-                std::cout << i + 1 << "." << EditHpArray[i] << endl;
+                std::cout << i + 1 << "." << EditHpArray[i] << std::endl;
             }
             std::cout << "Choice: ";
             std::cin >> health_edit_choice;
@@ -300,14 +287,14 @@ void CharacterManager::editCharacter() {
                 {
                     int new_temp_health = getValidIntegerInput("Temporary Heath");
                     c.setTempHP(new_temp_health);
-                    cout << "New temp health set" << endl;
+                    std::cout << "New temp health set" << std::endl;
                     break;
                 }
                 case 4: //Hit Dice
                 {
                     std::string new_hit_dice = getValidHitDiceInput();
                     c.setHitDice(new_hit_dice);
-                    std::cout << "New hit dice set" << endl;
+                    std::cout << "New hit dice set" << std::endl;
                     break;
                 }
             }
@@ -321,15 +308,15 @@ void CharacterManager::editCharacter() {
         }
         else if (choice == 4) 
         {
-            std::cout << "What stat would you like to change? "  << endl;
+            std::cout << "What stat would you like to change? "  << std::endl;
             for (int i = 0; i < 6; i++)
             {
-                std::cout << i + 1 << ". " << Ability_scores[i] << endl;
+                std::cout << i + 1 << ". " << Ability_scores[i] << std::endl;
             }
             int val;
             int abil;
             std::cin >> abil;
-            std::cout << "New " << Ability_scores[abil - 1]<< endl;
+            std::cout << "New " << Ability_scores[abil - 1]<< std::endl;
             std::cin >> val;
             c.setStats(val, abil);
         }
@@ -337,12 +324,12 @@ void CharacterManager::editCharacter() {
         int spellChoice;
 
             do {
-                cout << "\n=== Spells ===\n";
-                cout << "1. View Spells\n";
-                cout << "2. Create New Spell\n";
-                cout << "3. Add Existing Spell to Character\n";
-                cout << "0. Back\n";
-                cin >> spellChoice;
+                std::cout << "\n=== Spells ===\n";
+                std::cout << "1. View Spells\n";
+                std::cout << "2. Create New Spell\n";
+                std::cout << "3. Add Existing Spell to Character\n";
+                std::cout << "0. Back\n";
+                std::cin >> spellChoice;
 
                 if (spellChoice == 1)
                 {
@@ -350,19 +337,19 @@ void CharacterManager::editCharacter() {
                 }
                 else if (spellChoice == 2)
                 {
-                    string name, type, effect, time, range, comp, duration, save, desc;
+                    std::string name, type, effect, time, range, comp, duration, save, desc;
                     int level;
 
-                    cout << "Spell name: "; cin >> name; //Name of spell
-                    cout << "Type: "; cin >> type; //Abjuration, Conjuration, Divination, Enchantment, Evocation, Illusion, Necromancy, Transmutation
-                    cout << "Effect: "; cin >> effect; //Damage, Healing, Utility, Control, Summoning, Buff, Debuff
-                    cout << "Level: "; cin >> level; //Spell level (0 for cantrips)
-                    cout << "Cast time: "; cin >> time; //Action, Bonus Action, Reaction, etc.
-                    cout << "Range: "; cin >> range; //Touch, Self, 30 ft, 60 ft, etc.
-                    cout << "Components: "; cin >> comp; //V, S, M (with optional material description)
-                    cout << "Duration: "; cin >> duration; //Instantaneous, Concentration (up to 1 minute), etc.
-                    cout << "Saving throw: "; cin >> save; //None, Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma
-                    cout << "Description: "; cin >> desc; //Detailed spell description
+                    std::cout << "Spell name: "; std::cin >> name; //Name of spell
+                    std::cout << "Type: "; std::cin >> type; //Abjuration, Conjuration, Divination, Enchantment, Evocation, Illusion, Necromancy, Transmutation
+                    std::cout << "Effect: "; std::cin >> effect; //Damage, Healing, Utility, Control, Summoning, Buff, Debuff
+                    std::cout << "Level: "; std::cin >> level; //Spell level (0 for cantrips)
+                    std::cout << "Cast time: "; std::cin >> time; //Action, Bonus Action, Reaction, etc.
+                    std::cout << "Range: "; std::cin >> range; //Touch, Self, 30 ft, 60 ft, etc.
+                    std::cout << "Components: "; std::cin >> comp; //V, S, M (with optional material description)
+                    std::cout << "Duration: "; std::cin >> duration; //Instantaneous, Concentration (up to 1 minute), etc.
+                    std::cout << "Saving throw: "; std::cin >> save; //None, Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma
+                    std::cout << "Description: "; std::cin >> desc; //Detailed spell description
 
                     Spell s(name, type, effect, level, time, range, comp, duration, save, desc);
                     // Save to Spellbook
@@ -372,19 +359,19 @@ void CharacterManager::editCharacter() {
                     global.addSpell(s);
                     global.saveSpellbook("SpellBook.txt");
 
-                    cout << "Spell added to global spellbook!\n";
+                    std::cout << "Spell added to global spellbook!\n";
                 }
                 else if (spellChoice == 3)
                 {
                     Spellbook global;
                     global.loadSpellbook("SpellBook.txt");
 
-                    cout << "\n=== Global Spell List ===\n";
+                    std::cout << "\n=== Global Spell List ===\n";
                     global.displayAllSpells();
 
-                    string spellName;
-                    cout << "Enter spell name to add: ";
-                    cin >> spellName;
+                    std::string spellName;
+                    std::cout << "Enter spell name to add: ";
+                    std::cin >> spellName;
 
                     // Find spell
                     auto spells = global.getSpellsByLevel(0);
@@ -396,22 +383,22 @@ void CharacterManager::editCharacter() {
                         if (s.getSpellName() == spellName)
                         {
                             c.getSpellbook().addSpell(s);
-                            cout << "Spell added to character!\n";
+                            std::cout << "Spell added to character!\n";
                             found = true;
                             break;
                         }
                     }
                     if (!found) {
-                        cout << "Spell not found.\n";
+                        std::cout << "Spell not found.\n";
                     }
                 }
             } while (spellChoice != 0);
         }
         else 
         {
-            std::cout << "Exiting edit menu " << endl;
+            std::cout << "Exiting edit menu " << std::endl;
             std::cin.clear();
-            std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
 
     } while (choice != 0);
@@ -439,14 +426,14 @@ std::string CharacterManager::getValidStringInput(const std::string& value_to_ge
 
 bool CharacterManager::isValidString(const std::string &input)
 {
-   if (input.empty()) return false;
-
-    // Returns false if any character is a digit
-    for (char c : input) 
+    if (input.empty()) return false;
+    bool hasLetter = false;
+    for (char c : input)
     {
-        if (std::isdigit(c)) return false;
+        if (!std::isalpha(c) && c != ' ' && c != '-' && c != '\'') return false;
+        if (std::isalpha(c)) hasLetter = true;
     }
-    return true;
+    return hasLetter;
 }
 
 bool CharacterManager::isValidHitDice(const std::string& input)
@@ -486,7 +473,7 @@ int CharacterManager::getValidIntegerInput(const std::string& value_to_get)
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     while (true)
     {
-        std::cout << "Enter new " << value_to_get << endl;
+        std::cout << "Enter new " << value_to_get << std::endl;
         std::cin >> new_input;
         if (new_input > 0)
         {
@@ -495,7 +482,7 @@ int CharacterManager::getValidIntegerInput(const std::string& value_to_get)
         else
         {
             Invalidinput();
-            std::cout << value_to_get << " must be a positive integer greater than 0" << endl;
+            std::cout << value_to_get << " must be a positive integer greater than 0" << std::endl;
         }
     }
 }
@@ -504,19 +491,19 @@ void CharacterManager::Invalidinput()
 {
     std::cout << "Not a valid Input!" << std::endl;
     std::cin.clear();
-    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 }
 
-void CharacterManager::saveToFile(const string& filename) const {
-    ofstream file(filename);
+void CharacterManager::saveToFile(const std::string& filename) const {
+    std::ofstream file(filename);
 
     if (!file) {
         std::cout << "Error saving file\n";
         return;
     }
 
-    file << characters.size() << endl;
+    file << characters.size() << std::endl;
 
     for (const auto& c : characters) {
         c.save(file);
@@ -525,8 +512,8 @@ void CharacterManager::saveToFile(const string& filename) const {
     std::cout << "Saved successfully.\n";
 }
 
-void CharacterManager::loadFromFile(const string& filename) {
-    ifstream file(filename);
+void CharacterManager::loadFromFile(const std::string& filename) {
+    std::ifstream file(filename);
 
     if (!file) {
         std::cout << "No save file found.\n";
@@ -540,10 +527,10 @@ void CharacterManager::loadFromFile(const string& filename) {
     file.ignore();
 
     for (int i = 0; i < count; i++) {
-        string name, race, characterClass, background, alignment;
+        std::string name, race, characterClass, background, alignment;
         int lvl, age, weight;
         int c_hp, m_hp, t_hp;
-        string h_dice;
+        std::string h_dice;
         int str, dex, con, intl, wis, cha, init, prof;
 
         std::getline(file, name);
@@ -584,17 +571,17 @@ void CharacterManager::loadFromFile(const string& filename) {
         }
 
         // --- SPELLBOOK ---
-        string marker;
-        getline(file, marker);
+        std::string marker;
+        std::getline(file, marker);
 
         if (marker == "SPELLBOOK")
         {
-            ofstream temp("temp_spell.txt");
+            std::ofstream temp("temp_spell.txt");
 
-            string line;
-            while (getline(file, line) && line != "SPELLSLOTS")
+            std::string line;
+            while (std::getline(file, line) && line != "SPELLSLOTS")
             {
-                temp << line << endl;
+                temp << line << std::endl;
             }
 
             temp.close();
@@ -625,7 +612,7 @@ void CharacterManager::manageInventory(Character& c) {
             c.showInventory();
         }
         else if (choice == 2) {
-            string name, type;
+            std::string name, type;
             int value;
 
             std::cout << "Item name: ";

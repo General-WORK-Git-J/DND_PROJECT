@@ -1,9 +1,7 @@
 #include "H_Item.h"
 #include <iostream>
 
-using namespace std;
-
-Item::Item(string n, string t, int v) 
+Item::Item(std::string n, std::string t, int v)
 {
     name = n;
     type = t;

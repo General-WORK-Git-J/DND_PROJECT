@@ -1,11 +1,9 @@
 #include "H_Character.h"
 #include <iostream>
 
-using namespace std;
-
 // Constructor
-Character::Character(string n, string r, string c,string b, string a,
-     int lvl, int new_age, int new_weight,int c_hp, int m_hp,int t_hp, string h_dice, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
+Character::Character(std::string n, std::string r, std::string c, std::string b, std::string a,
+     int lvl, int new_age, int new_weight, int c_hp, int m_hp, int t_hp, std::string h_dice, int str, int dex, int con, int intl, int wis, int cha, int init, int prof) {
     name = n;
     race = r;
     characterClass = c;
@@ -31,19 +29,19 @@ Character::Character(string n, string r, string c,string b, string a,
 
 
 // Save character to file
-void Character::save(ofstream& file) const {
-    file << name << endl;
-    file << race << endl;
-    file << characterClass << endl;
-    file << background << endl;
-    file << alignment << endl;
+void Character::save(std::ofstream& file) const {
+    file << name << std::endl;
+    file << race << std::endl;
+    file << characterClass << std::endl;
+    file << background << std::endl;
+    file << alignment << std::endl;
     file << level << " "
          << age << " "
-         << weight << endl;
+         << weight << std::endl;
     file << current_hp << " "
          << max_hp << " "
-         << temp_hp << endl;
-    file << hit_dice << endl;
+         << temp_hp << std::endl;
+    file << hit_dice << std::endl;
     file << strength << " "
          << dexterity << " "
          << constitution << " "
@@ -51,14 +49,14 @@ void Character::save(ofstream& file) const {
          << wisdom << " "
          << charisma << " "
          << Initiative << " "
-         << proficiency << endl;
-    file << inventory.size() << endl;
+         << proficiency << std::endl;
+    file << inventory.size() << std::endl;
     for (size_t i = 0; i < inventory.size(); i++) 
     {
         Item item = inventory.getItem(i + 1);
-        file << item.getName() << endl;
-        file << item.getType() << endl;
-        file << item.getValue() << endl;
+        file << item.getName() << std::endl;
+        file << item.getType() << std::endl;
+        file << item.getValue() << std::endl;
     }
     // --- SPELLBOOK ---
     file << "SPELLBOOK\n";
@@ -67,11 +65,11 @@ void Character::save(ofstream& file) const {
     spellbook.saveSpellbook("temp_spell.txt");
 
     // Copy into main file
-    ifstream temp("temp_spell.txt");
-    string line;
-    while (getline(temp, line))
+    std::ifstream temp("temp_spell.txt");
+    std::string line;
+    while (std::getline(temp, line))
     {
-        file << line << endl;
+        file << line << std::endl;
     }
     temp.close();
 
@@ -86,7 +84,7 @@ void Character::display() const {
 
     std::cout << "\n=== Character Sheet ===\n";
     std::cout << "Name: " << name << std::endl;
-    std::cout << "Race: " << race << endl;
+    std::cout << "Race: " << race << std::endl;
     std::cout << "Class: " << characterClass << std::endl;
     std::cout << "Level: " << level << std::endl;
     std::cout << "Age: " << age << std::endl;
@@ -222,7 +220,7 @@ void Character::setStats(int AS, int Ability)
     {
     std::cout << "Ability score must be between 1 and 20" << std::endl;
     std::cin.clear();
-    std::cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
 }
 
