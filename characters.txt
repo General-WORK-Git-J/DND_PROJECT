@@ -1,19 +1,16 @@
-2
-Thrikna
-Orc
-Fighter
-18 16 16 11 10 11 3 3
-0
-paul
-human
+1
+thrikna
+orc
 warlock
-wanderer
-lawful good
-5 21 100
+chaotic neutral
+chaotic neutral
+5 22 100
 66 66 0
 d10
 18 16 16 11 10 11 3 3
-1
-sword
-weapon
-20
+0
+WALLET
+1 2 2 5 0
+SPELLBOOK
+0
+SPELLSLOTS

@@ -9,6 +9,7 @@
 #include "H_Inventory.h"
 #include "H_SpellBook.h"
 #include "H_SpellSlots.h"
+#include "H_Wallet.h"
 
 class Character {
 private:
@@ -46,6 +47,7 @@ private:
     Inventory inventory;
     Spellbook spellbook;
     SpellSlots spellSlots;
+    Wallet wallet;
 
 public:
     Character(std::string n, std::string r, std::string c, std::string b, std::string a,
@@ -117,6 +119,10 @@ public:
     Spellbook& getSpellbook();
     SpellSlots& getSpellSlots();
     void showSpells() const;
+
+    // Wallet
+    Wallet& getWallet();
+    void showCurrency() const;
 
     // File functions
     void save(std::ofstream& file) const;

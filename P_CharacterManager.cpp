@@ -570,6 +570,14 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             c.addItem(Item(itemName, itemType, itemValue));
         }
 
+        // --- WALLET ---
+        std::string walletMarker;
+        std::getline(file, walletMarker);
+        if (walletMarker == "WALLET")
+        {
+            c.getWallet().load(file);
+        }
+
         // --- SPELLBOOK ---
         std::string marker;
         std::getline(file, marker);
@@ -604,6 +612,7 @@ void CharacterManager::manageInventory(Character& c) {
         std::cout << "1. View\n";
         std::cout << "2. Add Item\n";
         std::cout << "3. Remove Item\n";
+        std::cout << "4. Currency\n";
         std::cout << "0. Back\n";
         std::cout << "Choice: ";
         std::cin >> choice;
@@ -629,6 +638,36 @@ void CharacterManager::manageInventory(Character& c) {
             std::cout << "Index to remove: ";
             std::cin >> index;
             c.removeItem(index);
+        }
+        else if (choice == 4) {
+            int currChoice;
+            do {
+                std::cout << "\n=== Currency ===\n";
+                c.showCurrency();
+                std::cout << "1. Add currency\n";
+                std::cout << "2. Spend currency\n";
+                std::cout << "0. Back\n";
+                std::cout << "Choice: ";
+                std::cin >> currChoice;
+
+                if (currChoice == 1 || currChoice == 2) {
+                    int pp, gp, ep, sp, cp;
+                    std::cout << "Platinum: "; std::cin >> pp;
+                    std::cout << "Gold: ";     std::cin >> gp;
+                    std::cout << "Electrum: "; std::cin >> ep;
+                    std::cout << "Silver: ";   std::cin >> sp;
+                    std::cout << "Copper: ";   std::cin >> cp;
+
+                    int sign = (currChoice == 2) ? -1 : 1;
+                    c.getWallet().adjustPlatinum(sign * pp);
+                    c.getWallet().adjustGold(sign * gp);
+                    c.getWallet().adjustElectrum(sign * ep);
+                    c.getWallet().adjustSilver(sign * sp);
+                    c.getWallet().adjustCopper(sign * cp);
+
+                    std::cout << (currChoice == 1 ? "Currency added.\n" : "Currency spent.\n");
+                }
+            } while (currChoice != 0);
         }
 
     } while (choice != 0);

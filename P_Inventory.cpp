@@ -13,7 +13,7 @@ void Inventory::removeItem(int index) {
 
 void Inventory::display() const {
     if (items.empty()) {
-        std::std::cout << "Inventory is empty.\n";
+        std::cout << "Inventory is empty.\n";
         return;
     }
 

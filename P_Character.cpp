@@ -58,6 +58,10 @@ void Character::save(std::ofstream& file) const {
         file << item.getType() << std::endl;
         file << item.getValue() << std::endl;
     }
+    // --- WALLET ---
+    file << "WALLET\n";
+    wallet.save(file);
+
     // --- SPELLBOOK ---
     file << "SPELLBOOK\n";
 
@@ -102,6 +106,8 @@ void Character::display() const {
     std::cout << "CHA: " << charisma << "(" <<((charisma/2)-5) << ")" << std::endl;
     std::cout << "INIT: " << Initiative << std::endl;
     std::cout << "PROF: " << proficiency << std::endl;
+    std::cout << "Currency: ";
+    wallet.display();
     std::cout << "=======================\n";
 }
 
@@ -222,6 +228,15 @@ void Character::setStats(int AS, int Ability)
     std::cin.clear();
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     }
+}
+
+//-----------------------------------------------------//
+// Wallet
+Wallet& Character::getWallet() { return wallet; }
+
+void Character::showCurrency() const {
+    std::cout << "\n=== Currency ===\n";
+    wallet.display();
 }
 
 //-----------------------------------------------------//

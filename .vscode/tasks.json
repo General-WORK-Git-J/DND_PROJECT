@@ -15,6 +15,7 @@
                 "${workspaceFolder}\\P_Spells.cpp",
                 "${workspaceFolder}\\P_SpellBook.cpp",
                 "${workspaceFolder}\\P_SpellSlots.cpp",
+                "${workspaceFolder}\\P_Wallet.cpp",
                 "-o",
                 "${workspaceFolder}\\DND_PROJECT.exe"
             ],
