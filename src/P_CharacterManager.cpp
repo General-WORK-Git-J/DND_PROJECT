@@ -144,7 +144,7 @@ void CharacterManager::editCharacter() {
         {
             int char_edit_choice;
             std::cout << "What would you like to change? " << std::endl;
-            for (int i = 0; i < size(EditCharDetailsArray); i++)
+            for (int i = 0; i < 8; i++)
             {
                 std::cout << i + 1 << "." << EditCharDetailsArray[i] << std::endl;
             }
@@ -236,7 +236,7 @@ void CharacterManager::editCharacter() {
         {
             int health_edit_choice;
             std::cout << "What would you like to change? " << std::endl;
-            for (int i = 0; i < size(EditHpArray); i++)
+            for (int i = 0; i < 4; i++)
             {
                 std::cout << i + 1 << "." << EditHpArray[i] << std::endl;
             }
@@ -585,7 +585,7 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             c.getSpellbook().loadSpellbook("data/temp_spell.txt");
         }
 
-        characters.push_back(c);
+        characters.push_back(std::move(c));
         
     }
 
