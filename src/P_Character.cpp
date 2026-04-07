@@ -1,4 +1,7 @@
 #include "H_Character.h"
+#include "H_Weapon.h"
+#include "H_Armor.h"
+#include "H_Gear.h"
 #include <iostream>
 
 // Constructor
@@ -50,14 +53,7 @@ void Character::save(std::ofstream& file) const {
          << charisma << " "
          << Initiative << " "
          << proficiency << std::endl;
-    file << inventory.size() << std::endl;
-    for (size_t i = 0; i < inventory.size(); i++) 
-    {
-        Item item = inventory.getItem(i + 1);
-        file << item.getName() << std::endl;
-        file << item.getType() << std::endl;
-        file << item.getValue() << std::endl;
-    }
+    inventory.save(file);
     // --- WALLET ---
     file << "WALLET\n";
     wallet.save(file);
@@ -66,10 +62,10 @@ void Character::save(std::ofstream& file) const {
     file << "SPELLBOOK\n";
 
     // Save spellbook to temp file
-    spellbook.saveSpellbook("temp_spell.txt");
+    spellbook.saveSpellbook("data/temp_spell.txt");
 
     // Copy into main file
-    std::ifstream temp("temp_spell.txt");
+    std::ifstream temp("data/temp_spell.txt");
     std::string line;
     while (std::getline(temp, line))
     {
@@ -169,9 +165,11 @@ void Character::setProficiency(int prof) {proficiency = prof;}
 
 
 // Inventory
-void Character::addItem(const Item& item) {
-    inventory.addItem(item);
+void Character::addItem(std::unique_ptr<Item> item) {
+    inventory.addItem(std::move(item));
 }
+
+Inventory& Character::getInventory() { return inventory; }
 
 void Character::removeItem(int index) {
     inventory.removeItem(index);
@@ -183,7 +181,7 @@ void Character::showInventory() const {
 
 void Character::clearInventory() {
     while (inventory.size() > 0) {
-        inventory.removeItem(0);
+        inventory.removeItem(1);
     }
 }
 

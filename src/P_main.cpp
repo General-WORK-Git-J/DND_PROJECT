@@ -17,7 +17,7 @@ int main() {
 
     int choice;
     Spellbook globalSpellbook;
-    globalSpellbook.loadSpellbook("SpellBook.txt");
+    globalSpellbook.loadSpellbook("data/SpellBook.txt");
     
     do {
         std::cout << "\n=== DnD Manager ===\n";
@@ -35,8 +35,8 @@ int main() {
             case 1: manager.createCharacter(); break;
             case 2: manager.viewCharacters(); break;
             case 3: manager.editCharacter(); break;
-            case 4: manager.saveToFile("characters.txt"); break;
-            case 5: manager.loadFromFile("characters.txt"); break;
+            case 4: manager.saveToFile("data/characters.txt"); break;
+            case 5: manager.loadFromFile("data/characters.txt"); break;
         }
 
     } while (choice != 0);

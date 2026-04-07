@@ -1,4 +1,7 @@
 #include "H_CharacterManager.h"
+#include "H_Weapon.h"
+#include "H_Armor.h"
+#include "H_Gear.h"
 #include <iostream>
 #include <fstream>
 
@@ -354,17 +357,17 @@ void CharacterManager::editCharacter() {
                     Spell s(name, type, effect, level, time, range, comp, duration, save, desc);
                     // Save to Spellbook
                     Spellbook global;
-                    global.loadSpellbook("SpellBook.txt");
+                    global.loadSpellbook("data/SpellBook.txt");
 
                     global.addSpell(s);
-                    global.saveSpellbook("SpellBook.txt");
+                    global.saveSpellbook("data/SpellBook.txt");
 
                     std::cout << "Spell added to global spellbook!\n";
                 }
                 else if (spellChoice == 3)
                 {
                     Spellbook global;
-                    global.loadSpellbook("SpellBook.txt");
+                    global.loadSpellbook("data/SpellBook.txt");
 
                     std::cout << "\n=== Global Spell List ===\n";
                     global.displayAllSpells();
@@ -554,21 +557,7 @@ void CharacterManager::loadFromFile(const std::string& filename) {
     
 
     // --- INVENTORY ---
-        int itemCount;
-        file >> itemCount;
-        file.ignore();
-
-        for (int j = 0; j < itemCount; j++) {
-            std::string itemName, itemType;
-            int itemValue;
-
-            std::getline(file, itemName);
-            std::getline(file, itemType);
-            file >> itemValue;
-            file.ignore();
-
-            c.addItem(Item(itemName, itemType, itemValue));
-        }
+        c.getInventory().load(file);
 
         // --- WALLET ---
         std::string walletMarker;
@@ -584,7 +573,7 @@ void CharacterManager::loadFromFile(const std::string& filename) {
 
         if (marker == "SPELLBOOK")
         {
-            std::ofstream temp("temp_spell.txt");
+            std::ofstream temp("data/temp_spell.txt");
 
             std::string line;
             while (std::getline(file, line) && line != "SPELLSLOTS")
@@ -593,7 +582,7 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             }
 
             temp.close();
-            c.getSpellbook().loadSpellbook("temp_spell.txt");
+            c.getSpellbook().loadSpellbook("data/temp_spell.txt");
         }
 
         characters.push_back(c);
@@ -621,17 +610,53 @@ void CharacterManager::manageInventory(Character& c) {
             c.showInventory();
         }
         else if (choice == 2) {
-            std::string name, type;
-            int value;
+            std::cout << "Item type:\n1. Weapon\n2. Armor\n3. Gear\nChoice: ";
+            int typeChoice;
+            std::cin >> typeChoice;
 
-            std::cout << "Item name: ";
-            std::cin >> name;
-            std::cout << "Type: ";
-            std::cin >> type;
-            std::cout << "Value: ";
-            std::cin >> value;
+            std::string iName, iDesc, iRarity;
+            float iWeight;
+            int iQty, iValue;
+            bool iAttune;
 
-            c.addItem(Item(name, type, value));
+            iName = getValidStringInput("name");
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Description: "; std::getline(std::cin, iDesc);
+            iRarity = getValidStringInput("rarity (Common/Uncommon/Rare/Very Rare/Legendary)");
+            std::cout << "Weight (lb): "; std::cin >> iWeight;
+            std::cout << "Quantity: ";    std::cin >> iQty;
+            std::cout << "Value (gp): "; std::cin >> iValue;
+            std::cout << "Requires attunement? (1=Yes 0=No): "; std::cin >> iAttune;
+
+            if (typeChoice == 1) {
+                std::string dmgDice, dmgType, wCat, wType, props, range;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Damage dice (e.g. 1d6): "; std::getline(std::cin, dmgDice);
+                std::cout << "Damage type (e.g. Slashing): "; std::getline(std::cin, dmgType);
+                std::cout << "Category (Simple/Martial): "; std::getline(std::cin, wCat);
+                std::cout << "Type (Melee/Ranged): "; std::getline(std::cin, wType);
+                std::cout << "Properties (e.g. Finesse, Light): "; std::getline(std::cin, props);
+                std::cout << "Range (e.g. 5 ft / 80/320 ft): "; std::getline(std::cin, range);
+                c.addItem(std::make_unique<Weapon>(iName, iDesc, iWeight, iQty, iValue, iRarity, iAttune,
+                                                   dmgDice, dmgType, wCat, wType, props, range));
+            }
+            else if (typeChoice == 2) {
+                std::string aType;
+                int baseAC, maxDex, strReq;
+                bool stealthDis;
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Armor type (Light/Medium/Heavy/Shield): "; std::getline(std::cin, aType);
+                std::cout << "Base AC: "; std::cin >> baseAC;
+                std::cout << "Max Dex bonus (-1 for no limit): "; std::cin >> maxDex;
+                std::cout << "Strength requirement (0 for none): "; std::cin >> strReq;
+                std::cout << "Stealth disadvantage? (1=Yes 0=No): "; std::cin >> stealthDis;
+                c.addItem(std::make_unique<Armor>(iName, iDesc, iWeight, iQty, iValue, iRarity, iAttune,
+                                                  aType, baseAC, maxDex, strReq, stealthDis));
+            }
+            else {
+                c.addItem(std::make_unique<Gear>(iName, iDesc, iWeight, iQty, iValue, iRarity, iAttune));
+            }
+            std::cout << "Item added.\n";
         }
         else if (choice == 3) {
             int index;

@@ -7,17 +7,21 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${workspaceFolder}\\P_main.cpp",
-                "${workspaceFolder}\\P_Character.cpp",
-                "${workspaceFolder}\\P_CharacterManager.cpp",
-                "${workspaceFolder}\\P_Inventory.cpp",
-                "${workspaceFolder}\\P_Item.cpp",
-                "${workspaceFolder}\\P_Spells.cpp",
-                "${workspaceFolder}\\P_SpellBook.cpp",
-                "${workspaceFolder}\\P_SpellSlots.cpp",
-                "${workspaceFolder}\\P_Wallet.cpp",
+                "-I${workspaceFolder}/include",
+                "${workspaceFolder}/src/P_main.cpp",
+                "${workspaceFolder}/src/P_Character.cpp",
+                "${workspaceFolder}/src/P_CharacterManager.cpp",
+                "${workspaceFolder}/src/P_Inventory.cpp",
+                "${workspaceFolder}/src/P_Item.cpp",
+                "${workspaceFolder}/src/P_Weapon.cpp",
+                "${workspaceFolder}/src/P_Armor.cpp",
+                "${workspaceFolder}/src/P_Gear.cpp",
+                "${workspaceFolder}/src/P_spells.cpp",
+                "${workspaceFolder}/src/P_SpellBook.cpp",
+                "${workspaceFolder}/src/P_SpellSlots.cpp",
+                "${workspaceFolder}/src/P_Wallet.cpp",
                 "-o",
-                "${workspaceFolder}\\DND_PROJECT.exe"
+                "${workspaceFolder}/DND_PROJECT.exe"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"

@@ -6,6 +6,7 @@
 #include <limits>
 #include <cmath>
 
+#include <memory>
 #include "H_Inventory.h"
 #include "H_SpellBook.h"
 #include "H_SpellSlots.h"
@@ -110,10 +111,11 @@ public:
     void setStats(int new_AS, int ability_to_change);
 
     // Inventory
-    void addItem(const Item& item);
+    void addItem(std::unique_ptr<Item> item);
     void removeItem(int index);
     void showInventory() const;
     void clearInventory();
+    Inventory& getInventory();
 
     // Spellbook
     Spellbook& getSpellbook();
