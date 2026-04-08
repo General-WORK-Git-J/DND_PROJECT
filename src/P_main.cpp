@@ -40,6 +40,6 @@ int main() {
         }
 
     } while (choice != 0);
-
+    SetConsoleTextAttribute(console_color, 7);
     return 0;
 }
