@@ -20,24 +20,25 @@ void CharacterManager::createCharacter() {
     background = getValidStringInput("background");
     alignment = getValidStringInput("alignment");
 
-    std::cout << "Enter level: ";
-    std::cin >> lvl;
+    bool level_set = false;
+    while (!level_set) {
+        lvl = getValidIntegerInput("level (1-20)");
+        if (lvl >= 1 && lvl <= 20) level_set = true;
+        else { Invalidinput(); std::cout << "Level must be between 1 and 20\n"; }
+    }
 
-    std::cout << "Enter age: ";
-    std::cin >> age;
+    age    = getValidIntegerInput("age");
+    weight = getValidIntegerInput("weight");
+    m_hp   = getValidIntegerInput("max health");
+    c_hp   = m_hp;
 
-    std::cout << "Enter weight: ";
-    std::cin >> weight;
+    std::cout << "Enter Temporary health (0 if none): ";
+    while (!(std::cin >> t_hp) || t_hp < 0) {
+        Invalidinput();
+        std::cout << "Enter a non-negative integer: ";
+    }
 
-    std::cout << "Enter Temporary health (if applicable, otherwise enter 0): ";
-    std::cin >> t_hp;
-
-    std::cout << "Enter Max Health: ";
-    std::cin >> m_hp;
-    c_hp = m_hp;
-
-    std::cout << "Enter hit dice: ";
-    std::cin >> h_dice;
+    h_dice = getValidHitDiceInput();
 
 
     
@@ -46,15 +47,14 @@ void CharacterManager::createCharacter() {
     {
         int new_score;
         std::cout << "Enter " << Ability_scores[i];
-        std::cin >> new_score;
-        if (new_score >= 1 && new_score <= 20)
+        if (std::cin >> new_score && new_score >= 1 && new_score <= 20)
         {
             new_AS[i] = new_score;
         }
         else
         {
-            std::cout << "Ability score must be between 1 and 20, please re-enter! " << std::endl;
             Invalidinput();
+            std::cout << "Ability score must be between 1 and 20, please re-enter!\n";
             i--;
         }
     }
@@ -473,20 +473,16 @@ std::string CharacterManager::getValidHitDiceInput()
 int CharacterManager::getValidIntegerInput(const std::string& value_to_get)
 {
     int new_input;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     while (true)
     {
-        std::cout << "Enter new " << value_to_get << std::endl;
-        std::cin >> new_input;
-        if (new_input > 0)
+        std::cout << "Enter new " << value_to_get << ": ";
+        if (std::cin >> new_input && new_input > 0)
         {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             return new_input;
         }
-        else
-        {
-            Invalidinput();
-            std::cout << value_to_get << " must be a positive integer greater than 0" << std::endl;
-        }
+        Invalidinput();
+        std::cout << value_to_get << " must be a positive integer greater than 0\n";
     }
 }
 
