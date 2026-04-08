@@ -37,6 +37,7 @@ void CharacterManager::createCharacter() {
         Invalidinput();
         std::cout << "Enter a non-negative integer: ";
     }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     h_dice = getValidHitDiceInput();
 
@@ -112,10 +113,15 @@ void CharacterManager::viewCharacters() const {
         return;
     }
 
-    for (size_t i = 0; i < characters.size(); i++) {
-        std::cout << "\nIndex: " << i + 1 << std::endl;
-        characters[i].display();
-    }
+    std::cout << "\n=== Characters ===\n";
+    for (size_t i = 0; i < characters.size(); i++)
+        std::cout << i + 1 << ". " << characters[i].getName() << "\n";
+    std::cout << "0. Back\nChoice: ";
+
+    int choice;
+    std::cin >> choice;
+    if (choice < 1 || choice > static_cast<int>(characters.size())) return;
+    characters[choice - 1].display();
 }
 
 void CharacterManager::editCharacter() {
@@ -150,6 +156,7 @@ void CharacterManager::editCharacter() {
             }
             std::cout << "Choice: ";
             std::cin >> char_edit_choice;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             switch (char_edit_choice)
             {
 
@@ -242,6 +249,7 @@ void CharacterManager::editCharacter() {
             }
             std::cout << "Choice: ";
             std::cin >> health_edit_choice;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             switch(health_edit_choice)
             {
@@ -410,7 +418,6 @@ void CharacterManager::editCharacter() {
 std::string CharacterManager::getValidStringInput(const std::string& value_to_get)
 {
     std::string new_input;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     while (true)
     {
         std::cout << "Enter new " << value_to_get << std::endl;
@@ -453,7 +460,6 @@ bool CharacterManager::isValidHitDice(const std::string& input)
 std::string CharacterManager::getValidHitDiceInput()
 {
     std::string new_input;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     while (true)
     {
         std::cout << "Enter new Hit Dice (e.g. d6, d8, d12): " << std::endl;
@@ -609,6 +615,7 @@ void CharacterManager::manageInventory(Character& c) {
             std::cout << "Item type:\n1. Weapon\n2. Armor\n3. Gear\nChoice: ";
             int typeChoice;
             std::cin >> typeChoice;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
             std::string iName, iDesc, iRarity;
             float iWeight;

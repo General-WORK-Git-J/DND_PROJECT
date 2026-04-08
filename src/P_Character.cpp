@@ -82,26 +82,33 @@ void Character::display() const {
 
 
 
+    auto mod = [](int score) -> std::string {
+        int m = (score / 2) - 5;
+        return (m >= 0 ? "+" : "") + std::to_string(m);
+    };
+
     std::cout << "\n=== Character Sheet ===\n";
-    std::cout << "Name: " << name << std::endl;
-    std::cout << "Race: " << race << std::endl;
-    std::cout << "Class: " << characterClass << std::endl;
-    std::cout << "Level: " << level << std::endl;
-    std::cout << "Age: " << age << std::endl;
-    std::cout << "Background: " << background << std::endl;
-    std::cout << "Alignment: " << alignment << std::endl;
-    std::cout << "Weight: " << weight << std::endl;
-    std::cout << "Current HP/Max HP: " << current_hp << "/" << max_hp << std::endl;
-    std::cout << "Temp HP: " << temp_hp << std::endl;
-    std::cout << "Hit dice: " << level << hit_dice << std::endl;
-    std::cout << "STR: " << strength << "(" << ((strength/2)-5)  << ")" << std::endl;
-    std::cout << "DEX: " << dexterity << "(" << ((dexterity/2)-5) << ")" << std::endl;
-    std::cout << "CON: " << constitution << "(" << ((constitution/2)-5)<< ")" << std::endl;
-    std::cout << "INT: " << intelligence << "(" << ((intelligence/2)-5) << ")" << std::endl;
-    std::cout << "WIS: " << wisdom << "(" << ((wisdom/2)-5) << ")" << std::endl;
-    std::cout << "CHA: " << charisma << "(" <<((charisma/2)-5) << ")" << std::endl;
-    std::cout << "INIT: " << Initiative << std::endl;
-    std::cout << "PROF: " << proficiency << std::endl;
+    std::cout << "Name: "       << name           << "\n";
+    std::cout << "Race: "       << race           << "\n";
+    std::cout << "Class: "      << characterClass << "\n";
+    std::cout << "Level: "      << level          << "\n";
+    std::cout << "Age: "        << age            << "\n";
+    std::cout << "Background: " << background     << "\n";
+    std::cout << "Alignment: "  << alignment      << "\n";
+    std::cout << "Weight: "     << weight         << " lbs\n";
+    std::cout << "HP: "         << current_hp << "/" << max_hp;
+    if (temp_hp > 0) std::cout << "  (+" << temp_hp << " temp)";
+    std::cout << "\n";
+    std::cout << "Hit Dice: "   << level << hit_dice << "\n";
+    std::cout << "STR: " << strength     << " (" << mod(strength)     << ")\n";
+    std::cout << "DEX: " << dexterity    << " (" << mod(dexterity)    << ")\n";
+    std::cout << "CON: " << constitution << " (" << mod(constitution) << ")\n";
+    std::cout << "INT: " << intelligence << " (" << mod(intelligence) << ")\n";
+    std::cout << "WIS: " << wisdom       << " (" << mod(wisdom)       << ")\n";
+    std::cout << "CHA: " << charisma     << " (" << mod(charisma)     << ")\n";
+    std::cout << "Initiative: +" << Initiative << "\n";
+    std::cout << "Proficiency: +" << proficiency << "\n";
+    std::cout << "Items: " << inventory.size() << " carried\n";
     std::cout << "Currency: ";
     wallet.display();
     std::cout << "=======================\n";
@@ -133,10 +140,7 @@ int Character::getProficiency() const {return proficiency;}
 
 int Character::getAbilityModifier(int& ability_score)
 {
-    int Ab_mod;
-    int Ab_check = ability_score;
-    Ab_mod = (Ab_check - 10)/2; 
-    return Ab_mod;
+    return (ability_score / 2) - 5;
 }
 
 // Setters

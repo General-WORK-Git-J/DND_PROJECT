@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <limits>
 #include <windows.h>
 #include "H_CharacterManager.h"
 #include "H_SpellBook.h"
@@ -30,6 +31,7 @@ int main() {
         std::cout << "Choice: ";
         
         std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
             case 1: manager.createCharacter(); break;
