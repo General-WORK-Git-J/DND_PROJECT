@@ -27,6 +27,22 @@ void Spellbook::displayAllSpells() const
     }
 }
 
+void Spellbook::displaySpellsWithIndex() const
+{
+    if (knownSpells.empty())
+    {
+        std::cout << "No spells available.\n";
+        return;
+    }
+
+    for (size_t i = 0; i < knownSpells.size(); i++)
+    {
+        std::cout << i + 1 << ". " 
+                  << knownSpells[i].getSpellName() 
+                  << " (Level " << knownSpells[i].getSpellLevel() << ")\n";
+    }
+}
+
 std::vector<Spell> Spellbook::getSpellsByLevel(int level) const
 {
     std::vector<Spell> result;

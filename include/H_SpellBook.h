@@ -13,6 +13,7 @@ public:
     void addSpell(const Spell& spell);
     void removeSpell(std::string name);
     void displayAllSpells() const;
+    void displaySpellsWithIndex() const;
     void saveSpellbook(const std::string& filename) const;
     void loadSpellbook(const std::string& filename);
 
