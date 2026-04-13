@@ -16,6 +16,9 @@ add_executable(dnd_tests
     test_character.cpp
     test_spellslots.cpp
     test_inventory.cpp
+    test_items.cpp
+    test_spell.cpp
+    test_persistence.cpp
 )
 
 target_link_libraries(dnd_tests
