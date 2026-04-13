@@ -56,7 +56,7 @@ TEST(InventoryTest, AddMultipleItemsAccumulates) {
 TEST(InventoryTest, AddedItemNameIsPreserved) {
     Inventory inv;
     inv.addItem(makeSword());
-    EXPECT_EQ(inv.getItem(0).getName(), "Longsword");
+    EXPECT_EQ(inv.getItem(1).getName(), "Longsword");
 }
 
 // ── getItem ───────────────────────────────────────────────────────────────────
@@ -65,8 +65,8 @@ TEST(InventoryTest, GetItemReturnsCorrectItemByIndex) {
     Inventory inv;
     inv.addItem(makeSword());
     inv.addItem(makeLeatherArmor());
-    EXPECT_EQ(inv.getItem(0).getName(), "Longsword");
-    EXPECT_EQ(inv.getItem(1).getName(), "Leather Armor");
+    EXPECT_EQ(inv.getItem(1).getName(), "Longsword");
+    EXPECT_EQ(inv.getItem(2).getName(), "Leather Armor");
 }
 
 // ── removeItem ────────────────────────────────────────────────────────────────
@@ -75,7 +75,7 @@ TEST(InventoryTest, RemoveItemDecreasesSize) {
     Inventory inv;
     inv.addItem(makeSword());
     inv.addItem(makeRope());
-    inv.removeItem(0);
+    inv.removeItem(1);
     EXPECT_EQ(inv.size(), 1);
 }
 
@@ -83,14 +83,14 @@ TEST(InventoryTest, RemoveFirstItemShiftsRemaining) {
     Inventory inv;
     inv.addItem(makeSword());
     inv.addItem(makeRope());
-    inv.removeItem(0); // remove Longsword
-    EXPECT_EQ(inv.getItem(0).getName(), "Rope");
+    inv.removeItem(1); // remove Longsword
+    EXPECT_EQ(inv.getItem(1).getName(), "Rope");
 }
 
 TEST(InventoryTest, RemoveLastItemLeavesInventoryEmpty) {
     Inventory inv;
     inv.addItem(makeSword());
-    inv.removeItem(0);
+    inv.removeItem(1);
     EXPECT_EQ(inv.size(), 0);
 }
 
@@ -99,17 +99,17 @@ TEST(InventoryTest, RemoveLastItemLeavesInventoryEmpty) {
 TEST(InventoryTest, WeaponHasCorrectItemTag) {
     Inventory inv;
     inv.addItem(makeSword());
-    EXPECT_EQ(inv.getItem(0).getItemTag(), "WEAPON");
+    EXPECT_EQ(inv.getItem(1).getItemTag(), "WEAPON");
 }
 
 TEST(InventoryTest, ArmorHasCorrectItemTag) {
     Inventory inv;
     inv.addItem(makeLeatherArmor());
-    EXPECT_EQ(inv.getItem(0).getItemTag(), "ARMOR");
+    EXPECT_EQ(inv.getItem(1).getItemTag(), "ARMOR");
 }
 
 TEST(InventoryTest, GearHasCorrectItemTag) {
     Inventory inv;
     inv.addItem(makeRope());
-    EXPECT_EQ(inv.getItem(0).getItemTag(), "GEAR");
+    EXPECT_EQ(inv.getItem(1).getItemTag(), "GEAR");
 }
