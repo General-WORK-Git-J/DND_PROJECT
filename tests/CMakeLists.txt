@@ -19,6 +19,7 @@ add_executable(dnd_tests
     test_items.cpp
     test_spell.cpp
     test_persistence.cpp
+    test_colours.cpp
 )
 
 target_link_libraries(dnd_tests

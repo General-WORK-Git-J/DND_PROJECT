@@ -20,6 +20,7 @@
                 "${workspaceFolder}/src/P_SpellBook.cpp",
                 "${workspaceFolder}/src/P_SpellSlots.cpp",
                 "${workspaceFolder}/src/P_Wallet.cpp",
+                "${workspaceFolder}/src/P_Colours.cpp",
                 "-o",
                 "${workspaceFolder}/DND_PROJECT.exe"
             ],

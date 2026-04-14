@@ -23,6 +23,7 @@ set(LIB_SOURCES
     src/P_SpellBook.cpp
     src/P_SpellSlots.cpp
     src/P_Wallet.cpp
+    src/P_Colours.cpp
 )
 
 # Static library that both the game exe and the test exe link against

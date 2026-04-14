@@ -9,11 +9,12 @@
 
 int main() {
     CharacterManager manager;
+    Colour_manager col_manager;
 
     // Get console handle and set text colour. Colour codes are in H_Colours.h (e.g. red = 4)
-    HANDLE console_color;
-    console_color = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(console_color, 4);
+    //HANDLE console_color;
+    //console_color = GetStdHandle(STD_OUTPUT_HANDLE);
+    //SetConsoleTextAttribute(console_color, 4);
 
 
     int choice;
@@ -27,6 +28,7 @@ int main() {
         std::cout << "3. Edit\n";
         std::cout << "4. Save\n";
         std::cout << "5. Load\n";
+        std::cout << "6. Colour\n";
         std::cout << "0. Exit\n";
         std::cout << "Choice: ";
         
@@ -39,9 +41,10 @@ int main() {
             case 3: manager.editCharacter(); break;
             case 4: manager.saveToFile("data/characters.txt"); break;
             case 5: manager.loadFromFile("data/characters.txt"); break;
+            case 6: col_manager.ChangeColour(); break;
         }
 
     } while (choice != 0);
-    SetConsoleTextAttribute(console_color, 7);
+    SetConsoleTextAttribute(col_manager.getHandle(), 7);
     return 0;
 }
