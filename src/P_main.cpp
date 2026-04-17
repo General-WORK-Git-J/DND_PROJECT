@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
-#include <windows.h>
 #include "H_CharacterManager.h"
 #include "H_SpellBook.h"
 #include "H_Colours.h"
@@ -45,6 +44,6 @@ int main() {
         }
 
     } while (choice != 0);
-    SetConsoleTextAttribute(col_manager.getHandle(), 7);
+    col_manager.setColour(WHITE);
     return 0;
 }

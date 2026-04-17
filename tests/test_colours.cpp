@@ -3,7 +3,7 @@
 
 // ── Macro definitions ─────────────────────────────────────────────────────────
 
-TEST(ColoursTest, MacroValuesMatchWindowsConsoleColourCodes)
+TEST(ColoursTest, MacroValuesMatchColourCodes)
 {
     EXPECT_EQ(BLACK,         0);
     EXPECT_EQ(BLUE,          1);
@@ -23,14 +23,11 @@ TEST(ColoursTest, MacroValuesMatchWindowsConsoleColourCodes)
     EXPECT_EQ(BRIGHT_WHITE,  15);
 }
 
-// ── Handle validity ───────────────────────────────────────────────────────────
+// ── Construction ──────────────────────────────────────────────────────────────
 
-TEST(ColourManagerTest, GetHandleReturnsValidHandle)
+TEST(ColourManagerTest, ConstructsWithoutCrashing)
 {
-    Colour_manager cm;
-    HANDLE h = cm.getHandle();
-    EXPECT_NE(h, INVALID_HANDLE_VALUE);
-    EXPECT_NE(h, static_cast<HANDLE>(nullptr));
+    EXPECT_NO_FATAL_FAILURE(Colour_manager cm);
 }
 
 // ── setColour: valid codes ─────────────────────────────────────────────────────
@@ -45,19 +42,4 @@ TEST(ColourManagerTest, SetColourAllValidCodesDoNotCrash)
     }
     // Restore default white so subsequent test output is readable
     cm.setColour(WHITE);
-}
-
-TEST(ColourManagerTest, SetColourWhiteRestoresDefault)
-{
-    Colour_manager cm;
-    cm.setColour(RED);
-    cm.setColour(WHITE);
-    // SetConsoleTextAttribute succeeds when the handle is valid;
-    // verifying via GetConsoleScreenBufferInfo
-    CONSOLE_SCREEN_BUFFER_INFO info{};
-    BOOL ok = GetConsoleScreenBufferInfo(cm.getHandle(), &info);
-    if (ok)
-    {
-        EXPECT_EQ(info.wAttributes & 0x0F, WHITE);
-    }
 }

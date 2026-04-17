@@ -1,7 +1,7 @@
 #ifndef _SPELLBOOK_
 #define _SPELLBOOK_
 
-#include "H_Spells.h"
+#include "H_spells.h"
 #include <vector>
 
 class Spellbook

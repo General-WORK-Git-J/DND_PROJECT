@@ -1,8 +1,4 @@
 #pragma once
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-#include <windows.h>
 #include <iostream>
 
 #define  BLACK                  0
@@ -15,7 +11,7 @@
 #define  WHITE                  7
 #define  GRAY                   8
 #define  LIGHT_BLUE             9
-#define  LIGHT_GREEN            10    
+#define  LIGHT_GREEN            10
 #define  LIGHT_AQUA             11
 #define  LIGHT_RED              12
 #define  LIGHT_PURPLE           13
@@ -25,27 +21,17 @@
 
 class Colour_manager
 {
-    private:
-
-    HANDLE console_colour = GetStdHandle(STD_OUTPUT_HANDLE);
-    
-
-
-    public:
+public:
+    // On Windows, enables ANSI virtual terminal processing so escape codes work.
+    // No-op on Linux/macOS where ANSI support is built into the terminal.
+    Colour_manager();
 
     // Setters
-
     void setColour(int colour_code);
 
-    // Getters
-    HANDLE getHandle();
-    //Display
+    // Display
     void DisplayColourcodes();
 
-    //Utilities
-
+    // Utilities
     void ChangeColour();
-
-    
-
 };

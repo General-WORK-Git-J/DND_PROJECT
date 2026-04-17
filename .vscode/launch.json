@@ -1,17 +1,22 @@
 {
     "configurations": [
         {
-            "name": "C/C++: g++.exe build and debug active file",
+            "name": "C/C++: g++ build and debug active file",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\DND_PROJECT.exe",
+            "program": "${workspaceFolder}/DND_PROJECT",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": true,
             "MIMode": "gdb",
-            "miDebuggerPath": "c:\\Program Files\\CodeBlocks\\MinGW\\bin\\gdb.exe",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "windows": {
+                "program": "${workspaceFolder}\\DND_PROJECT.exe",
+                "miDebuggerPath": "c:\\Program Files\\CodeBlocks\\MinGW\\bin\\gdb.exe",
+                "externalConsole": true
+            },
             "setupCommands": [
                 {
                     "description": "Enable pretty-printing for gdb",
@@ -24,7 +29,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "C/C++: g++.exe build active file"
+            "preLaunchTask": "C/C++: g++ build active file"
         }
     ],
     "version": "2.0.0"

@@ -6,7 +6,7 @@
 #include "H_Weapon.h"
 #include "H_Armor.h"
 #include "H_Gear.h"
-#include "H_Spells.h"
+#include "H_spells.h"
 #include "H_SpellBook.h"
 
 // RAII wrapper: removes a temp file on destruction, even if the test throws

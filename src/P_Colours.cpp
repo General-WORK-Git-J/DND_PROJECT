@@ -1,37 +1,80 @@
 #include "H_Colours.h"
 #include <limits>
 
-HANDLE Colour_manager::getHandle()
+// On Windows, opt the console into ANSI/VT100 escape-code processing.
+// This is a no-op on Linux/macOS where terminals support ANSI natively.
+#ifdef _WIN32
+#  ifndef NOMINMAX
+#    define NOMINMAX
+#  endif
+#  include <windows.h>
+static void enableAnsiOnWindows()
 {
-    return console_colour;
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE) return;
+    DWORD dwMode = 0;
+    if (!GetConsoleMode(hOut, &dwMode)) return;
+    SetConsoleMode(hOut, dwMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+}
+#endif
+
+// Maps the 0-15 colour codes (inherited from Windows console convention) to
+// their ANSI SGR equivalents so the same codes work on both platforms.
+static const char* ansiCode(int colour_code)
+{
+    switch (colour_code)
+    {
+        case BLACK:        return "\033[30m";
+        case BLUE:         return "\033[34m";
+        case GREEN:        return "\033[32m";
+        case AQUA:         return "\033[36m";
+        case RED:          return "\033[31m";
+        case PURPLE:       return "\033[35m";
+        case YELLOW:       return "\033[33m";
+        case WHITE:        return "\033[37m";
+        case GRAY:         return "\033[90m";
+        case LIGHT_BLUE:   return "\033[94m";
+        case LIGHT_GREEN:  return "\033[92m";
+        case LIGHT_AQUA:   return "\033[96m";
+        case LIGHT_RED:    return "\033[91m";
+        case LIGHT_PURPLE: return "\033[95m";
+        case LIGHT_YELLOW: return "\033[93m";
+        case BRIGHT_WHITE: return "\033[97m";
+        default:           return "\033[0m";
+    }
 }
 
-
-void Colour_manager::DisplayColourcodes()
+Colour_manager::Colour_manager()
 {
-    std::cout << "===Colours==="    << std::endl;
-    std::cout << "Black: 0"         << std::endl;
-    std::cout << "Blue: 1"          << std::endl;
-    std::cout << "Green: 2"         << std::endl;
-    std::cout << "Aqua: 3"          << std::endl;
-    std::cout << "Red: 4"           << std::endl;
-    std::cout << "Purple: 5"        << std::endl;
-    std::cout << "Yellow: 6"        << std::endl;
-    std::cout << "White: 7"         << std::endl;
-    std::cout << "Grey: 8"          << std::endl;
-    std::cout << "Light Blue: 9"    << std::endl;
-    std::cout << "Light Green: 10"  << std::endl;
-    std::cout << "Light Aqua: 11"   << std::endl;
-    std::cout << "Light Red: 12"    << std::endl;
-    std::cout << "Light Purple: 13" << std::endl;
-    std::cout << "Light Yellow: 14" << std::endl;
-    std::cout << "Bright White: 15" << std::endl;
-
+#ifdef _WIN32
+    enableAnsiOnWindows();
+#endif
 }
 
 void Colour_manager::setColour(int colour_code)
 {
-    SetConsoleTextAttribute(console_colour, colour_code);
+    std::cout << ansiCode(colour_code) << std::flush;
+}
+
+void Colour_manager::DisplayColourcodes()
+{
+    std::cout << "===Colours===" << std::endl;
+    std::cout << ansiCode(BLACK)        << "0:  Black"        << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(BLUE)         << "1:  Blue"         << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(GREEN)        << "2:  Green"        << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(AQUA)         << "3:  Aqua"         << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(RED)          << "4:  Red"          << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(PURPLE)       << "5:  Purple"       << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(YELLOW)       << "6:  Yellow"       << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(WHITE)        << "7:  White"        << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(GRAY)         << "8:  Gray"         << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(LIGHT_BLUE)   << "9:  Light Blue"   << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(LIGHT_GREEN)  << "10: Light Green"  << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(LIGHT_AQUA)   << "11: Light Aqua"   << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(LIGHT_RED)    << "12: Light Red"    << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(LIGHT_PURPLE) << "13: Light Purple" << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(LIGHT_YELLOW) << "14: Light Yellow" << ansiCode(WHITE) << std::endl;
+    std::cout << ansiCode(BRIGHT_WHITE) << "15: Bright White" << ansiCode(WHITE) << std::endl;
 }
 
 void Colour_manager::ChangeColour()

@@ -28,8 +28,10 @@ target_link_libraries(dnd_tests
     GTest::gtest_main
 )
 
-# Statically link MinGW runtime so the exe runs without DLLs on the PATH
-target_link_options(dnd_tests PRIVATE -static)
+# Statically link MinGW runtime on Windows so the exe runs without DLLs on the PATH
+if(WIN32)
+    target_link_options(dnd_tests PRIVATE -static)
+endif()
 
 # PRE_TEST defers discovery until test-run time — more reliable on MinGW/Windows
 # (avoids running the binary during cmake configure, which can fail due to missing DLLs)

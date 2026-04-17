@@ -1,4 +1,4 @@
-#include "H_Spells.h"
+#include "H_spells.h"
 
 //-----------------------------------------------------//
 // Constructors

@@ -1,9 +1,11 @@
 cmake_minimum_required(VERSION 3.18)
 
-# Point CMake at the MinGW compiler from CodeBlocks.
+# Point CMake at the MinGW compiler on Windows.
 # Must be set BEFORE the project() call.
-set(CMAKE_CXX_COMPILER "C:/Program Files/CodeBlocks/MinGW/bin/g++.exe")
-set(CMAKE_C_COMPILER   "C:/Program Files/CodeBlocks/MinGW/bin/gcc.exe")
+if(WIN32)
+    set(CMAKE_CXX_COMPILER "C:/Program Files/CodeBlocks/MinGW/bin/g++.exe")
+    set(CMAKE_C_COMPILER   "C:/Program Files/CodeBlocks/MinGW/bin/gcc.exe")
+endif()
 
 project(DND_PROJECT CXX)
 
