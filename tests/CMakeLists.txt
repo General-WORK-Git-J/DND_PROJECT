@@ -30,7 +30,43 @@ target_link_libraries(dnd_tests
 
 # Statically link MinGW runtime on Windows so the exe runs without DLLs on the PATH
 if(WIN32)
-    target_link_options(dnd_tests PRIVATE -static)
+    if(ENABLE_COVERAGE)
+        # -static must come first; -lgcov explicitly provides the coverage runtime
+        target_link_options(dnd_tests PRIVATE -static -fprofile-arcs -lgcov)
+    else()
+        target_link_options(dnd_tests PRIVATE -static)
+    endif()
+endif()
+
+if(ENABLE_COVERAGE)
+    target_compile_options(dnd_tests PRIVATE -fprofile-arcs -ftest-coverage)
+
+    if(WIN32)
+        set(GCOV_EXECUTABLE "C:/Program Files/CodeBlocks/MinGW/bin/gcov.exe")
+    else()
+        set(GCOV_EXECUTABLE "gcov")
+    endif()
+
+    find_program(GCOVR_EXECUTABLE gcovr)
+
+    if(GCOVR_EXECUTABLE)
+        add_custom_target(coverage
+            DEPENDS dnd_tests
+            COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage
+            COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${CMAKE_BINARY_DIR} --output-on-failure
+            COMMAND ${GCOVR_EXECUTABLE}
+                --gcov-executable "${GCOV_EXECUTABLE}"
+                --root ${CMAKE_SOURCE_DIR}
+                --exclude "${CMAKE_SOURCE_DIR}/tests/"
+                --exclude "${CMAKE_BINARY_DIR}/_deps/"
+                --html-details ${CMAKE_BINARY_DIR}/coverage/index.html
+                --txt
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            COMMENT "Running tests and generating coverage report -> ${CMAKE_BINARY_DIR}/coverage/index.html"
+        )
+    else()
+        message(WARNING "gcovr not found — install it with: pip install gcovr")
+    endif()
 endif()
 
 # PRE_TEST defers discovery until test-run time — more reliable on MinGW/Windows

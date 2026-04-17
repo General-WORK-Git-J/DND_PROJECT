@@ -6,11 +6,14 @@ if(WIN32)
     set(CMAKE_CXX_COMPILER "C:/Program Files/CodeBlocks/MinGW/bin/g++.exe")
     set(CMAKE_C_COMPILER   "C:/Program Files/CodeBlocks/MinGW/bin/gcc.exe")
 endif()
+# On Linux CMake finds GCC automatically — no paths needed
 
 project(DND_PROJECT CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+option(ENABLE_COVERAGE "Build with gcov coverage instrumentation" OFF)
 
 # All game logic sources — excludes main so tests can link to the same library
 set(LIB_SOURCES
@@ -31,6 +34,10 @@ set(LIB_SOURCES
 # Static library that both the game exe and the test exe link against
 add_library(dnd_lib STATIC ${LIB_SOURCES})
 target_include_directories(dnd_lib PUBLIC include)
+
+if(ENABLE_COVERAGE)
+    target_compile_options(dnd_lib PRIVATE -fprofile-arcs -ftest-coverage)
+endif()
 
 # Main game executable
 add_executable(DND_PROJECT src/P_main.cpp)
