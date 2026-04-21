@@ -4,6 +4,28 @@
 #include "H_Gear.h"
 #include <iostream>
 #include <fstream>
+#include <cctype>
+#include <sstream>
+
+// Anonymous namespace keeps these helpers private to this .cpp file.
+namespace {
+// Returns a lowercase copy so string comparisons can ignore letter casing.
+std::string toLowerCopy(const std::string& value)
+{
+    std::string result = value;
+    for (char& c : result)
+    {
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+    return result;
+}
+
+// Warlocks are the only class here whose spell slots reset on a short rest.
+bool isWarlockClass(const Character& character)
+{
+    return toLowerCopy(character.getClass()) == "warlock";
+}
+}
 
 void CharacterManager::createCharacter() {
     std::string name, race, characterClass, background, alignment;
@@ -336,9 +358,14 @@ void CharacterManager::editCharacter() {
 
             do {
                 std::cout << "\n=== Spells ===\n";
-                std::cout << "1. View All Spells\n";
+                std::cout << "1. View Global Spells\n";
                 std::cout << "2. Create New Spell\n";
                 std::cout << "3. Add Existing Spell to Character\n";
+                std::cout << "4. View Character Spellbook\n";
+                std::cout << "5. Cast Spell\n";
+                std::cout << "6. Edit Spell Slots\n";
+                std::cout << "7. Long Rest\n";
+                std::cout << "8. Short Rest\n";
                 std::cout << "0. Back\n";
                 std::cin >> spellChoice;
 
@@ -467,6 +494,161 @@ void CharacterManager::editCharacter() {
                     else
                     {
                         std::cout << "Invalid selection.\n";
+                    }
+                }
+                else if (spellChoice == 4)
+                {
+                    c.showSpells();
+                }
+                else if (spellChoice == 5)
+                {
+                    // Casting uses the character's own known spells, not the global spell list.
+                    auto knownSpells = c.getSpellbook().getAllSpells();
+
+                    if (knownSpells.empty())
+                    {
+                        std::cout << "Character has no spells in their spellbook.\n";
+                        continue;
+                    }
+
+                    c.getSpellbook().displaySpellsWithIndex();
+                    std::cout << "Select spell number: ";
+
+                    int selectedSpell = 0;
+                    std::cin >> selectedSpell;
+
+                    if (std::cin.fail() || selectedSpell < 1 || selectedSpell > static_cast<int>(knownSpells.size()))
+                    {
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        std::cout << "Invalid spell selection.\n";
+                        continue;
+                    }
+
+                    const Spell& spellToCast = knownSpells[selectedSpell - 1];
+                    const int spellLevel = spellToCast.getSpellLevel();
+
+                    if (spellLevel == 0)
+                    {
+                        std::cout << spellToCast.getSpellName() << " is a cantrip and does not use a spell slot.\n";
+                        continue;
+                    }
+
+                    // Allow upcasting, but never casting below the spell's base level.
+                    std::cout << "Cast " << spellToCast.getSpellName()
+                              << " using what slot level? (" << spellLevel << "-9): ";
+
+                    int slotLevel = 0;
+                    std::cin >> slotLevel;
+
+                    if (std::cin.fail() || slotLevel < spellLevel || slotLevel > 9)
+                    {
+                        std::cin.clear();
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        std::cout << "Invalid slot level.\n";
+                        continue;
+                    }
+
+                    if (c.getSpellSlots().useSlot(slotLevel))
+                    {
+                        std::cout << spellToCast.getSpellName() << " cast using a level "
+                                  << slotLevel << " slot.\n";
+                        std::cout << "Remaining level " << slotLevel << " slots: "
+                                  << c.getSpellSlots().getCurrentSlots(slotLevel) << "/"
+                                  << c.getSpellSlots().getMaxSlots(slotLevel) << "\n";
+                    }
+                    else
+                    {
+                        std::cout << "No level " << slotLevel << " spell slots remaining.\n";
+                    }
+                }
+                else if (spellChoice == 6)
+                {
+                    int slotEditChoice = -1;
+
+                    do
+                    {
+                        std::cout << "\n=== Edit Spell Slots ===\n";
+                        c.getSpellSlots().displaySlots();
+                        std::cout << "1. Set max slots for a level\n";
+                        std::cout << "2. Set current slots for a level\n";
+                        std::cout << "0. Back\n";
+                        std::cout << "Choice: ";
+                        std::cin >> slotEditChoice;
+
+                        if (slotEditChoice == 1 || slotEditChoice == 2)
+                        {
+                            int slotLevel = 0;
+                            std::cout << "Spell level (1-9): ";
+                            std::cin >> slotLevel;
+
+                            if (std::cin.fail() || slotLevel < 1 || slotLevel > 9)
+                            {
+                                std::cin.clear();
+                                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                std::cout << "Invalid spell level.\n";
+                                continue;
+                            }
+
+                            if (slotEditChoice == 1)
+                            {
+                                int maxSlots = 0;
+                                std::cout << "New max slots: ";
+                                std::cin >> maxSlots;
+
+                                if (std::cin.fail() || maxSlots < 0)
+                                {
+                                    std::cin.clear();
+                                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                    std::cout << "Invalid slot count.\n";
+                                    continue;
+                                }
+
+                                c.getSpellSlots().setSlots(slotLevel, maxSlots);
+                                // Explicitly keep zero-max levels at zero current slots.
+                                if (maxSlots == 0)
+                                {
+                                    c.getSpellSlots().setCurrentSlots(slotLevel, 0);
+                                }
+                                std::cout << "Max slots updated for level " << slotLevel << ".\n";
+                            }
+                            else
+                            {
+                                int currentSlots = 0;
+                                std::cout << "New current slots: ";
+                                std::cin >> currentSlots;
+
+                                if (std::cin.fail() || currentSlots < 0)
+                                {
+                                    std::cin.clear();
+                                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                                    std::cout << "Invalid slot count.\n";
+                                    continue;
+                                }
+
+                                c.getSpellSlots().setCurrentSlots(slotLevel, currentSlots);
+                                std::cout << "Current slots updated for level " << slotLevel << ".\n";
+                            }
+                        }
+                    } while (slotEditChoice != 0);
+                }
+                else if (spellChoice == 7)
+                {
+                    c.getSpellSlots().resetSlots();
+                    std::cout << "Long rest complete. Spell slots restored to full.\n";
+                }
+                else if (spellChoice == 8)
+                {
+                    // For this simplified system, only Warlocks recover slots on a short rest.
+                    if (isWarlockClass(c))
+                    {
+                        c.getSpellSlots().resetSlots();
+                        std::cout << "Short rest complete. Warlock spell slots restored to full.\n";
+                    }
+                    else
+                    {
+                        std::cout << "Short rest complete. Spell slots unchanged for "
+                                  << c.getClass() << ".\n";
                     }
                 }
             } while (spellChoice != 0);
@@ -651,6 +833,37 @@ void CharacterManager::loadFromFile(const std::string& filename) {
 
             temp.close();
             c.getSpellbook().loadSpellbook("data/temp_spell.txt");
+        }
+
+        std::string spellSlotMarker;
+        std::getline(file, spellSlotMarker);
+        if (spellSlotMarker == "SPELLSLOTS")
+        {
+            std::streampos spellSlotDataPos = file.tellg();
+            std::string slotCountLine;
+
+            if (std::getline(file, slotCountLine))
+            {
+                std::istringstream countParser(slotCountLine);
+                int slotCount = 0;
+
+                if (countParser >> slotCount)
+                {
+                    // Newer saves include a slot-count header and full slot data.
+                    file.seekg(spellSlotDataPos);
+                    c.getSpellSlots().load(file);
+                }
+                else
+                {
+                    // Older saves only had the marker, so leave slots empty and keep parsing.
+                    file.clear();
+                    file.seekg(spellSlotDataPos);
+                }
+            }
+            else
+            {
+                file.clear();
+            }
         }
 
         characters.push_back(std::move(c));

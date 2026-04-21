@@ -73,8 +73,9 @@ void Character::save(std::ofstream& file) const {
     }
     temp.close();
 
-    // --- SPELLSLOTS (placeholder for now) ---
+    // Spell slots are stored after the spellbook marker block for each character.
     file << "SPELLSLOTS\n";
+    spellSlots.save(file);
 }
 
 // Display
