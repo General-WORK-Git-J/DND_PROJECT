@@ -36,6 +36,7 @@ public:
 
     // Inventory
     void manageInventory(Character& c);
+    void manageFeatures(Character& c);
 
 
 };

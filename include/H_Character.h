@@ -11,6 +11,7 @@
 #include "H_SpellBook.h"
 #include "H_SpellSlots.h"
 #include "H_Wallet.h"
+#include "H_CharacterFeatures.h"
 
 class Character {
 private:
@@ -49,6 +50,7 @@ private:
     Spellbook spellbook;
     SpellSlots spellSlots;
     Wallet wallet;
+    CharacterFeatures features;
 
 public:
     Character(std::string n, std::string r, std::string c, std::string b, std::string a,
@@ -125,6 +127,11 @@ public:
     // Wallet
     Wallet& getWallet();
     void showCurrency() const;
+
+    // Features and skills
+    CharacterFeatures& getFeatures();
+    const CharacterFeatures& getFeatures() const;
+    void showFeatures() const;
 
     // File functions
     void save(std::ofstream& file) const;

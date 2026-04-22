@@ -76,6 +76,10 @@ void Character::save(std::ofstream& file) const {
     // Spell slots are stored after the spellbook marker block for each character.
     file << "SPELLSLOTS\n";
     spellSlots.save(file);
+
+    // Features stores feats, racial traits, and the character's skill ranks.
+    file << "FEATURES\n";
+    features.save(file);
 }
 
 // Display
@@ -109,6 +113,8 @@ void Character::display() const {
     std::cout << "CHA: " << charisma     << " (" << mod(charisma)     << ")\n";
     std::cout << "Initiative: +" << Initiative << "\n";
     std::cout << "Proficiency: +" << proficiency << "\n";
+    std::cout << "Feats: " << features.getFeats().size() << "\n";
+    std::cout << "Racial Traits: " << features.getRacialTraits().size() << "\n";
     std::cout << "Items: " << inventory.size() << " carried\n";
     std::cout << "Currency: ";
     wallet.display();
@@ -240,6 +246,31 @@ Wallet& Character::getWallet() { return wallet; }
 void Character::showCurrency() const {
     std::cout << "\n=== Currency ===\n";
     wallet.display();
+}
+
+CharacterFeatures& Character::getFeatures()
+{
+    return features;
+}
+
+const CharacterFeatures& Character::getFeatures() const
+{
+    return features;
+}
+
+void Character::showFeatures() const
+{
+    // Present all tracked feature-style character data together in one place.
+    std::cout << "\n=== Feats ===\n";
+    features.displayFeats();
+
+    std::cout << "\n=== Racial Traits ===\n";
+    features.displayRacialTraits();
+
+    std::cout << "\n=== Skills ===\n";
+    features.displaySkills(strength, dexterity, constitution,
+                           intelligence, wisdom, charisma,
+                           proficiency);
 }
 
 //-----------------------------------------------------//

@@ -18,6 +18,7 @@ option(ENABLE_COVERAGE "Build with gcov coverage instrumentation" OFF)
 # All game logic sources — excludes main so tests can link to the same library
 set(LIB_SOURCES
     src/P_Character.cpp
+    src/P_CharacterFeatures.cpp
     src/P_CharacterManager.cpp
     src/P_Inventory.cpp
     src/P_Item.cpp

@@ -165,7 +165,7 @@ void CharacterManager::editCharacter() {
 
     int choice;
     do {
-        std::cout << "\n1.Character details \n2.Character health \n3.Inventory \n4.Ability scores \n5.Spells \n0.Back \nChoice: ";
+        std::cout << "\n1.Character details \n2.Character health \n3.Inventory \n4.Ability scores \n5.Spells \n6.Features and skills \n0.Back \nChoice: ";
         std::cin >> choice;
 
         if (choice == 1) 
@@ -653,6 +653,10 @@ void CharacterManager::editCharacter() {
                 }
             } while (spellChoice != 0);
         }
+        else if (choice == 6)
+        {
+            manageFeatures(c);
+        }
         else 
         {
             std::cout << "Exiting edit menu " << std::endl;
@@ -836,6 +840,7 @@ void CharacterManager::loadFromFile(const std::string& filename) {
         }
 
         std::string spellSlotMarker;
+        std::streampos featureMarkerPos = file.tellg();
         std::getline(file, spellSlotMarker);
         if (spellSlotMarker == "SPELLSLOTS")
         {
@@ -864,6 +869,24 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             {
                 file.clear();
             }
+        }
+        else
+        {
+            file.clear();
+            file.seekg(featureMarkerPos);
+        }
+
+        std::streampos nextCharacterPos = file.tellg();
+        std::string featureMarker;
+        std::getline(file, featureMarker);
+        if (featureMarker == "FEATURES")
+        {
+            c.getFeatures().load(file);
+        }
+        else
+        {
+            file.clear();
+            file.seekg(nextCharacterPos);
         }
 
         characters.push_back(std::move(c));
@@ -977,5 +1000,133 @@ void CharacterManager::manageInventory(Character& c) {
             } while (currChoice != 0);
         }
 
+    } while (choice != 0);
+}
+
+void CharacterManager::manageFeatures(Character& c)
+{
+    int choice = -1;
+
+    do
+    {
+        // This submenu acts as a lightweight tracker rather than a rules engine.
+        std::cout << "\n=== Features And Skills ===\n";
+        std::cout << "1. View all\n";
+        std::cout << "2. Add feat\n";
+        std::cout << "3. Remove feat\n";
+        std::cout << "4. Add racial trait\n";
+        std::cout << "5. Remove racial trait\n";
+        std::cout << "6. View skills\n";
+        std::cout << "7. Edit skill proficiency\n";
+        std::cout << "0. Back\n";
+        std::cout << "Choice: ";
+        std::cin >> choice;
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+        if (choice == 1)
+        {
+            c.showFeatures();
+        }
+        else if (choice == 2)
+        {
+            std::string feat;
+            std::cout << "Feat name: ";
+            std::getline(std::cin, feat);
+            if (!feat.empty())
+            {
+                c.getFeatures().addFeat(feat);
+                std::cout << "Feat added.\n";
+            }
+        }
+        else if (choice == 3)
+        {
+            std::cout << "\n=== Feats ===\n";
+            c.getFeatures().displayFeats();
+            std::cout << "Index to remove: ";
+            int index = 0;
+            std::cin >> index;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            if (c.getFeatures().removeFeat(index))
+            {
+                std::cout << "Feat removed.\n";
+            }
+            else
+            {
+                std::cout << "Invalid index.\n";
+            }
+        }
+        else if (choice == 4)
+        {
+            std::string trait;
+            std::cout << "Racial trait name: ";
+            std::getline(std::cin, trait);
+            if (!trait.empty())
+            {
+                c.getFeatures().addRacialTrait(trait);
+                std::cout << "Racial trait added.\n";
+            }
+        }
+        else if (choice == 5)
+        {
+            std::cout << "\n=== Racial Traits ===\n";
+            c.getFeatures().displayRacialTraits();
+            std::cout << "Index to remove: ";
+            int index = 0;
+            std::cin >> index;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            if (c.getFeatures().removeRacialTrait(index))
+            {
+                std::cout << "Racial trait removed.\n";
+            }
+            else
+            {
+                std::cout << "Invalid index.\n";
+            }
+        }
+        else if (choice == 6)
+        {
+            std::cout << "\n=== Skills ===\n";
+            c.getFeatures().displaySkills(c.getStrength(), c.getDexterity(), c.getConstitution(),
+                                          c.getIntelligence(), c.getWisdom(), c.getCharisma(),
+                                          c.getProficiency());
+        }
+        else if (choice == 7)
+        {
+            const auto& skills = c.getFeatures().getSkills();
+            // Skills are selected by index here, but stored internally by name.
+            c.getFeatures().displaySkills(c.getStrength(), c.getDexterity(), c.getConstitution(),
+                                          c.getIntelligence(), c.getWisdom(), c.getCharisma(),
+                                          c.getProficiency());
+            std::cout << "Skill number: ";
+
+            int skillIndex = 0;
+            std::cin >> skillIndex;
+            if (std::cin.fail() || skillIndex < 1 || skillIndex > static_cast<int>(skills.size()))
+            {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid skill selection.\n";
+                continue;
+            }
+
+            std::cout << "Rank (0=None, 1=Proficient, 2=Expertise): ";
+            int rankValue = 0;
+            std::cin >> rankValue;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            if (std::cin.fail() || rankValue < 0 || rankValue > 2)
+            {
+                std::cin.clear();
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                std::cout << "Invalid rank.\n";
+                continue;
+            }
+
+            c.getFeatures().setSkillRank(skills[skillIndex - 1].name,
+                                         static_cast<SkillRank>(rankValue));
+            std::cout << "Skill updated.\n";
+        }
     } while (choice != 0);
 }

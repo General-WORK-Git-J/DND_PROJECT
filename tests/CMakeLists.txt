@@ -14,6 +14,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(dnd_tests
     test_wallet.cpp
     test_character.cpp
+    test_features.cpp
     test_spellslots.cpp
     test_inventory.cpp
     test_items.cpp
