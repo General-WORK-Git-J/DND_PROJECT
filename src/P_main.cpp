@@ -4,12 +4,15 @@
 #include <limits>
 #include "H_CharacterManager.h"
 #include "H_CharacterFeatures.h"
+#include "H_DiceRoller.h"
 #include "H_SpellBook.h"
 #include "H_Colours.h"
 
 int main() {
     CharacterManager manager;
     Colour_manager col_manager;
+    // Dice roller is available from the main menu as a utility tool.
+    DiceRoller diceRoller;
 
     // Get console handle and set text colour. Colour codes are in H_Colours.h (e.g. red = 4)
     //HANDLE console_color;
@@ -29,6 +32,8 @@ int main() {
         std::cout << "4. Save\n";
         std::cout << "5. Load\n";
         std::cout << "6. Colour\n";
+        // Standalone dice rolling keeps common table actions outside character menus.
+        std::cout << "7. Roll Dice\n";
         std::cout << "0. Exit\n";
         std::cout << "Choice: ";
         
@@ -42,6 +47,7 @@ int main() {
             case 4: manager.saveToFile("data/characters.txt"); break;
             case 5: manager.loadFromFile("data/characters.txt"); break;
             case 6: col_manager.ChangeColour(); break;
+            case 7: diceRoller.promptAndRoll(); break;
         }
 
     } while (choice != 0);
