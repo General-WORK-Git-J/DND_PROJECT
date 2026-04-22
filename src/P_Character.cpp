@@ -28,6 +28,8 @@ Character::Character(std::string n, std::string r, std::string c, std::string b,
     charisma = cha;
     Initiative = init;
     proficiency = prof;
+    equippedArmorIndex = -1;
+    equippedShieldIndex = -1;
 }
 
 
@@ -81,6 +83,9 @@ void Character::save(std::ofstream& file) const {
     // Features stores feats, racial traits, and the character's skill ranks.
     file << "FEATURES\n";
     features.save(file);
+
+    file << "EQUIPPED\n";
+    file << equippedArmorIndex << " " << equippedShieldIndex << "\n";
 }
 
 // Display
@@ -104,6 +109,12 @@ void Character::display() const {
     std::cout << "Weight: "     << weight         << " lbs\n";
     std::cout << "HP: "         << current_hp << "/" << max_hp;
     if (temp_hp > 0) std::cout << "  (+" << temp_hp << " temp)";
+    std::cout << "\n";
+    std::cout << "AC: "         << getAC();
+    if (equippedArmorIndex > 0 && equippedArmorIndex <= inventory.size())
+        std::cout << "  [" << inventory.getItem(equippedArmorIndex).getName() << "]";
+    if (equippedShieldIndex > 0 && equippedShieldIndex <= inventory.size())
+        std::cout << " + Shield";
     std::cout << "\n";
     std::cout << "Hit Dice: "   << hit_die_num << "/" << level << hit_dice << "\n";
     std::cout << "STR: " << strength     << " (" << mod(strength)     << ")\n";
@@ -199,6 +210,12 @@ void Character::addItem(std::unique_ptr<Item> item) {
 Inventory& Character::getInventory() { return inventory; }
 
 void Character::removeItem(int index) {
+    if (index == equippedArmorIndex)       equippedArmorIndex = -1;
+    else if (index < equippedArmorIndex)   equippedArmorIndex--;
+
+    if (index == equippedShieldIndex)      equippedShieldIndex = -1;
+    else if (index < equippedShieldIndex)  equippedShieldIndex--;
+
     inventory.removeItem(index);
 }
 
@@ -211,6 +228,57 @@ void Character::clearInventory() {
         inventory.removeItem(1);
     }
 }
+
+// AC
+int Character::getAC() const {
+    int dexMod = (dexterity / 2) - 5;
+    int ac = 10 + dexMod; // unarmored default
+
+    if (equippedArmorIndex > 0 && equippedArmorIndex <= inventory.size()) {
+        const Armor* armor = dynamic_cast<const Armor*>(&inventory.getItem(equippedArmorIndex));
+        if (armor) {
+            const std::string type = armor->getArmorType();
+            int base = armor->getBaseAC();
+            int maxDex = armor->getMaxDexBonus();
+
+            if (type == "Light") {
+                ac = base + dexMod;
+            } else if (type == "Medium") {
+                int cap = (maxDex >= 0) ? std::min(dexMod, maxDex) : dexMod;
+                ac = base + cap;
+            } else {
+                ac = base; // Heavy: no DEX bonus
+            }
+        }
+    }
+
+    if (equippedShieldIndex > 0 && equippedShieldIndex <= inventory.size())
+        ac += 2;
+
+    return ac;
+}
+
+void Character::equipArmor(int index) {
+    if (index < 1 || index > inventory.size()) return;
+    const Armor* armor = dynamic_cast<const Armor*>(&inventory.getItem(index));
+    if (armor && armor->getArmorType() != "Shield")
+        equippedArmorIndex = index;
+}
+
+void Character::equipShield(int index) {
+    if (index < 1 || index > inventory.size()) return;
+    const Armor* armor = dynamic_cast<const Armor*>(&inventory.getItem(index));
+    if (armor && armor->getArmorType() == "Shield")
+        equippedShieldIndex = index;
+}
+
+void Character::unequipArmor()  { equippedArmorIndex  = -1; }
+void Character::unequipShield() { equippedShieldIndex = -1; }
+
+int  Character::getEquippedArmorIndex()  const { return equippedArmorIndex;  }
+int  Character::getEquippedShieldIndex() const { return equippedShieldIndex; }
+void Character::setEquippedArmorIndex(int idx)  { equippedArmorIndex  = idx; }
+void Character::setEquippedShieldIndex(int idx) { equippedShieldIndex = idx; }
 
 // Ability scores
 void Character::setStats(int AS, int Ability)
@@ -282,6 +350,11 @@ void Character::showFeatures() const
 
     std::cout << "\n=== Racial Traits ===\n";
     features.displayRacialTraits();
+
+    std::cout << "\n=== Saving Throws ===\n";
+    features.displaySaves(strength, dexterity, constitution,
+                          intelligence, wisdom, charisma,
+                          proficiency);
 
     std::cout << "\n=== Skills ===\n";
     features.displaySkills(strength, dexterity, constitution,

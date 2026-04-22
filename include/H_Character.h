@@ -52,6 +52,9 @@ private:
     Wallet wallet;
     CharacterFeatures features;
 
+    int equippedArmorIndex;   // 1-based inventory index, -1 = none
+    int equippedShieldIndex;  // 1-based inventory index, -1 = none
+
 public:
     Character(std::string n, std::string r, std::string c, std::string b, std::string a,
          int lvl, int age, int weight,int c_hp, int m_hp, int t_hp, std::string h_dice, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
@@ -123,6 +126,17 @@ public:
     void showInventory() const;
     void clearInventory();
     Inventory& getInventory();
+
+    // AC
+    int getAC() const;
+    void equipArmor(int index);
+    void equipShield(int index);
+    void unequipArmor();
+    void unequipShield();
+    int getEquippedArmorIndex() const;
+    int getEquippedShieldIndex() const;
+    void setEquippedArmorIndex(int idx);
+    void setEquippedShieldIndex(int idx);
 
     // Spellbook
     Spellbook& getSpellbook();

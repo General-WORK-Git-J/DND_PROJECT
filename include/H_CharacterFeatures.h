@@ -18,12 +18,21 @@ struct SkillEntry {
     SkillRank rank;
 };
 
+struct SaveEntry {
+    std::string ability; // "STR", "DEX", "CON", "INT", "WIS", "CHA"
+    bool proficient;
+};
+
 class CharacterFeatures {
 private:
     std::vector<std::string> feats;
     std::vector<std::string> racialTraits;
     // Fixed 5e skill list with editable proficiency/expertise state per skill.
     std::vector<SkillEntry> skills;
+
+    std::vector<SaveEntry> savingThrows;
+    SaveEntry* findSave(const std::string& ability);
+    const SaveEntry* findSave(const std::string& ability) const;
 
     SkillEntry* findSkill(const std::string& skillName);
     const SkillEntry* findSkill(const std::string& skillName) const;
@@ -46,6 +55,18 @@ public:
                          int strength, int dexterity, int constitution,
                          int intelligence, int wisdom, int charisma,
                          int proficiencyBonus) const;
+
+    bool setSaveProficiency(const std::string& ability, bool proficient);
+    bool getSaveProficiency(const std::string& ability) const;
+    int getSaveModifier(const std::string& ability,
+                        int strength, int dexterity, int constitution,
+                        int intelligence, int wisdom, int charisma,
+                        int proficiencyBonus) const;
+
+    const std::vector<SaveEntry>& getSavingThrows() const;
+    void displaySaves(int strength, int dexterity, int constitution,
+                      int intelligence, int wisdom, int charisma,
+                      int proficiencyBonus) const;
 
     void displayFeats() const;
     void displayRacialTraits() const;

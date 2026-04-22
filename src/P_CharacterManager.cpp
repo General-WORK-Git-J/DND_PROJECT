@@ -920,6 +920,23 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             file.seekg(nextCharacterPos);
         }
 
+        std::streampos equippedPos = file.tellg();
+        std::string equippedMarker;
+        std::getline(file, equippedMarker);
+        if (equippedMarker == "EQUIPPED")
+        {
+            int armorIdx = -1, shieldIdx = -1;
+            file >> armorIdx >> shieldIdx;
+            file.ignore();
+            c.setEquippedArmorIndex(armorIdx);
+            c.setEquippedShieldIndex(shieldIdx);
+        }
+        else
+        {
+            file.clear();
+            file.seekg(equippedPos);
+        }
+
         characters.push_back(std::move(c));
         
     }
@@ -937,6 +954,8 @@ void CharacterManager::manageInventory(Character& c) {
         std::cout << "2. Add Item\n";
         std::cout << "3. Remove Item\n";
         std::cout << "4. Currency\n";
+        std::cout << "5. Equip armor / shield\n";
+        std::cout << "6. Unequip armor / shield\n";
         std::cout << "0. Back\n";
         std::cout << "Choice: ";
         std::cin >> choice;
@@ -999,6 +1018,28 @@ void CharacterManager::manageInventory(Character& c) {
             std::cin >> index;
             c.removeItem(index);
         }
+        else if (choice == 5) {
+            if (c.getInventory().size() == 0) {
+                std::cout << "Inventory is empty.\n";
+            } else {
+                c.showInventory();
+                std::cout << "Enter item number to equip (0 to cancel): ";
+                int idx;
+                std::cin >> idx;
+                if (idx > 0 && idx <= c.getInventory().size()) {
+                    c.equipArmor(idx);
+                    c.equipShield(idx);
+                    std::cout << "Equipped. AC is now " << c.getAC() << ".\n";
+                }
+            }
+        }
+        else if (choice == 6) {
+            std::cout << "1. Unequip armor\n2. Unequip shield\nChoice: ";
+            int uChoice;
+            std::cin >> uChoice;
+            if (uChoice == 1) { c.unequipArmor();  std::cout << "Armor unequipped.\n"; }
+            if (uChoice == 2) { c.unequipShield(); std::cout << "Shield unequipped.\n"; }
+        }
         else if (choice == 4) {
             int currChoice;
             do {
@@ -1048,6 +1089,7 @@ void CharacterManager::manageFeatures(Character& c)
         std::cout << "5. Remove racial trait\n";
         std::cout << "6. View skills\n";
         std::cout << "7. Edit skill proficiency\n";
+        std::cout << "8. Edit skill proficiency\n";
         std::cout << "0. Back\n";
         std::cout << "Choice: ";
         std::cin >> choice;
@@ -1157,6 +1199,26 @@ void CharacterManager::manageFeatures(Character& c)
             c.getFeatures().setSkillRank(skills[skillIndex - 1].name,
                                          static_cast<SkillRank>(rankValue));
             std::cout << "Skill updated.\n";
+        }
+
+        else if (choice == 8)
+        {
+            std::cout << "\n=== Saving Throws ===\n";
+            c.getFeatures().displaySaves(c.getStrength(), c.getDexterity(), c.getConstitution(),
+                                         c.getIntelligence(), c.getWisdom(), c.getCharisma(),
+                                         c.getProficiency());
+            std::cout << "Enter ability to toggle (STR/DEX/CON/INT/WIS/CHA) or 0 to cancel: ";
+            std::string ability;
+            std::getline(std::cin, ability);
+            if (ability != "0" && !ability.empty())
+            {
+                bool current = c.getFeatures().getSaveProficiency(ability);
+                if (c.getFeatures().setSaveProficiency(ability, !current))
+                    std::cout << ability << " saving throw " << (!current ? "proficient" : "not proficient") << ".\n";
+                else
+                    std::cout << "Invalid ability. Use STR, DEX, CON, INT, WIS, or CHA.\n";
+            }
+
         }
     } while (choice != 0);
 }

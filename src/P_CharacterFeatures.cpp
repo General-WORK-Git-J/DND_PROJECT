@@ -58,6 +58,14 @@ CharacterFeatures::CharacterFeatures()
         {"Stealth", "DEX", SkillRank::None},
         {"Survival", "WIS", SkillRank::None}
     })
+    , savingThrows({
+        {"STR", false},
+        {"DEX", false},
+        {"CON", false},
+        {"INT", false},
+        {"WIS", false},
+        {"CHA", false}
+    })
 {
 }
 
@@ -234,6 +242,7 @@ void CharacterFeatures::displaySkills(int strength, int dexterity, int constitut
                   << (modifier >= 0 ? "+" : "") << modifier
                   << " - " << rankLabel << "\n";
     }
+    
 }
 
 void CharacterFeatures::save(std::ofstream& file) const
@@ -258,6 +267,8 @@ void CharacterFeatures::save(std::ofstream& file) const
         file << skill.ability << "\n";
         file << static_cast<int>(skill.rank) << "\n";
     }
+    for (const auto& s : savingThrows)
+        file << (s.proficient ? 1 : 0) << "\n";
 }
 
 void CharacterFeatures::load(std::ifstream& file)
@@ -305,5 +316,71 @@ void CharacterFeatures::load(std::ifstream& file)
             skill->ability = ability;
             skill->rank = static_cast<SkillRank>(rankValue);
         }
+    }
+    for (auto& s : savingThrows) {
+        int val = 0;
+        file >> val;
+        file.ignore();
+        s.proficient = (val != 0);
+    }
+}
+
+SaveEntry* CharacterFeatures::findSave(const std::string& ability)
+{
+    for (auto& s : savingThrows)
+        if (s.ability == ability) return &s;
+    return nullptr;
+}
+
+const SaveEntry* CharacterFeatures::findSave(const std::string& ability) const
+{
+    for (const auto& s : savingThrows)
+        if (s.ability == ability) return &s;
+    return nullptr;
+}
+
+bool CharacterFeatures::setSaveProficiency(const std::string& ability, bool proficient)
+{
+    SaveEntry* s = findSave(ability);
+    if (!s) return false;
+    s->proficient = proficient;
+    return true;
+}
+
+bool CharacterFeatures::getSaveProficiency(const std::string& ability) const
+{
+    const SaveEntry* s = findSave(ability);
+    return s ? s->proficient : false;
+}
+
+const std::vector<SaveEntry>& CharacterFeatures::getSavingThrows() const
+{
+    return savingThrows;
+}
+
+int CharacterFeatures::getSaveModifier(const std::string& ability,
+                                        int strength, int dexterity, int constitution,
+                                        int intelligence, int wisdom, int charisma,
+                                        int proficiencyBonus) const
+{
+    const SaveEntry* s = findSave(ability);
+    if (!s) return 0;
+    int mod = abilityModifier(scoreForAbility(ability,
+        strength, dexterity, constitution, intelligence, wisdom, charisma));
+    if (s->proficient) mod += proficiencyBonus;
+    return mod;
+}                                        
+
+void CharacterFeatures::displaySaves(int strength, int dexterity, int constitution,
+                                     int intelligence, int wisdom, int charisma,
+                                     int proficiencyBonus) const
+{
+    for (const auto& s : savingThrows) {
+        int mod = getSaveModifier(s.ability,
+            strength, dexterity, constitution, intelligence, wisdom, charisma,
+            proficiencyBonus);
+        std::cout << (s.proficient ? "[P] " : "[ ] ")
+                  << s.ability << ": "
+                  << (mod >= 0 ? "+" : "") << mod << "\n";
     }
 }
