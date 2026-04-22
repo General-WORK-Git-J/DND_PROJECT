@@ -20,6 +20,7 @@ set(LIB_SOURCES
     src/P_Character.cpp
     src/P_CharacterFeatures.cpp
     src/P_CharacterManager.cpp
+    src/P_DiceRoller.cpp
     src/P_Inventory.cpp
     src/P_Item.cpp
     src/P_Weapon.cpp

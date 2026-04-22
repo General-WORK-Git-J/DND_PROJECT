@@ -14,6 +14,8 @@ FetchContent_MakeAvailable(googletest)
 add_executable(dnd_tests
     test_wallet.cpp
     test_character.cpp
+    # Dice roller tests cover generic die ranges plus d20 mode rules.
+    test_dice_roller.cpp
     test_features.cpp
     test_spellslots.cpp
     test_inventory.cpp
