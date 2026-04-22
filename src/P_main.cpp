@@ -3,6 +3,7 @@
 #include <fstream>
 #include <limits>
 #include "H_CharacterManager.h"
+#include "H_CharacterFeatures.h"
 #include "H_SpellBook.h"
 #include "H_Colours.h"
 
