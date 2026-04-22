@@ -1,14 +1,14 @@
 #include "H_Weapon.h"
 #include <iostream>
 
-Weapon::Weapon(std::string name, std::string description, float weight,
-               int quantity, int value, std::string rarity, bool requiresAttunement,
-               std::string damageDice, std::string damageType,
-               std::string weaponCategory, std::string weaponType,
-               std::string properties, std::string range)
-    : Item(name, description, weight, quantity, value, rarity, requiresAttunement),
-      damageDice(damageDice), damageType(damageType), weaponCategory(weaponCategory),
-      weaponType(weaponType), properties(properties), range(range) {}
+Weapon::Weapon(std::string name_, std::string description_, float weight_,
+               int quantity_, int value_, std::string rarity_, bool requiresAttunement_,
+               std::string damageDice_, std::string damageType_,
+               std::string weaponCategory_, std::string weaponType_,
+               std::string properties_, std::string range_)
+    : Item(name_, description_, weight_, quantity_, value_, rarity_, requiresAttunement_),
+      damageDice(damageDice_), damageType(damageType_), weaponCategory(weaponCategory_),
+      weaponType(weaponType_), properties(properties_), range(range_) {}
 
 std::string Weapon::getDamageDice() const     { return damageDice; }
 std::string Weapon::getDamageType() const     { return damageType; }

@@ -4,10 +4,10 @@
 #include "H_Gear.h"
 #include <iostream>
 
-Item::Item(std::string name, std::string description, float weight,
-           int quantity, int value, std::string rarity, bool requiresAttunement)
-    : name(name), description(description), weight(weight),
-      quantity(quantity), value(value), rarity(rarity), requiresAttunement(requiresAttunement) {}
+Item::Item(std::string name_, std::string description_, float weight_,
+           int quantity_, int value_, std::string rarity_, bool requiresAttunement_)
+    : name(name_), description(description_), weight(weight_),
+      quantity(quantity_), value(value_), rarity(rarity_), requiresAttunement(requiresAttunement_) {}
 
 std::string Item::getName() const            { return name; }
 std::string Item::getDescription() const     { return description; }

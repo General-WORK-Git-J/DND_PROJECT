@@ -73,6 +73,9 @@ public:
     int getMaxHP() const;
     int getTempHP() const;
     std::string getHitDice() const;
+    int getHitDiceNum() const;
+
+    void setHitDiceNum(int n);
 
 
     int getStrength() const;
@@ -100,6 +103,8 @@ public:
     void setMaxHP(int m_hp);
     void setTempHP(int t_hp);
     void setHitDice(const std::string& new_hit_dice);
+    void spendHitDice(int count);
+    void recoverHitDice();
 
     void setStrength(int str);
     void setDexterity(int dex);

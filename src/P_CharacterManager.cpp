@@ -156,7 +156,7 @@ void CharacterManager::editCharacter() {
     std::cout << "Enter character index: ";
     std::cin >> index;
 
-    if (index - 1 < 0 || index - 1 >= characters.size()) {
+    if (index < 1 || index > static_cast<int>(characters.size())) {
         std::cout << "Invalid index.\n";
         return;
     }
@@ -454,7 +454,7 @@ void CharacterManager::editCharacter() {
                         std::cin.clear();
                         std::cin.ignore(1000, '\n');
                         std::cout << "Invalid input.\n";
-                        continue;;
+                        continue;
                     }
 
                     auto spells = global.getSpellsByLevel(level);
@@ -474,21 +474,21 @@ void CharacterManager::editCharacter() {
                                 << " (Level " << spells[i].getSpellLevel() << ")\n";
                     }
 
-                    int choice;
+                    int spellNum;
                     std::cout << "Select spell number: ";
-                    std::cin >> choice;
+                    std::cin >> spellNum;
 
                     if (std::cin.fail())
                     {
-                        std::cin.clear(); // reset error state
-                        std::cin.ignore(1000, '\n'); // discard bad input
+                        std::cin.clear();
+                        std::cin.ignore(1000, '\n');
                         std::cout << "Invalid input.\n";
                         continue;
                     }
 
-                    if (choice > 0 && choice <= spells.size())
+                    if (spellNum > 0 && spellNum <= static_cast<int>(spells.size()))
                     {
-                        c.getSpellbook().addSpell(spells[choice - 1]);
+                        c.getSpellbook().addSpell(spells[spellNum - 1]);
                         std::cout << "Spell added to character!\n";
                     }
                     else
@@ -635,11 +635,13 @@ void CharacterManager::editCharacter() {
                 else if (spellChoice == 7)
                 {
                     c.getSpellSlots().resetSlots();
-                    std::cout << "Long rest complete. Spell slots restored to full.\n";
+                    c.setCurrentHP(c.getMaxHP());
+                    c.recoverHitDice();
+                    std::cout << "Long rest complete. HP, spell slots, and hit dice restored.\n";
+                    std::cout << "Hit dice: " << c.getHitDiceNum() << "/" << c.getLevel() << c.getHitDice() << "\n";
                 }
                 else if (spellChoice == 8)
                 {
-                    // For this simplified system, only Warlocks recover slots on a short rest.
                     if (isWarlockClass(c))
                     {
                         c.getSpellSlots().resetSlots();
@@ -649,6 +651,34 @@ void CharacterManager::editCharacter() {
                     {
                         std::cout << "Short rest complete. Spell slots unchanged for "
                                   << c.getClass() << ".\n";
+                    }
+
+                    // All classes can spend hit dice during a short rest.
+                    std::cout << "Hit dice available: " << c.getHitDiceNum()
+                              << "/" << c.getLevel() << c.getHitDice() << "\n";
+                    if (c.getHitDiceNum() > 0 && c.getCurrentHP() < c.getMaxHP())
+                    {
+                        std::cout << "Spend hit dice to recover HP? (0 = No): ";
+                        int toSpend = 0;
+                        std::cin >> toSpend;
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                        if (toSpend > 0 && toSpend <= c.getHitDiceNum())
+                        {
+                            std::cout << "Enter total HP recovered (roll " << toSpend
+                                      << c.getHitDice() << " + CON modifier per die): ";
+                            int hpGained = 0;
+                            std::cin >> hpGained;
+                            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                            if (hpGained > 0)
+                            {
+                                int newHp = c.getCurrentHP() + hpGained;
+                                c.setCurrentHP(newHp > c.getMaxHP() ? c.getMaxHP() : newHp);
+                            }
+                            c.spendHitDice(toSpend);
+                            std::cout << "HP: " << c.getCurrentHP() << "/" << c.getMaxHP()
+                                      << "  Hit dice remaining: " << c.getHitDiceNum() << "\n";
+                        }
                     }
                 }
             } while (spellChoice != 0);
@@ -788,6 +818,7 @@ void CharacterManager::loadFromFile(const std::string& filename) {
         int lvl, age, weight;
         int c_hp, m_hp, t_hp;
         std::string h_dice;
+        int h_dice_num = 0;
         int str, dex, con, intl, wis, cha, init, prof;
 
         std::getline(file, name);
@@ -802,13 +833,13 @@ void CharacterManager::loadFromFile(const std::string& filename) {
         file >> c_hp;
         file >> m_hp;
         file >> t_hp;
-        file >> h_dice;
+        file >> h_dice >> h_dice_num;
 
         file >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         file.ignore();
 
-        Character c(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, h_dice, str, dex, con, intl, wis, cha, init, prof );
-    
+        Character c(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, h_dice, str, dex, con, intl, wis, cha, init, prof);
+        if (h_dice_num > 0) c.setHitDiceNum(h_dice_num);
 
     // --- INVENTORY ---
         c.getInventory().load(file);
@@ -925,7 +956,6 @@ void CharacterManager::manageInventory(Character& c) {
             bool iAttune;
 
             iName = getValidStringInput("name");
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << "Description: "; std::getline(std::cin, iDesc);
             iRarity = getValidStringInput("rarity (Common/Uncommon/Rare/Very Rare/Legendary)");
             std::cout << "Weight (lb): "; std::cin >> iWeight;
