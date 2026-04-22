@@ -1,5 +1,5 @@
-#ifndef _SPELLSLOTS_
-#define _SPELLSLOTS_
+#ifndef SPELLSLOTS_H
+#define SPELLSLOTS_H
 
 #include <map>
 #include <fstream>
@@ -25,4 +25,4 @@ public:
     void load(std::ifstream& file);
 };
 
-#endif
+#endif // SPELLSLOTS_H

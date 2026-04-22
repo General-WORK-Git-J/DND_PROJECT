@@ -1,13 +1,13 @@
 #include "H_Armor.h"
 #include <iostream>
 
-Armor::Armor(std::string name, std::string description, float weight,
-             int quantity, int value, std::string rarity, bool requiresAttunement,
-             std::string armorType, int baseAC,
-             int maxDexBonus, int strRequirement, bool stealthDisadvantage)
-    : Item(name, description, weight, quantity, value, rarity, requiresAttunement),
-      armorType(armorType), baseAC(baseAC), maxDexBonus(maxDexBonus),
-      strRequirement(strRequirement), stealthDisadvantage(stealthDisadvantage) {}
+Armor::Armor(std::string name_, std::string description_, float weight_,
+             int quantity_, int value_, std::string rarity_, bool requiresAttunement_,
+             std::string armorType_, int baseAC_,
+             int maxDexBonus_, int strRequirement_, bool stealthDisadvantage_)
+    : Item(name_, description_, weight_, quantity_, value_, rarity_, requiresAttunement_),
+      armorType(armorType_), baseAC(baseAC_), maxDexBonus(maxDexBonus_),
+      strRequirement(strRequirement_), stealthDisadvantage(stealthDisadvantage_) {}
 
 std::string Armor::getArmorType() const       { return armorType; }
 int         Armor::getBaseAC() const          { return baseAC; }

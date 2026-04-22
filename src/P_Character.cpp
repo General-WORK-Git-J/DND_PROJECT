@@ -13,6 +13,7 @@ Character::Character(std::string n, std::string r, std::string c, std::string b,
     background = b;
     alignment = a;
     level = lvl;
+    hit_die_num = lvl;
     age = new_age;
     weight = new_weight;
     current_hp = c_hp;
@@ -44,7 +45,7 @@ void Character::save(std::ofstream& file) const {
     file << current_hp << " "
          << max_hp << " "
          << temp_hp << std::endl;
-    file << hit_dice << std::endl;
+    file << hit_dice << " " << hit_die_num << std::endl;
     file << strength << " "
          << dexterity << " "
          << constitution << " "
@@ -104,7 +105,7 @@ void Character::display() const {
     std::cout << "HP: "         << current_hp << "/" << max_hp;
     if (temp_hp > 0) std::cout << "  (+" << temp_hp << " temp)";
     std::cout << "\n";
-    std::cout << "Hit Dice: "   << level << hit_dice << "\n";
+    std::cout << "Hit Dice: "   << hit_die_num << "/" << level << hit_dice << "\n";
     std::cout << "STR: " << strength     << " (" << mod(strength)     << ")\n";
     std::cout << "DEX: " << dexterity    << " (" << mod(dexterity)    << ")\n";
     std::cout << "CON: " << constitution << " (" << mod(constitution) << ")\n";
@@ -164,6 +165,21 @@ void Character::setCurrentHP(int c_hp){current_hp = c_hp;}
 void Character::setMaxHP(int m_hp){max_hp = m_hp;}
 void Character::setTempHP(int t_hp){temp_hp = t_hp;}
 void Character::setHitDice(const std::string& new_hit_dice){hit_dice = new_hit_dice;}
+int Character::getHitDiceNum() const { return hit_die_num; }
+void Character::setHitDiceNum(int n) { hit_die_num = (n < 0 ? 0 : (n > level ? level : n)); }
+
+void Character::spendHitDice(int count)
+{
+    if (count < 1 || count > hit_die_num) return;
+    hit_die_num -= count;
+}
+
+void Character::recoverHitDice()
+{
+    // On a long rest, recover half the character's total hit dice (rounded up).
+    int recovered = (level + 1) / 2;
+    hit_die_num = (hit_die_num + recovered > level) ? level : hit_die_num + recovered;
+}
 void Character::setStrength(int str) { strength = str; }
 void Character::setDexterity(int dex) {dexterity = dex;}
 void Character::setConstitution(int con) {constitution = con;}
