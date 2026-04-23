@@ -36,7 +36,7 @@ void CharacterManager::createCharacter() {
 
     int new_AS[6];
 
-    name = getValidStringInput("name");
+    name = getValidNameInput("name");
     race = getValidStringInput("race");
     characterClass = getValidStringInput("class");
     background = getValidStringInput("background");
@@ -184,7 +184,7 @@ void CharacterManager::editCharacter() {
 
             case 1: //Name
                 {
-                    std::string new_name = getValidStringInput("Name");
+                    std::string new_name = getValidNameInput("Name");
                     c.setName(new_name);
                     break;
                 }
@@ -716,16 +716,50 @@ std::string CharacterManager::getValidStringInput(const std::string& value_to_ge
     }
 }
 
+std::string CharacterManager::getValidNameInput(const std::string& value_to_get)
+{
+    std::string new_input;
+    while (true)
+    {
+        std::cout << "Enter new " << value_to_get << std::endl;
+        std::getline(std::cin, new_input);
+        if (isValidName(new_input))
+        {
+            return new_input;
+        }
+        else
+        {
+            Invalidinput();
+            std::cout << "Invalid " << value_to_get << std::endl;
+        }
+    }
+}
+
 bool CharacterManager::isValidString(const std::string &input)
 {
     if (input.empty()) return false;
     bool hasLetter = false;
     for (char c : input)
     {
-        if (!std::isalpha(c) && c != ' ' && c != '-' && c != '\'') return false;
-        if (std::isalpha(c)) hasLetter = true;
+        if (!std::isprint(static_cast<unsigned char>(c))) return false;
+        if (std::isalpha(static_cast<unsigned char>(c))) hasLetter = true;
     }
     return hasLetter;
+}
+
+bool CharacterManager::isValidName(const std::string &input)
+{
+    if (input.empty()) return false;
+    for (char c : input)
+    {
+        if (!std::isprint(static_cast<unsigned char>(c))) return false;
+    }
+    // Reject strings that are only whitespace
+    for (char c : input)
+    {
+        if (!std::isspace(static_cast<unsigned char>(c))) return true;
+    }
+    return false;
 }
 
 bool CharacterManager::isValidHitDice(const std::string& input)
@@ -988,7 +1022,7 @@ void CharacterManager::manageInventory(Character& c) {
             int iQty, iValue;
             bool iAttune;
 
-            iName = getValidStringInput("name");
+            iName = getValidNameInput("name");
             std::cout << "Description: "; std::getline(std::cin, iDesc);
             iRarity = getValidStringInput("rarity (Common/Uncommon/Rare/Very Rare/Legendary)");
             std::cout << "Weight (lb): "; std::cin >> iWeight;
