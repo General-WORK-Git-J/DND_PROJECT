@@ -1,7 +1,14 @@
 {
     "configurations": [
         {
-            "name": "C/C++: g++ build and debug active file",
+            "name": "Run in Konsole",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "konsole --hold -e '${workspaceFolder}/DND_PROJECT'",
+            "preLaunchTask": "C/C++: g++ build active file"
+        },
+        {
+            "name": "C/C++: g++ debug (integrated terminal)",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/DND_PROJECT",
@@ -9,7 +16,7 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": true,
+            "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "/usr/bin/gdb",
             "windows": {

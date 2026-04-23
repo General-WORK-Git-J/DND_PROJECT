@@ -38,7 +38,8 @@ add_library(dnd_lib STATIC ${LIB_SOURCES})
 target_include_directories(dnd_lib PUBLIC include)
 
 if(ENABLE_COVERAGE)
-    target_compile_options(dnd_lib PRIVATE -fprofile-arcs -ftest-coverage)
+    target_compile_options(dnd_lib PUBLIC -fprofile-arcs -ftest-coverage)
+    target_link_options(dnd_lib PUBLIC --coverage)
 endif()
 
 # Main game executable
