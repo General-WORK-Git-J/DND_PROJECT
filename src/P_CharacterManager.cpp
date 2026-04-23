@@ -153,6 +153,11 @@ void CharacterManager::editCharacter() {
     }
 
     int index;
+    for (int i = 0; i < static_cast<int>(characters.size()); i++)
+    {
+        std::cout << i + 1 << ". " << characters[i].getName() << std::endl;
+    }
+    
     std::cout << "Enter character index: ";
     std::cin >> index;
 
