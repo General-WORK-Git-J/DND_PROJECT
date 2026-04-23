@@ -809,8 +809,11 @@ void CharacterManager::loadFromFile(const std::string& filename) {
 
     characters.clear();
 
-    int count;
-    file >> count;
+    int count = 0;
+    if (!(file >> count) || count < 0) {
+        std::cout << "Save file is empty or corrupt.\n";
+        return;
+    }
     file.ignore();
 
     for (int i = 0; i < count; i++) {
@@ -856,6 +859,8 @@ void CharacterManager::loadFromFile(const std::string& filename) {
         std::string marker;
         std::getline(file, marker);
 
+        bool spellSlotsConsumed = false;
+
         if (marker == "SPELLBOOK")
         {
             std::ofstream temp("data/temp_spell.txt");
@@ -865,15 +870,29 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             {
                 temp << line << std::endl;
             }
+            // The while loop consumes "SPELLSLOTS" as its exit condition
+            spellSlotsConsumed = (line == "SPELLSLOTS");
 
             temp.close();
             c.getSpellbook().loadSpellbook("data/temp_spell.txt");
         }
 
-        std::string spellSlotMarker;
-        std::streampos featureMarkerPos = file.tellg();
-        std::getline(file, spellSlotMarker);
-        if (spellSlotMarker == "SPELLSLOTS")
+        // If the spellbook while-loop didn't consume "SPELLSLOTS", try to read it now
+        if (!spellSlotsConsumed)
+        {
+            std::streampos preSlotPos = file.tellg();
+            std::string spellSlotMarker;
+            std::getline(file, spellSlotMarker);
+            if (spellSlotMarker == "SPELLSLOTS")
+                spellSlotsConsumed = true;
+            else
+            {
+                file.clear();
+                file.seekg(preSlotPos);
+            }
+        }
+
+        if (spellSlotsConsumed)
         {
             std::streampos spellSlotDataPos = file.tellg();
             std::string slotCountLine;
@@ -900,11 +919,6 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             {
                 file.clear();
             }
-        }
-        else
-        {
-            file.clear();
-            file.seekg(featureMarkerPos);
         }
 
         std::streampos nextCharacterPos = file.tellg();
