@@ -14,10 +14,6 @@ int main() {
     // Dice roller is available from the main menu as a utility tool.
     DiceRoller diceRoller;
 
-    // Get console handle and set text colour. Colour codes are in H_Colours.h (e.g. red = 4)
-    //HANDLE console_color;
-    //console_color = GetStdHandle(STD_OUTPUT_HANDLE);
-    //SetConsoleTextAttribute(console_color, 4);
 
 
     int choice;
