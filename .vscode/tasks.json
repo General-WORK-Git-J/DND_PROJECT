@@ -10,7 +10,7 @@
             "problemMatcher": ["$gcc"],
             "group": {
                 "kind": "build",
-                "isDefault": true
+                "isDefault": false
             }
         },
         {
@@ -61,7 +61,7 @@
                     "${workspaceFolder}/src/P_Colours.cpp",
                     "${workspaceFolder}/src/P_DiceRoller.cpp",
                     "-o",
-                    "${workspaceFolder}/DND_PROJECT.exe"
+                    "${workspaceFolder}\\DND_PROJECT.exe"
                 ]
             },
             "options": {
@@ -85,6 +85,16 @@
                 "-e",
                 "${workspaceFolder}/DND_PROJECT"
             ],
+            "windows": {
+                "command": "cmd",
+                "args": [
+                    "/c",
+                    "start",
+                    "cmd",
+                    "/k",
+                    "${workspaceFolder}\\DND_PROJECT.exe"
+                ]
+            },
             "dependsOn": "C/C++: g++ build active file",
             "options": {
                 "cwd": "${workspaceFolder}"
