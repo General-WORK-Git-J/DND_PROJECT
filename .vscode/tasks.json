@@ -2,6 +2,19 @@
     "tasks": [
         {
             "type": "shell",
+            "label": "CMake build",
+            "command": "cmake --build build --target DND_PROJECT",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
             "label": "C/C++: g++ build active file",
             "command": "/usr/bin/g++",
             "args": [
@@ -22,6 +35,7 @@
                 "${workspaceFolder}/src/P_SpellSlots.cpp",
                 "${workspaceFolder}/src/P_Wallet.cpp",
                 "${workspaceFolder}/src/P_Colours.cpp",
+                "${workspaceFolder}/src/P_DiceRoller.cpp",
                 "-o",
                 "${workspaceFolder}/DND_PROJECT"
             ],

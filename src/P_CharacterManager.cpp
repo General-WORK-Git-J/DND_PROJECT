@@ -36,7 +36,7 @@ void CharacterManager::createCharacter() {
 
     int new_AS[6];
 
-    name = getValidStringInput("name");
+    name = getValidNameInput("name");
     race = getValidStringInput("race");
     characterClass = getValidStringInput("class");
     background = getValidStringInput("background");
@@ -184,7 +184,7 @@ void CharacterManager::editCharacter() {
 
             case 1: //Name
                 {
-                    std::string new_name = getValidStringInput("Name");
+                    std::string new_name = getValidNameInput("Name");
                     c.setName(new_name);
                     break;
                 }
@@ -716,16 +716,50 @@ std::string CharacterManager::getValidStringInput(const std::string& value_to_ge
     }
 }
 
+std::string CharacterManager::getValidNameInput(const std::string& value_to_get)
+{
+    std::string new_input;
+    while (true)
+    {
+        std::cout << "Enter new " << value_to_get << std::endl;
+        std::getline(std::cin, new_input);
+        if (isValidName(new_input))
+        {
+            return new_input;
+        }
+        else
+        {
+            Invalidinput();
+            std::cout << "Invalid " << value_to_get << std::endl;
+        }
+    }
+}
+
 bool CharacterManager::isValidString(const std::string &input)
 {
     if (input.empty()) return false;
     bool hasLetter = false;
     for (char c : input)
     {
-        if (!std::isalpha(c) && c != ' ' && c != '-' && c != '\'') return false;
-        if (std::isalpha(c)) hasLetter = true;
+        if (!std::isprint(static_cast<unsigned char>(c))) return false;
+        if (std::isalpha(static_cast<unsigned char>(c))) hasLetter = true;
     }
     return hasLetter;
+}
+
+bool CharacterManager::isValidName(const std::string &input)
+{
+    if (input.empty()) return false;
+    for (char c : input)
+    {
+        if (!std::isprint(static_cast<unsigned char>(c))) return false;
+    }
+    // Reject strings that are only whitespace
+    for (char c : input)
+    {
+        if (!std::isspace(static_cast<unsigned char>(c))) return true;
+    }
+    return false;
 }
 
 bool CharacterManager::isValidHitDice(const std::string& input)
@@ -809,8 +843,11 @@ void CharacterManager::loadFromFile(const std::string& filename) {
 
     characters.clear();
 
-    int count;
-    file >> count;
+    int count = 0;
+    if (!(file >> count) || count < 0) {
+        std::cout << "Save file is empty or corrupt.\n";
+        return;
+    }
     file.ignore();
 
     for (int i = 0; i < count; i++) {
@@ -856,6 +893,8 @@ void CharacterManager::loadFromFile(const std::string& filename) {
         std::string marker;
         std::getline(file, marker);
 
+        bool spellSlotsConsumed = false;
+
         if (marker == "SPELLBOOK")
         {
             std::ofstream temp("data/temp_spell.txt");
@@ -865,15 +904,29 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             {
                 temp << line << std::endl;
             }
+            // The while loop consumes "SPELLSLOTS" as its exit condition
+            spellSlotsConsumed = (line == "SPELLSLOTS");
 
             temp.close();
             c.getSpellbook().loadSpellbook("data/temp_spell.txt");
         }
 
-        std::string spellSlotMarker;
-        std::streampos featureMarkerPos = file.tellg();
-        std::getline(file, spellSlotMarker);
-        if (spellSlotMarker == "SPELLSLOTS")
+        // If the spellbook while-loop didn't consume "SPELLSLOTS", try to read it now
+        if (!spellSlotsConsumed)
+        {
+            std::streampos preSlotPos = file.tellg();
+            std::string spellSlotMarker;
+            std::getline(file, spellSlotMarker);
+            if (spellSlotMarker == "SPELLSLOTS")
+                spellSlotsConsumed = true;
+            else
+            {
+                file.clear();
+                file.seekg(preSlotPos);
+            }
+        }
+
+        if (spellSlotsConsumed)
         {
             std::streampos spellSlotDataPos = file.tellg();
             std::string slotCountLine;
@@ -900,11 +953,6 @@ void CharacterManager::loadFromFile(const std::string& filename) {
             {
                 file.clear();
             }
-        }
-        else
-        {
-            file.clear();
-            file.seekg(featureMarkerPos);
         }
 
         std::streampos nextCharacterPos = file.tellg();
@@ -974,7 +1022,7 @@ void CharacterManager::manageInventory(Character& c) {
             int iQty, iValue;
             bool iAttune;
 
-            iName = getValidStringInput("name");
+            iName = getValidNameInput("name");
             std::cout << "Description: "; std::getline(std::cin, iDesc);
             iRarity = getValidStringInput("rarity (Common/Uncommon/Rare/Very Rare/Legendary)");
             std::cout << "Weight (lb): "; std::cin >> iWeight;
