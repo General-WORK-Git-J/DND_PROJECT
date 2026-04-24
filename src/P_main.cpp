@@ -14,22 +14,16 @@ int main() {
     // Dice roller is available from the main menu as a utility tool.
     DiceRoller diceRoller;
 
-
-
     int choice;
-    Spellbook globalSpellbook;
-    globalSpellbook.loadSpellbook("data/SpellBook.txt");
     
     do {
         std::cout << "\n=== DnD Manager ===\n";
-        std::cout << "1. Create\n";
-        std::cout << "2. View\n";
-        std::cout << "3. Edit\n";
-        std::cout << "4. Save\n";
-        std::cout << "5. Load\n";
-        std::cout << "6. Colour\n";
+        std::cout << "1. Create Character\n";
+        std::cout << "2. View Character\n";
+        std::cout << "3. View Spells\n";
+        std::cout << "4. Colour\n";
         // Standalone dice rolling keeps common table actions outside character menus.
-        std::cout << "7. Roll Dice\n";
+        std::cout << "5. Roll Dice\n";
         std::cout << "0. Exit\n";
         std::cout << "Choice: ";
         
@@ -38,12 +32,54 @@ int main() {
 
         switch (choice) {
             case 1: manager.createCharacter(); break;
-            case 2: manager.viewCharacters(); break;
-            case 3: manager.editCharacter(); break;
-            case 4: manager.saveToFile("data/characters.txt"); break;
-            case 5: manager.loadFromFile("data/characters.txt"); break;
-            case 6: col_manager.ChangeColour(); break;
-            case 7: diceRoller.promptAndRoll(); break;
+            case 2:
+            {
+                int characterMenuChoice = -1;
+                do
+                {
+                    std::cout << "\n=== View Character ===\n";
+                    std::cout << "1. Load Characters\n";
+                    std::cout << "2. View Character Details\n";
+                    std::cout << "3. Edit Character\n";
+                    std::cout << "4. Save Characters\n";
+                    std::cout << "0. Back\n";
+                    std::cout << "Choice: ";
+
+                    std::cin >> characterMenuChoice;
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                    switch (characterMenuChoice)
+                    {
+                        case 1:
+                            manager.loadFromFile("data/characters.txt");
+                            break;
+                        case 2:
+                            manager.viewCharacters();
+                            break;
+                        case 3:
+                            manager.editCharacter();
+                            break;
+                        case 4:
+                            manager.saveToFile("data/characters.txt");
+                            break;
+                        case 0:
+                            break;
+                        default:
+                            std::cout << "Invalid choice.\n";
+                            break;
+                    }
+                } while (characterMenuChoice != 0);
+                break;
+            }
+            case 3:
+                manager.manageGlobalSpells();
+                break;
+            case 4: col_manager.ChangeColour(); break;
+            case 5: diceRoller.promptAndRoll(); break;
+            case 0: break;
+            default:
+                std::cout << "Invalid choice.\n";
+                break;
         }
 
     } while (choice != 0);

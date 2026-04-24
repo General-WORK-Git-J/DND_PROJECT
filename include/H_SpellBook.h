@@ -12,6 +12,7 @@ private:
 public:
     void addSpell(const Spell& spell);
     void removeSpell(std::string name);
+    bool updateSpell(size_t index, const Spell& spell);
     void displayAllSpells() const;
     void displaySpellsWithIndex() const;
     void saveSpellbook(const std::string& filename) const;
