@@ -4,7 +4,34 @@
 #include <iostream>
 #include <limits>
 
+// Probably should explain the difference between skills and feats in DND.
+
+// Basically, Skills are universal components of DND characters, every character has the same ones.
+// These skills represent how capable your character is at certain tasks and when attempting to do something 
+// you may be asked to make a "skill check". this means you must roll a d20 to determine if you succeed or fail
+// What skills are used for any given task or action is decided by the Dungeon master
+
+// Being certain classes, races and backgrounds can cause you to become "proficient" in a skill, 
+// which means you can add your proficiency bonus along with your ability score modifier
+// to a roll when using that particular skill for a check.
+
+// at some point you may gain "expertise" in a skill, which allows you to double your prof bonus 
+// before adding it to your roll. For example a character "proficient" in "Athletics" who rolled a 14
+// would have a final value for an "Athletics" check like this: 14 + strength mod + prof bonus = final value 
+
+// if that same character rolled a 13 but has "expertise" in Athletics,
+// then the roll would be: 13 + strength mod + (prof bonus x 2) = final value
+
+// which ability score (AS) modifier you add to your roll for a skill check is dependent on which AS it
+// is derived from (This is predetermined by the rules of DND 5e). For example, "Athletics" is 
+// derived from the strength AS and as such the Strength modifier is used when making a check with this skill
+
+// Feats are able to be chosen at specific levels and are essentiallty additional abilites not dependent 
+// on your class. "Racial" feats are a specific type of feat gained at level 1 upon character 
+// creation and ,as named, are determined by your race  
+
 namespace {
+
 // Normalizes text for case-insensitive skill lookups.
 std::string toLowerCopy(const std::string& value)
 {
@@ -35,6 +62,26 @@ int scoreForAbility(const std::string& ability,
     return charisma;
 }
 }
+
+// Skill, proficiency and saving throw management
+
+// Saving throws:
+
+// At some point during a DND campaign you will be asked to make a "Saving throw".
+// This is effectively a specific type of check to see whether an action or occurance affects you,
+// such as avoidng a trap that was triggered or breaking out a grapple attempt. 
+
+// you can be "proficient" in a particular type of saving throw and, similarly to skill checks, you can add your prof bonus to your
+// roll. However, Unlike skill checks, saving throws only ever use the base Ability scores: STR, DEX, CON, INT, WIS, CHA.
+
+// There is a special type of saving throw called a "Death save". This occurs when a character reaches 0 hp but 
+// is not killed outright. For every consecutive turn while your health remains at 0, you must roll a d20 to determine if you pass or fail.
+
+// Death saves use no modifiers and have a simple pass requirment of 10 or higher using a d20 dice.
+// 3 successes ( 3 rolls of 10+, or a single natural 20 roll) "stabilizes" your character at 1 hp. 
+// 3 fails (9 or lower) causes your character to die. getting a natural 1 counts as 2 fails
+
+// you can also be stabilized by being healed by outside sources
 
 CharacterFeatures::CharacterFeatures()
     : skills({

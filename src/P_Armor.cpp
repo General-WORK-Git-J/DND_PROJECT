@@ -1,6 +1,8 @@
 #include "H_Armor.h"
 #include <iostream>
 
+
+// Armour constructor
 Armor::Armor(std::string name_, std::string description_, float weight_,
              int quantity_, int value_, std::string rarity_, bool requiresAttunement_,
              std::string armorType_, int baseAC_,
@@ -9,6 +11,7 @@ Armor::Armor(std::string name_, std::string description_, float weight_,
       armorType(armorType_), baseAC(baseAC_), maxDexBonus(maxDexBonus_),
       strRequirement(strRequirement_), stealthDisadvantage(stealthDisadvantage_) {}
 
+// Getters
 std::string Armor::getArmorType() const       { return armorType; }
 int         Armor::getBaseAC() const          { return baseAC; }
 int         Armor::getMaxDexBonus() const     { return maxDexBonus; }
@@ -17,6 +20,7 @@ bool        Armor::getStealthDisadvantage() const { return stealthDisadvantage; 
 
 std::string Armor::getItemTag() const { return "ARMOR"; }
 
+// Display
 void Armor::display() const {
     std::cout << "[Armor]\n";
     displayCommon();
@@ -27,6 +31,7 @@ void Armor::display() const {
     std::cout << "  Stealth:     " << (stealthDisadvantage ? "Disadvantage" : "Normal") << "\n";
 }
 
+// Save/Load item
 void Armor::saveData(std::ofstream& file) const {
     saveCommon(file);
     file << armorType << "\n";
@@ -35,6 +40,7 @@ void Armor::saveData(std::ofstream& file) const {
     file << strRequirement << "\n";
     file << stealthDisadvantage << "\n";
 }
+
 
 void Armor::loadData(std::ifstream& file) {
     loadCommon(file);

@@ -1,6 +1,19 @@
 #include "H_Wallet.h"
 #include <iostream>
 
+
+// Money is an important aspect of DND and comes in 5 denominations as per the 5e ruleset
+// starting from the Highest:
+// Platinum = 10 Gold
+// Gold = 10 Silver or 5 Electrum pieces
+// Silver = 10 Copper
+// Copper is the lowest
+// Electrum pieces are unusual as they dont follow the convention of the other denominations, intended to be halfway between gold and silver, and are often unused.
+// However, some Dungeon masters like using them, so they are included for clarity.
+
+
+
+
 Wallet::Wallet() : copper(0), silver(0), electrum(0), gold(0), platinum(0) {}
 
 int Wallet::getCopper() const { return copper; }

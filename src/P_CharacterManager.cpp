@@ -8,8 +8,19 @@
 #include <limits>
 #include <sstream>
 
+// Main file for managing character utilities
+
+// Indexing in c++ is 0-based, so first element in a container is element 0.
+// But for display purposes it is converted to 1-based, and then converted back to 0-based for actual element referencing.
+
+// All numeric values (damage, health, stats etc.) in DND are whole integers, though in the event that division occurs, such as when an attack does half damage 
+// or a potion does half healing and the resulting value isnt a whole number, the numeric value is rounded up or down to a whole number at the Dungeon masters 
+//discretion. This simplifies the numeric based data management, and means we dont ever have to use floats or doubles (yay)
+
+
 // Anonymous namespace keeps these helpers private to this .cpp file.
 namespace {
+
 // Returns a lowercase copy so string comparisons can ignore letter casing.
 std::string toLowerCopy(const std::string& value)
 {
@@ -41,6 +52,8 @@ void saveGlobalSpellbook(const Spellbook& spellbook)
 }
 
 void CharacterManager::createCharacter() {
+
+    // Initialize variables
     std::string name, race, characterClass, background, alignment;
     int lvl, age, weight;
     int c_hp, m_hp, t_hp;
@@ -49,12 +62,14 @@ void CharacterManager::createCharacter() {
 
     int new_AS[6];
 
+    // Get string based information
     name = getValidNameInput("name");
     race = getValidStringInput("race");
     characterClass = getValidStringInput("class");
     background = getValidStringInput("background");
     alignment = getValidStringInput("alignment");
-
+    
+    // Get level
     bool level_set = false;
     while (!level_set) {
         lvl = getValidIntegerInput("level (1-20)");
@@ -62,10 +77,11 @@ void CharacterManager::createCharacter() {
         else { Invalidinput(); std::cout << "Level must be between 1 and 20\n"; }
     }
 
+    // Get integer based information.
     age    = getValidIntegerInput("age");
     weight = getValidIntegerInput("weight");
     m_hp   = getValidIntegerInput("max health");
-    c_hp   = m_hp;
+    c_hp   = m_hp; 
 
     std::cout << "Enter Temporary health (0 if none): ";
     while (!(std::cin >> t_hp) || t_hp < 0) {
@@ -78,7 +94,7 @@ void CharacterManager::createCharacter() {
 
 
     
-
+    // Get ability scores 
     for (int i = 0; i < 6; i++)
     {
         int new_score;
@@ -95,6 +111,7 @@ void CharacterManager::createCharacter() {
         }
     }
 
+    // Assign new ability scores
     str = new_AS[0];
     dex = new_AS[1];
     con = new_AS[2];
@@ -102,6 +119,7 @@ void CharacterManager::createCharacter() {
     wis = new_AS[4];
     cha = new_AS[5];
 
+    // Get prof and intitiative
     bool initiative_set = false;
     bool proficiency_set = false;
 
@@ -119,24 +137,24 @@ void CharacterManager::createCharacter() {
         }
     }
 
-    while ( proficiency_set == false)
+    while (proficiency_set == false)
     {
         
     std::cout << "Enter proficiency: ";
     std::cin >> prof;
-    if (prof >= 2)
-    {proficiency_set = true;}
+    if (prof >= 2) // Proficiency bonus is +2 at level one, cannot be lower
+        {proficiency_set = true;}
 
     else
-    {
+        {
         Invalidinput();
         std::cout << "Proficiency must be minimum +2, please enter valid value! " << std::endl;
         
+        }
     }
-    }
 
 
-
+    // Build character using constructor and place into vector
     characters.emplace_back(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, h_dice, str, dex, con, intl, wis, cha, init, prof);
 
     std::cout << "Character created!\n";
@@ -148,11 +166,13 @@ bool CharacterManager::hasCharacters() const
 }
 
 void CharacterManager::viewCharacters() const {
+    // Check for characters
     if (characters.empty()) {
         std::cout << "No characters available.\n";
         return;
     }
 
+    // List Characters by name
     std::cout << "\n=== Characters ===\n";
     for (size_t i = 0; i < characters.size(); i++)
         std::cout << i + 1 << ". " << characters[i].getName() << "\n";
@@ -161,7 +181,8 @@ void CharacterManager::viewCharacters() const {
     int choice;
     std::cin >> choice;
     if (choice < 1 || choice > static_cast<int>(characters.size())) return;
-    characters[choice - 1].display();
+    // Show all details of chosen character
+    characters[choice - 1].display();  
 }
 
 void CharacterManager::manageGlobalSpells()
@@ -388,12 +409,14 @@ void CharacterManager::manageGlobalSpells()
 }
 
 void CharacterManager::editCharacter() {
+    // Check for characters
     if (characters.empty()) {
         std::cout << "No characters to edit.\n";
         return;
     }
 
     int index;
+    // Displays characters by name by using a for loop to iterate through the vector
     for (int i = 0; i < static_cast<int>(characters.size()); i++)
     {
         std::cout << i + 1 << ". " << characters[i].getName() << std::endl;
@@ -407,14 +430,17 @@ void CharacterManager::editCharacter() {
         return;
     }
 
+    // Assigns the character object chose to reference c to apply edits
     Character& c = characters[index - 1];
 
     int choice;
+
+    // Display edit menu
     do {
         std::cout << "\n1.Character details \n2.Character health \n3.Inventory \n4.Ability scores \n5.Spells \n6.Features and skills \n0.Back \nChoice: ";
         std::cin >> choice;
 
-        if (choice == 1) 
+        if (choice == 1) // Character details
         {
             int char_edit_choice;
             std::cout << "What would you like to change? " << std::endl;
@@ -471,7 +497,7 @@ void CharacterManager::editCharacter() {
                     break;
                 }
 
-                case 7: //Weight
+            case 7: //Weight
                 {
                     int new_weight = getValidIntegerInput("Weight");
                     c.setWeight(new_weight);
@@ -479,7 +505,7 @@ void CharacterManager::editCharacter() {
                     break;
                 }
 
-                case 8: //Level
+            case 8: //Level
                 {
                     bool level_set = false;
                     while (level_set == false)
@@ -507,7 +533,7 @@ void CharacterManager::editCharacter() {
             
             
         }
-        else if (choice == 2)
+        else if (choice == 2) // Health
         {
             int health_edit_choice;
             std::cout << "What would you like to change? " << std::endl;
@@ -581,11 +607,11 @@ void CharacterManager::editCharacter() {
             
         }
 
-        else if (choice == 3) 
+        else if (choice == 3) // Inventory
         {
             manageInventory(c);
         }
-        else if (choice == 4) 
+        else if (choice == 4) // Stats
         {
             std::cout << "What stat would you like to change? "  << std::endl;
             for (int i = 0; i < 6; i++)
@@ -599,7 +625,8 @@ void CharacterManager::editCharacter() {
             std::cin >> val;
             c.setStats(val, abil);
         }
-        else if (choice == 5){
+        else if (choice == 5) // Spells and hsort/long rest
+        {
         int spellChoice;
 
             do {
@@ -879,11 +906,11 @@ void CharacterManager::editCharacter() {
                 }
             } while (spellChoice != 0);
         }
-        else if (choice == 6)
+        else if (choice == 6) // Feats and abilites
         {
             manageFeatures(c);
         }
-        else 
+        else // Exit edit menu
         {
             std::cout << "Exiting edit menu " << std::endl;
             std::cin.clear();
@@ -893,6 +920,7 @@ void CharacterManager::editCharacter() {
     } while (choice != 0);
 }
 
+// Utility methods for getting valid inputs and re-usable error-checking methods
 std::string CharacterManager::getValidStringInput(const std::string& value_to_get)
 {
     std::string new_input;
@@ -930,6 +958,7 @@ std::string CharacterManager::getValidNameInput(const std::string& value_to_get)
         }
     }
 }
+
 
 bool CharacterManager::isValidString(const std::string &input)
 {
@@ -1011,7 +1040,7 @@ void CharacterManager::Invalidinput()
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
 }
-
+// Save/Load functions
 void CharacterManager::saveToFile(const std::string& filename) const {
     std::ofstream file(filename);
 
@@ -1188,11 +1217,12 @@ void CharacterManager::loadFromFile(const std::string& filename) {
     std::cout << "Loaded successfully.\n";
 }
 
-// inventory
+// Inventory
 void CharacterManager::manageInventory(Character& c) {
     int choice;
 
     do {
+        // Inventory menu
         std::cout << "\n=== Inventory ===\n";
         std::cout << "1. View\n";
         std::cout << "2. Add Item\n";
@@ -1207,7 +1237,8 @@ void CharacterManager::manageInventory(Character& c) {
         if (choice == 1) {
             c.showInventory();
         }
-        else if (choice == 2) {
+        else if (choice == 2) // Create new item
+        {
             std::cout << "Item type:\n1. Weapon\n2. Armor\n3. Gear\nChoice: ";
             int typeChoice;
             std::cin >> typeChoice;
@@ -1256,13 +1287,15 @@ void CharacterManager::manageInventory(Character& c) {
             }
             std::cout << "Item added.\n";
         }
-        else if (choice == 3) {
+        else if (choice == 3) // Remove item by index 
+        {
             int index;
             std::cout << "Index to remove: ";
             std::cin >> index;
             c.removeItem(index);
         }
-        else if (choice == 5) {
+        else if (choice == 5) // Equip armor or shield
+        {
             if (c.getInventory().size() == 0) {
                 std::cout << "Inventory is empty.\n";
             } else {
@@ -1277,14 +1310,16 @@ void CharacterManager::manageInventory(Character& c) {
                 }
             }
         }
-        else if (choice == 6) {
+        else if (choice == 6) // Unequip Armor or shield 
+        {
             std::cout << "1. Unequip armor\n2. Unequip shield\nChoice: ";
             int uChoice;
             std::cin >> uChoice;
             if (uChoice == 1) { c.unequipArmor();  std::cout << "Armor unequipped.\n"; }
             if (uChoice == 2) { c.unequipShield(); std::cout << "Shield unequipped.\n"; }
         }
-        else if (choice == 4) {
+        else if (choice == 4) // Manage currency
+        {
             int currChoice;
             do {
                 std::cout << "\n=== Currency ===\n";
@@ -1297,7 +1332,7 @@ void CharacterManager::manageInventory(Character& c) {
 
                 if (currChoice == 1 || currChoice == 2) {
                     int pp, gp, ep, sp, cp;
-                    std::cout << "Platinum: "; std::cin >> pp;
+                    std::cout << "Platinum: "; std::cin >> pp; 
                     std::cout << "Gold: ";     std::cin >> gp;
                     std::cout << "Electrum: "; std::cin >> ep;
                     std::cout << "Silver: ";   std::cin >> sp;
@@ -1318,6 +1353,7 @@ void CharacterManager::manageInventory(Character& c) {
     } while (choice != 0);
 }
 
+// Methods for managing features
 void CharacterManager::manageFeatures(Character& c)
 {
     int choice = -1;
@@ -1333,17 +1369,17 @@ void CharacterManager::manageFeatures(Character& c)
         std::cout << "5. Remove racial trait\n";
         std::cout << "6. View skills\n";
         std::cout << "7. Edit skill proficiency\n";
-        std::cout << "8. Edit skill proficiency\n";
+        std::cout << "8. Edit saving throw proficiency\n";
         std::cout << "0. Back\n";
         std::cout << "Choice: ";
         std::cin >> choice;
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-        if (choice == 1)
+        if (choice == 1) // View feats
         {
             c.showFeatures();
         }
-        else if (choice == 2)
+        else if (choice == 2) // Add feat
         {
             std::string feat;
             std::cout << "Feat name: ";
@@ -1354,7 +1390,7 @@ void CharacterManager::manageFeatures(Character& c)
                 std::cout << "Feat added.\n";
             }
         }
-        else if (choice == 3)
+        else if (choice == 3) // Remove feat
         {
             std::cout << "\n=== Feats ===\n";
             c.getFeatures().displayFeats();
@@ -1372,7 +1408,7 @@ void CharacterManager::manageFeatures(Character& c)
                 std::cout << "Invalid index.\n";
             }
         }
-        else if (choice == 4)
+        else if (choice == 4) // Add racial feat/trait
         {
             std::string trait;
             std::cout << "Racial trait name: ";
@@ -1383,7 +1419,7 @@ void CharacterManager::manageFeatures(Character& c)
                 std::cout << "Racial trait added.\n";
             }
         }
-        else if (choice == 5)
+        else if (choice == 5) // Remove racial feat/trait
         {
             std::cout << "\n=== Racial Traits ===\n";
             c.getFeatures().displayRacialTraits();
@@ -1401,14 +1437,14 @@ void CharacterManager::manageFeatures(Character& c)
                 std::cout << "Invalid index.\n";
             }
         }
-        else if (choice == 6)
+        else if (choice == 6) // View skills
         {
             std::cout << "\n=== Skills ===\n";
             c.getFeatures().displaySkills(c.getStrength(), c.getDexterity(), c.getConstitution(),
                                           c.getIntelligence(), c.getWisdom(), c.getCharisma(),
                                           c.getProficiency());
         }
-        else if (choice == 7)
+        else if (choice == 7) // Edit skill proficiencies
         {
             const auto& skills = c.getFeatures().getSkills();
             // Skills are selected by index here, but stored internally by name.
@@ -1445,7 +1481,7 @@ void CharacterManager::manageFeatures(Character& c)
             std::cout << "Skill updated.\n";
         }
 
-        else if (choice == 8)
+        else if (choice == 8) // Edit saving throw proficiencys
         {
             std::cout << "\n=== Saving Throws ===\n";
             c.getFeatures().displaySaves(c.getStrength(), c.getDexterity(), c.getConstitution(),

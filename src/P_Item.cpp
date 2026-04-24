@@ -33,6 +33,9 @@ void Item::display() const {
     displayCommon();
 }
 
+
+// Save/Load data and param shared by all item subtypes
+
 void Item::saveCommon(std::ofstream& file) const {
     file << name << "\n";
     file << description << "\n";
@@ -66,6 +69,7 @@ void Item::save(std::ofstream& file) const {
     saveData(file);
 }
 
+// Creates pointer of associated item subtype based on item tag 
 std::unique_ptr<Item> Item::loadFromFile(std::ifstream& file) {
     std::string tag;
     std::getline(file, tag);

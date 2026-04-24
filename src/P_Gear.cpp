@@ -1,6 +1,8 @@
 #include "H_Gear.h"
 #include <iostream>
 
+
+// This is an item subclass for miscellanous items
 Gear::Gear(std::string name_, std::string description_, float weight_,
            int quantity_, int value_, std::string rarity_, bool requiresAttunement_)
     : Item(name_, description_, weight_, quantity_, value_, rarity_, requiresAttunement_) {}

@@ -5,6 +5,23 @@
 #include <numeric>
 #include <thread>
 
+
+// Dice in DND are a core part of the game and they are used for a wide variety of tasks, such as Skill checks, Damage, saving throws, Healing etc.
+// DND has 6 unique die: d4. d6. d8, d10, d12 and d20 
+
+// sometimes you can be asked to roll a d2, d3 or a d100, though these are normally substituted with existing die with addtional conditions.
+// for a d2, generally, you roll a d6 with the odd values representing 1, and the evens, 2. 
+// for a d3, generally, you roll a d4, with 1-3 representing their values as normal, and 4 meaning roll again.
+// A d100 is typically rolled using 2 d10 die, one for the tens and one for the units. Some sets even come with special d10 die to represent this
+
+// Sometimes when rolling a d20, you may be asked to roll at "advantage" or "disadvantage". This means that you must roll 2 d20
+// and use the  higher (advantage) or lower (disadvantage) number. This mechanic in-game is used to reflect whether the conditions are ideal or sub-optimal
+// when making a skill check
+
+// when having to roll multiple dice for an action, such as for damage, you will see it represented something like 3d8. this just means 3 d8 die 
+// must be rolled and their individual values totalled to use for whatever action you are trying to do 
+
+
 namespace {
 // Restrict the interactive roller to the standard dice used in this project.
 bool isSupportedDie(int sides)
