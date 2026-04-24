@@ -1,0 +1,10 @@
+paul
+human
+warlock
+chaotic neutral
+lawful good
+5 21 200
+66 66 0
+d10 5
+18 16 14 14 13 12 4 4
+-1 -1

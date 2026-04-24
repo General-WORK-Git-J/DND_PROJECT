@@ -37,6 +37,11 @@ set(LIB_SOURCES
 add_library(dnd_lib STATIC ${LIB_SOURCES})
 target_include_directories(dnd_lib PUBLIC include)
 
+# MinGW GCC 8.x ships filesystem as a separate library; GCC 9+ includes it automatically.
+if(WIN32)
+    target_link_libraries(dnd_lib PUBLIC stdc++fs)
+endif()
+
 if(ENABLE_COVERAGE)
     target_compile_options(dnd_lib PUBLIC -fprofile-arcs -ftest-coverage)
     target_link_options(dnd_lib PUBLIC --coverage)

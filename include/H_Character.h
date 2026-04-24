@@ -153,7 +153,8 @@ public:
     void showFeatures() const;
 
     // File functions
-    void save(std::ofstream& file) const;
+    void saveToDirectory(const std::string& dirPath) const;
+    static Character loadFromDirectory(const std::string& dirPath);
 };
 
 #endif

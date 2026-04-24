@@ -24,11 +24,9 @@ int main() {
         std::cout << "\n=== DnD Manager ===\n";
         std::cout << "1. Create Character\n";
         std::cout << "2. View Characters\n";
-        std::cout << "3. Edit Characters\n";
-        std::cout << "4. Save Characters\n";
-        std::cout << "5. Load Characters\n";
-        std::cout << "6. Change Text Colour\n";
-        std::cout << "7. Roll Dice\n";                  // Standalone dice rolling keeps common table actions outside character menus.
+        std::cout << "3. Manage Global Spells\n";
+        std::cout << "4. Change Text Colour\n";
+        std::cout << "5. Roll Dice\n";
         std::cout << "0. Exit\n";
         std::cout << "Choice: ";
         
@@ -56,7 +54,7 @@ int main() {
                     switch (characterMenuChoice)
                     {
                         case 1:
-                            manager.loadFromFile("data/characters.txt");
+                            manager.loadAll();
                             break;
                         case 2:
                             manager.viewCharacters();
@@ -65,7 +63,7 @@ int main() {
                             manager.editCharacter();
                             break;
                         case 4:
-                            manager.saveToFile("data/characters.txt");
+                            manager.saveAll();
                             break;
                         case 0:
                             break;

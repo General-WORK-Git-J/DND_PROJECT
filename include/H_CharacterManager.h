@@ -34,8 +34,10 @@ public:
     
 
     // Save/Load
-    void saveToFile(const std::string& filename) const;
-    void loadFromFile(const std::string& filename);
+    void saveCharacter(const Character& c) const;
+    void saveAll() const;
+    void loadAll();
+    std::vector<std::string> listCharacterNames() const;
 
 
     // Inventory

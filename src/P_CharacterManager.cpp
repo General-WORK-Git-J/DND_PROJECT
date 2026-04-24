@@ -6,7 +6,7 @@
 #include <fstream>
 #include <cctype>
 #include <limits>
-#include <sstream>
+#include <filesystem>
 
 // Main file for managing character utilities
 
@@ -1041,180 +1041,61 @@ void CharacterManager::Invalidinput()
 
 }
 // Save/Load functions
-void CharacterManager::saveToFile(const std::string& filename) const {
-    std::ofstream file(filename);
 
-    if (!file) {
-        std::cout << "Error saving file\n";
-        return;
-    }
-
-    file << characters.size() << std::endl;
-
-    for (const auto& c : characters) {
-        c.save(file);
-    }
-
-    std::cout << "Saved successfully.\n";
+void CharacterManager::saveCharacter(const Character& c) const {
+    namespace fs = std::filesystem;
+    fs::path dir = fs::path("data") / "characters" / c.getName();
+    fs::create_directories(dir);
+    c.saveToDirectory(dir.string());
+    std::cout << c.getName() << " saved.\n";
 }
 
-void CharacterManager::loadFromFile(const std::string& filename) {
-    std::ifstream file(filename);
+void CharacterManager::saveAll() const {
+    if (characters.empty()) {
+        std::cout << "No characters to save.\n";
+        return;
+    }
+    for (const auto& c : characters)
+        saveCharacter(c);
+}
 
-    if (!file) {
-        std::cout << "No save file found.\n";
+void CharacterManager::loadAll() {
+    namespace fs = std::filesystem;
+    fs::path base = fs::path("data") / "characters";
+
+    if (!fs::exists(base) || !fs::is_directory(base)) {
+        std::cout << "No saved characters found.\n";
         return;
     }
 
     characters.clear();
-
-    int count = 0;
-    if (!(file >> count) || count < 0) {
-        std::cout << "Save file is empty or corrupt.\n";
-        return;
-    }
-    file.ignore();
-
-    for (int i = 0; i < count; i++) {
-        std::string name, race, characterClass, background, alignment;
-        int lvl, age, weight;
-        int c_hp, m_hp, t_hp;
-        std::string h_dice;
-        int h_dice_num = 0;
-        int str, dex, con, intl, wis, cha, init, prof;
-
-        std::getline(file, name);
-        std::getline(file, race);
-        std::getline(file, characterClass);
-        std::getline(file, background);
-        std::getline(file, alignment);
-        
-        file >> lvl;
-        file >> age;
-        file >> weight;
-        file >> c_hp;
-        file >> m_hp;
-        file >> t_hp;
-        file >> h_dice >> h_dice_num;
-
-        file >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
-        file.ignore();
-
-        Character c(name, race, characterClass, background, alignment, lvl, age, weight, c_hp, m_hp, t_hp, h_dice, str, dex, con, intl, wis, cha, init, prof);
-        if (h_dice_num > 0) c.setHitDiceNum(h_dice_num);
-
-    // --- INVENTORY ---
-        c.getInventory().load(file);
-
-        // --- WALLET ---
-        std::string walletMarker;
-        std::getline(file, walletMarker);
-        if (walletMarker == "WALLET")
-        {
-            c.getWallet().load(file);
+    int loaded = 0;
+    for (const auto& entry : fs::directory_iterator(base)) {
+        if (entry.is_directory() && fs::exists(entry.path() / "character.txt")) {
+            characters.push_back(Character::loadFromDirectory(entry.path().string()));
+            loaded++;
         }
-
-        // --- SPELLBOOK ---
-        std::string marker;
-        std::getline(file, marker);
-
-        bool spellSlotsConsumed = false;
-
-        if (marker == "SPELLBOOK")
-        {
-            std::ofstream temp("data/temp_spell.txt");
-
-            std::string line;
-            while (std::getline(file, line) && line != "SPELLSLOTS")
-            {
-                temp << line << std::endl;
-            }
-            // The while loop consumes "SPELLSLOTS" as its exit condition
-            spellSlotsConsumed = (line == "SPELLSLOTS");
-
-            temp.close();
-            c.getSpellbook().loadSpellbook("data/temp_spell.txt");
-        }
-
-        // If the spellbook while-loop didn't consume "SPELLSLOTS", try to read it now
-        if (!spellSlotsConsumed)
-        {
-            std::streampos preSlotPos = file.tellg();
-            std::string spellSlotMarker;
-            std::getline(file, spellSlotMarker);
-            if (spellSlotMarker == "SPELLSLOTS")
-                spellSlotsConsumed = true;
-            else
-            {
-                file.clear();
-                file.seekg(preSlotPos);
-            }
-        }
-
-        if (spellSlotsConsumed)
-        {
-            std::streampos spellSlotDataPos = file.tellg();
-            std::string slotCountLine;
-
-            if (std::getline(file, slotCountLine))
-            {
-                std::istringstream countParser(slotCountLine);
-                int slotCount = 0;
-
-                if (countParser >> slotCount)
-                {
-                    // Newer saves include a slot-count header and full slot data.
-                    file.seekg(spellSlotDataPos);
-                    c.getSpellSlots().load(file);
-                }
-                else
-                {
-                    // Older saves only had the marker, so leave slots empty and keep parsing.
-                    file.clear();
-                    file.seekg(spellSlotDataPos);
-                }
-            }
-            else
-            {
-                file.clear();
-            }
-        }
-
-        std::streampos nextCharacterPos = file.tellg();
-        std::string featureMarker;
-        std::getline(file, featureMarker);
-        if (featureMarker == "FEATURES")
-        {
-            c.getFeatures().load(file);
-        }
-        else
-        {
-            file.clear();
-            file.seekg(nextCharacterPos);
-        }
-
-        std::streampos equippedPos = file.tellg();
-        std::string equippedMarker;
-        std::getline(file, equippedMarker);
-        if (equippedMarker == "EQUIPPED")
-        {
-            int armorIdx = -1, shieldIdx = -1;
-            file >> armorIdx >> shieldIdx;
-            file.ignore();
-            c.setEquippedArmorIndex(armorIdx);
-            c.setEquippedShieldIndex(shieldIdx);
-        }
-        else
-        {
-            file.clear();
-            file.seekg(equippedPos);
-        }
-
-        characters.push_back(std::move(c));
-        
     }
 
-    std::cout << "Loaded successfully.\n";
+    if (loaded == 0)
+        std::cout << "No saved characters found.\n";
+    else
+        std::cout << "Loaded " << loaded << " character(s).\n";
+}
+
+std::vector<std::string> CharacterManager::listCharacterNames() const {
+    namespace fs = std::filesystem;
+    std::vector<std::string> names;
+    fs::path base = fs::path("data") / "characters";
+
+    if (!fs::exists(base) || !fs::is_directory(base))
+        return names;
+
+    for (const auto& entry : fs::directory_iterator(base)) {
+        if (entry.is_directory())
+            names.push_back(entry.path().filename().string());
+    }
+    return names;
 }
 
 // Inventory

@@ -3,6 +3,7 @@
 #include "H_Armor.h"
 #include "H_Gear.h"
 #include <iostream>
+#include <filesystem>
 
 // Constructor
 Character::Character(std::string n, std::string r, std::string c, std::string b, std::string a,
@@ -34,58 +35,91 @@ Character::Character(std::string n, std::string r, std::string c, std::string b,
 
 
 
-// Save character to file
-void Character::save(std::ofstream& file) const {
-    file << name << std::endl;
-    file << race << std::endl;
-    file << characterClass << std::endl;
-    file << background << std::endl;
-    file << alignment << std::endl;
-    file << level << " "
-         << age << " "
-         << weight << std::endl;
-    file << current_hp << " "
-         << max_hp << " "
-         << temp_hp << std::endl;
-    file << hit_dice << " " << hit_die_num << std::endl;
-    file << strength << " "
-         << dexterity << " "
-         << constitution << " "
-         << intelligence << " "
-         << wisdom << " "
-         << charisma << " "
-         << Initiative << " "
-         << proficiency << std::endl;
-    inventory.save(file);
-    // --- WALLET ---
-    file << "WALLET\n";
-    wallet.save(file);
+// Save all character data into a dedicated directory, one file per section.
+void Character::saveToDirectory(const std::string& dir) const {
+    namespace fs = std::filesystem;
 
-    // --- SPELLBOOK ---
-    file << "SPELLBOOK\n";
-
-    // Save spellbook to temp file
-    spellbook.saveSpellbook("data/temp_spell.txt");
-
-    // Copy into main file
-    std::ifstream temp("data/temp_spell.txt");
-    std::string line;
-    while (std::getline(temp, line))
     {
-        file << line << std::endl;
+        std::ofstream f((fs::path(dir) / "character.txt").string());
+        f << name << "\n" << race << "\n" << characterClass << "\n"
+          << background << "\n" << alignment << "\n"
+          << level << " " << age << " " << weight << "\n"
+          << current_hp << " " << max_hp << " " << temp_hp << "\n"
+          << hit_dice << " " << hit_die_num << "\n"
+          << strength << " " << dexterity << " " << constitution << " "
+          << intelligence << " " << wisdom << " " << charisma << " "
+          << Initiative << " " << proficiency << "\n"
+          << equippedArmorIndex << " " << equippedShieldIndex << "\n";
     }
-    temp.close();
+    {
+        std::ofstream f((fs::path(dir) / "inventory.txt").string());
+        inventory.save(f);
+    }
+    {
+        std::ofstream f((fs::path(dir) / "wallet.txt").string());
+        wallet.save(f);
+    }
+    spellbook.saveSpellbook((fs::path(dir) / "spells.txt").string());
+    {
+        std::ofstream f((fs::path(dir) / "spellslots.txt").string());
+        spellSlots.save(f);
+    }
+    {
+        std::ofstream f((fs::path(dir) / "features.txt").string());
+        features.save(f);
+    }
+}
 
-    // Spell slots are stored after the spellbook marker block for each character.
-    file << "SPELLSLOTS\n";
-    spellSlots.save(file);
+// Reconstruct a Character from a previously saved directory.
+Character Character::loadFromDirectory(const std::string& dir) {
+    namespace fs = std::filesystem;
 
-    // Features stores feats, racial traits, and the character's skill ranks.
-    file << "FEATURES\n";
-    features.save(file);
+    std::string name, race, characterClass, background, alignment, h_dice;
+    int lvl = 1, age = 0, weight = 0;
+    int c_hp = 0, m_hp = 0, t_hp = 0, h_dice_num = 0;
+    int str = 10, dex = 10, con = 10, intl = 10, wis = 10, cha = 10, init = 0, prof = 2;
+    int armorIdx = -1, shieldIdx = -1;
 
-    file << "EQUIPPED\n";
-    file << equippedArmorIndex << " " << equippedShieldIndex << "\n";
+    {
+        std::ifstream f((fs::path(dir) / "character.txt").string());
+        std::getline(f, name);
+        std::getline(f, race);
+        std::getline(f, characterClass);
+        std::getline(f, background);
+        std::getline(f, alignment);
+        f >> lvl >> age >> weight;
+        f >> c_hp >> m_hp >> t_hp;
+        f >> h_dice >> h_dice_num;
+        f >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
+        f >> armorIdx >> shieldIdx;
+    }
+
+    Character c(name, race, characterClass, background, alignment,
+                lvl, age, weight, c_hp, m_hp, t_hp, h_dice,
+                str, dex, con, intl, wis, cha, init, prof);
+    c.setHitDiceNum(h_dice_num);
+    c.setEquippedArmorIndex(armorIdx);
+    c.setEquippedShieldIndex(shieldIdx);
+
+    {
+        std::ifstream f((fs::path(dir) / "inventory.txt").string());
+        if (f) c.getInventory().load(f);
+    }
+    {
+        std::ifstream f((fs::path(dir) / "wallet.txt").string());
+        if (f) c.getWallet().load(f);
+    }
+    c.getSpellbook().loadSpellbook((fs::path(dir) / "spells.txt").string());
+    {
+        std::ifstream f((fs::path(dir) / "spellslots.txt").string());
+        if (f) c.getSpellSlots().load(f);
+    }
+    {
+        std::ifstream f((fs::path(dir) / "features.txt").string());
+        if (f) c.getFeatures().load(f);
+    }
+
+    return c;
 }
 
 // Display
