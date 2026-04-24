@@ -18,6 +18,8 @@ public:
     void createCharacter();
     void viewCharacters() const;
     void editCharacter();
+    void manageGlobalSpells();
+    bool hasCharacters() const;
 
     // Utilities
     std::string getValidStringInput(const std::string& value_to_get); // Re-usable method to get a string input with built in error checking

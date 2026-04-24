@@ -227,3 +227,30 @@ TEST(SpellbookTest, GetAllSpellsReturnsEveryAddedSpell) {
     EXPECT_EQ(all[0].getSpellName(), "Fireball");
     EXPECT_EQ(all[1].getSpellName(), "Magic Missile");
 }
+
+TEST(SpellbookTest, UpdateSpellReplacesSelectedSpell) {
+    Spellbook sb;
+    sb.addSpell(makeFireball());
+    sb.addSpell(makeMagicMissile());
+
+    Spell updated = makeMagicMissile();
+    updated.setSpellName("Shield");
+    updated.setSpellLevel(1);
+
+    EXPECT_TRUE(sb.updateSpell(0, updated));
+
+    auto all = sb.getAllSpells();
+    ASSERT_EQ(all.size(), 2u);
+    EXPECT_EQ(all[0].getSpellName(), "Shield");
+    EXPECT_EQ(all[0].getSpellLevel(), 1);
+    EXPECT_EQ(all[1].getSpellName(), "Magic Missile");
+}
+
+TEST(SpellbookTest, UpdateSpellRejectsOutOfRangeIndex) {
+    Spellbook sb;
+    sb.addSpell(makeFireball());
+
+    EXPECT_FALSE(sb.updateSpell(3, makeMagicMissile()));
+    ASSERT_EQ(sb.getAllSpells().size(), 1u);
+    EXPECT_EQ(sb.getAllSpells()[0].getSpellName(), "Fireball");
+}

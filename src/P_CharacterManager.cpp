@@ -5,6 +5,7 @@
 #include <iostream>
 #include <fstream>
 #include <cctype>
+#include <limits>
 #include <sstream>
 
 // Main file for managing character utilities
@@ -35,6 +36,18 @@ std::string toLowerCopy(const std::string& value)
 bool isWarlockClass(const Character& character)
 {
     return toLowerCopy(character.getClass()) == "warlock";
+}
+
+Spellbook loadGlobalSpellbook()
+{
+    Spellbook global;
+    global.loadSpellbook("data/SpellBook.txt");
+    return global;
+}
+
+void saveGlobalSpellbook(const Spellbook& spellbook)
+{
+    spellbook.saveSpellbook("data/SpellBook.txt");
 }
 }
 
@@ -147,6 +160,10 @@ void CharacterManager::createCharacter() {
     std::cout << "Character created!\n";
 }
 
+bool CharacterManager::hasCharacters() const
+{
+    return !characters.empty();
+}
 
 void CharacterManager::viewCharacters() const {
     // Check for characters
@@ -166,6 +183,229 @@ void CharacterManager::viewCharacters() const {
     if (choice < 1 || choice > static_cast<int>(characters.size())) return;
     // Show all details of chosen character
     characters[choice - 1].display();  
+}
+
+void CharacterManager::manageGlobalSpells()
+{
+    int choice = -1;
+
+    do
+    {
+        std::cout << "\n=== Global Spells ===\n";
+        std::cout << "1. View Spells By Level\n";
+        std::cout << "2. Add Spell\n";
+        std::cout << "3. Edit Spell\n";
+        std::cout << "0. Back\n";
+        std::cout << "Choice: ";
+        std::cin >> choice;
+
+        if (std::cin.fail())
+        {
+            Invalidinput();
+            continue;
+        }
+
+        if (choice == 1)
+        {
+            int level = 0;
+            std::cout << "Enter spell level: ";
+            std::cin >> level;
+
+            if (std::cin.fail())
+            {
+                Invalidinput();
+                continue;
+            }
+
+            Spellbook global = loadGlobalSpellbook();
+            auto spells = global.getSpellsByLevel(level);
+
+            if (spells.empty())
+            {
+                std::cout << "No spells found at that level.\n";
+            }
+            else
+            {
+                std::cout << "\n=== Spells At Level " << level << " ===\n";
+                for (const auto& spell : spells)
+                {
+                    spell.DisplaySpellProperties();
+                    std::cout << "------------------\n";
+                }
+            }
+        }
+        else if (choice == 2)
+        {
+            std::string name, type, effect, time, range, comp, duration, save, desc;
+            int level = 0;
+
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+            std::cout << "Spell name: ";
+            std::getline(std::cin, name);
+            std::cout << "Type: ";
+            std::getline(std::cin, type);
+            std::cout << "Effect: ";
+            std::getline(std::cin, effect);
+            std::cout << "Level: ";
+            std::cin >> level;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Cast time: ";
+            std::getline(std::cin, time);
+            std::cout << "Range: ";
+            std::getline(std::cin, range);
+            std::cout << "Components: ";
+            std::getline(std::cin, comp);
+            std::cout << "Duration: ";
+            std::getline(std::cin, duration);
+            std::cout << "Saving throw: ";
+            std::getline(std::cin, save);
+            std::cout << "Description: ";
+            std::getline(std::cin, desc);
+
+            Spellbook global = loadGlobalSpellbook();
+            global.addSpell(Spell(name, type, effect, level, time, range, comp, duration, save, desc));
+            saveGlobalSpellbook(global);
+            std::cout << "Spell added to global spellbook!\n";
+        }
+        else if (choice == 3)
+        {
+            Spellbook global = loadGlobalSpellbook();
+            auto spells = global.getAllSpells();
+
+            if (spells.empty())
+            {
+                std::cout << "No spells available to edit.\n";
+                continue;
+            }
+
+            global.displaySpellsWithIndex();
+            std::cout << "Select spell number: ";
+
+            int spellNum = 0;
+            std::cin >> spellNum;
+            if (std::cin.fail() || spellNum < 1 || spellNum > static_cast<int>(spells.size()))
+            {
+                Invalidinput();
+                std::cout << "Invalid spell selection.\n";
+                continue;
+            }
+
+            Spell spellToEdit = spells[spellNum - 1];
+            int editChoice = -1;
+
+            do
+            {
+                std::cout << "\n=== Edit Spell: " << spellToEdit.getSpellName() << " ===\n";
+                std::cout << "1. Name\n";
+                std::cout << "2. Type\n";
+                std::cout << "3. Effect\n";
+                std::cout << "4. Level\n";
+                std::cout << "5. Cast Time\n";
+                std::cout << "6. Range\n";
+                std::cout << "7. Components\n";
+                std::cout << "8. Duration\n";
+                std::cout << "9. Saving Throw\n";
+                std::cout << "10. Description\n";
+                std::cout << "11. View Spell Details\n";
+                std::cout << "0. Save and Back\n";
+                std::cout << "Choice: ";
+                std::cin >> editChoice;
+
+                if (std::cin.fail())
+                {
+                    Invalidinput();
+                    continue;
+                }
+
+                switch (editChoice)
+                {
+                    case 1:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellName(getValidNameInput("spell name"));
+                        break;
+                    }
+                    case 2:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellType(getValidStringInput("spell type"));
+                        break;
+                    }
+                    case 3:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellEffect(getValidStringInput("spell effect"));
+                        break;
+                    }
+                    case 4:
+                    {
+                        spellToEdit.setSpellLevel(getValidIntegerInput("spell level"));
+                        break;
+                    }
+                    case 5:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellTime(getValidStringInput("cast time"));
+                        break;
+                    }
+                    case 6:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellRange(getValidStringInput("range"));
+                        break;
+                    }
+                    case 7:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellComponents(getValidStringInput("components"));
+                        break;
+                    }
+                    case 8:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellDuration(getValidStringInput("duration"));
+                        break;
+                    }
+                    case 9:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellSavingThrow(getValidStringInput("saving throw"));
+                        break;
+                    }
+                    case 10:
+                    {
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                        spellToEdit.setSpellDescription(getValidStringInput("description"));
+                        break;
+                    }
+                    case 11:
+                    {
+                        spellToEdit.DisplaySpellProperties();
+                        break;
+                    }
+                    case 0:
+                    {
+                        if (global.updateSpell(static_cast<size_t>(spellNum - 1), spellToEdit))
+                        {
+                            saveGlobalSpellbook(global);
+                            std::cout << "Spell updated.\n";
+                        }
+                        break;
+                    }
+                    default:
+                    {
+                        std::cout << "Invalid choice.\n";
+                        break;
+                    }
+                }
+            } while (editChoice != 0);
+        }
+        else if (choice != 0)
+        {
+            std::cout << "Invalid choice.\n";
+        }
+    } while (choice != 0);
 }
 
 void CharacterManager::editCharacter() {
@@ -390,93 +630,43 @@ void CharacterManager::editCharacter() {
         int spellChoice;
 
             do {
-                std::cout << "\n=== Spells ===\n";
+                std::cout << "\n=== Character Spells ===\n";
                 std::cout << "1. View Global Spells\n";
-                std::cout << "2. Create New Spell\n";
-                std::cout << "3. Add Existing Spell to Character\n";
-                std::cout << "4. View Character Spellbook\n";
-                std::cout << "5. Cast Spell\n";
-                std::cout << "6. Edit Spell Slots\n";
-                std::cout << "7. Long Rest\n";
-                std::cout << "8. Short Rest\n";
+                std::cout << "2. Add Existing Spell to Character\n";
+                std::cout << "3. View Character Spellbook\n";
+                std::cout << "4. Cast Spell\n";
+                std::cout << "5. Edit Spell Slots\n";
+                std::cout << "6. Long Rest\n";
+                std::cout << "7. Short Rest\n";
                 std::cout << "0. Back\n";
                 std::cin >> spellChoice;
 
                 if (spellChoice == 1)
                 {
-                    int viewChoice;
+                    Spellbook global = loadGlobalSpellbook();
+                    int level;
+                    std::cout << "Enter spell level: ";
+                    std::cin >> level;
 
-                    Spellbook global;
-                    global.loadSpellbook("data/SpellBook.txt");
+                    auto spells = global.getSpellsByLevel(level);
 
-                    std::cout << "\n=== View Spells ===\n";
-                    std::cout << "1. View All\n";
-                    std::cout << "2. Filter by Level\n";
-                    std::cout << "0. Back\n";
-                    std::cin >> viewChoice;
-
-                    if (viewChoice == 1)
+                    if (spells.empty())
                     {
-                        global.displayAllSpells();
+                        std::cout << "No spells found at that level.\n";
                     }
-                    else if (viewChoice == 2)
+                    else
                     {
-                        int level;
-                        std::cout << "Enter spell level: ";
-                        std::cin >> level;
-
-                        auto spells = global.getSpellsByLevel(level);
-
-                        if (spells.empty())
+                        for (size_t i = 0; i < spells.size(); i++)
                         {
-                            std::cout << "No spells found at that level.\n";
-                        }
-                        else
-                        {
-                            for (size_t i = 0; i < spells.size(); i++)
-                            {
-                                std::cout << i + 1 << ". "
-                                        << spells[i].getSpellName()
-                                        << "\n";
-                            }
+                            std::cout << i + 1 << ". "
+                                      << spells[i].getSpellName()
+                                      << "\n";
                         }
                     }
                 }
                 else if (spellChoice == 2)
                 {
-                    std::string name, type, effect, time, range, comp, duration, save, desc;
-                    int level;
-
-                    std::cin.ignore(); // Clears leftover newline
-
-                    std::cout << "Spell name: "; std::getline(std::cin, name); //Name of spell
-                    std::cout << "Type: "; std::getline(std::cin, type); // Abjuration, Conjuration, Divination, Enchantment, Evocation, Illusion, Necromancy, Transmutation
-                    std::cout << "Effect: "; std::getline(std::cin, effect); // Damage, Healing, Utility, Control, Summoning, Buff, Debuff
-
-                    std::cout << "Level: "; std::cin >> level; // Spell level (0 for cantrips)
-                    std::cin.ignore(); // clear newline after int input
-
-                    std::cout << "Cast time: "; std::getline(std::cin, time); // Action, Bonus Action, Reaction, etc.
-                    std::cout << "Range: "; std::getline(std::cin, range); // Touch, Self, 30 ft, 60 ft, etc.
-                    std::cout << "Components: "; std::getline(std::cin, comp); // V, S, M (with optional material description)
-                    std::cout << "Duration: "; std::getline(std::cin, duration); // Instantaneous, Concentration (up to 1 minute), etc.
-                    std::cout << "Saving throw: "; std::getline(std::cin, save); // None, Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma
-                    std::cout << "Description: "; std::getline(std::cin, desc); // Detailed spell description
-
-                    Spell s(name, type, effect, level, time, range, comp, duration, save, desc);
-                    // Save to Spellbook
-                    Spellbook global;
-                    global.loadSpellbook("data/SpellBook.txt");
-
-                    global.addSpell(s);
-                    global.saveSpellbook("data/SpellBook.txt");
-
-                    std::cout << "Spell added to global spellbook!\n";
-                }
-                else if (spellChoice == 3)
-                {
-                    Spellbook global;
-                    global.loadSpellbook("data/SpellBook.txt");
+                    Spellbook global = loadGlobalSpellbook();
 
                     int level;
                     std::cout << "Enter spell level to filter (0-9): ";
@@ -508,7 +698,7 @@ void CharacterManager::editCharacter() {
                     }
 
                     int spellNum;
-                    std::cout << "Select spell number: ";
+                    std::cout << "Select spell number (Cantrips are Level 0): ";
                     std::cin >> spellNum;
 
                     if (std::cin.fail())
@@ -529,11 +719,11 @@ void CharacterManager::editCharacter() {
                         std::cout << "Invalid selection.\n";
                     }
                 }
-                else if (spellChoice == 4)
+                else if (spellChoice == 3)
                 {
                     c.showSpells();
                 }
-                else if (spellChoice == 5)
+                else if (spellChoice == 4)
                 {
                     // Casting uses the character's own known spells, not the global spell list.
                     auto knownSpells = c.getSpellbook().getAllSpells();
@@ -545,7 +735,7 @@ void CharacterManager::editCharacter() {
                     }
 
                     c.getSpellbook().displaySpellsWithIndex();
-                    std::cout << "Select spell number: ";
+                    std::cout << "Select spell number (Cantrips are Level 0): ";
 
                     int selectedSpell = 0;
                     std::cin >> selectedSpell;
@@ -595,7 +785,7 @@ void CharacterManager::editCharacter() {
                         std::cout << "No level " << slotLevel << " spell slots remaining.\n";
                     }
                 }
-                else if (spellChoice == 6)
+                else if (spellChoice == 5)
                 {
                     int slotEditChoice = -1;
 
@@ -665,7 +855,7 @@ void CharacterManager::editCharacter() {
                         }
                     } while (slotEditChoice != 0);
                 }
-                else if (spellChoice == 7)
+                else if (spellChoice == 6)
                 {
                     c.getSpellSlots().resetSlots();
                     c.setCurrentHP(c.getMaxHP());
@@ -673,7 +863,7 @@ void CharacterManager::editCharacter() {
                     std::cout << "Long rest complete. HP, spell slots, and hit dice restored.\n";
                     std::cout << "Hit dice: " << c.getHitDiceNum() << "/" << c.getLevel() << c.getHitDice() << "\n";
                 }
-                else if (spellChoice == 8)
+                else if (spellChoice == 7)
                 {
                     if (isWarlockClass(c))
                     {

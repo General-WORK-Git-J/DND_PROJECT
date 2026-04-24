@@ -18,6 +18,17 @@ void Spellbook::removeSpell(std::string name)
     }
 }
 
+bool Spellbook::updateSpell(size_t index, const Spell& spell)
+{
+    if (index >= knownSpells.size())
+    {
+        return false;
+    }
+
+    knownSpells[index] = spell;
+    return true;
+}
+
 void Spellbook::displayAllSpells() const
 {
     for (const auto& spell : knownSpells)
