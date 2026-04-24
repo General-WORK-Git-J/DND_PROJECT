@@ -1,0 +1,10 @@
+chud
+human
+fighter
+pirate
+lawful good
+5 40 200
+67 67 0
+d6 5
+14 12 12 11 12 14 4 3
+-1 -1
