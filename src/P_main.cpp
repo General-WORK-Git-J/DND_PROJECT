@@ -9,6 +9,8 @@
 #include "H_Colours.h"
 
 int main() {
+
+    // Initialize character and colour manager objects
     CharacterManager manager;
     Colour_manager col_manager;
     // Dice roller is available from the main menu as a utility tool.
@@ -21,15 +23,16 @@ int main() {
     globalSpellbook.loadSpellbook("data/SpellBook.txt");
     
     do {
+
+        // Main menu
         std::cout << "\n=== DnD Manager ===\n";
-        std::cout << "1. Create\n";
-        std::cout << "2. View\n";
-        std::cout << "3. Edit\n";
-        std::cout << "4. Save\n";
-        std::cout << "5. Load\n";
-        std::cout << "6. Colour\n";
-        // Standalone dice rolling keeps common table actions outside character menus.
-        std::cout << "7. Roll Dice\n";
+        std::cout << "1. Create Character\n";
+        std::cout << "2. View Characters\n";
+        std::cout << "3. Edit Characters\n";
+        std::cout << "4. Save Characters\n";
+        std::cout << "5. Load Characters\n";
+        std::cout << "6. Change Text Colour\n";
+        std::cout << "7. Roll Dice\n";                  // Standalone dice rolling keeps common table actions outside character menus.
         std::cout << "0. Exit\n";
         std::cout << "Choice: ";
         
@@ -37,7 +40,7 @@ int main() {
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
-            case 1: manager.createCharacter(); break;
+            case 1: manager.createCharacter(); break; 
             case 2: manager.viewCharacters(); break;
             case 3: manager.editCharacter(); break;
             case 4: manager.saveToFile("data/characters.txt"); break;
@@ -47,6 +50,6 @@ int main() {
         }
 
     } while (choice != 0);
-    col_manager.setColour(WHITE);
+    col_manager.setColour(WHITE); // Set terminal colour back to white before closing program
     return 0;
 }

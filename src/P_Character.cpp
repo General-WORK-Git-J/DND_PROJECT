@@ -156,11 +156,7 @@ int Character::getWisdom() const {return wisdom;}
 int Character::getCharisma() const {return charisma;}
 int Character::getInitiative() const {return Initiative;}
 int Character::getProficiency() const {return proficiency;}
-
-int Character::getAbilityModifier(int& ability_score)
-{
-    return (ability_score / 2) - 5;
-}
+int Character::getAbilityModifier(int& ability_score) {return (ability_score / 2) - 5;}
 
 // Setters
 
@@ -179,6 +175,8 @@ void Character::setHitDice(const std::string& new_hit_dice){hit_dice = new_hit_d
 int Character::getHitDiceNum() const { return hit_die_num; }
 void Character::setHitDiceNum(int n) { hit_die_num = (n < 0 ? 0 : (n > level ? level : n)); }
 
+
+// Hit die utilities
 void Character::spendHitDice(int count)
 {
     if (count < 1 || count > hit_die_num) return;
@@ -191,6 +189,8 @@ void Character::recoverHitDice()
     int recovered = (level + 1) / 2;
     hit_die_num = (hit_die_num + recovered > level) ? level : hit_die_num + recovered;
 }
+
+// Setters Cont.
 void Character::setStrength(int str) { strength = str; }
 void Character::setDexterity(int dex) {dexterity = dex;}
 void Character::setConstitution(int con) {constitution = con;}
@@ -229,11 +229,12 @@ void Character::clearInventory() {
     }
 }
 
-// AC
+// AC and Armor management
 int Character::getAC() const {
     int dexMod = (dexterity / 2) - 5;
     int ac = 10 + dexMod; // unarmored default
 
+    // Calculates ac based on armour type ie light, medium, heavy, and whether a shield is equiped
     if (equippedArmorIndex > 0 && equippedArmorIndex <= inventory.size()) {
         const Armor* armor = dynamic_cast<const Armor*>(&inventory.getItem(equippedArmorIndex));
         if (armor) {
