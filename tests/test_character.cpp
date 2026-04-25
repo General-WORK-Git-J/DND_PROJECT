@@ -84,6 +84,123 @@ TEST(CharacterTest, SetMaxHPUpdatesMaxHP) {
     EXPECT_EQ(c.getMaxHP(), 55);
 }
 
+TEST(CharacterTest, DeathSavesClampToValidRange) {
+    Character c = makeCharacter();
+    c.setDeathSaveSuccesses(7);
+    c.setDeathSaveFailures(9);
+
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 3);
+    EXPECT_EQ(c.getDeathSaveFailures(), 3);
+}
+
+TEST(CharacterTest, HealingAboveZeroResetsDeathSaves) {
+    Character c = makeCharacter();
+    c.setDeathSaveSuccesses(2);
+    c.setDeathSaveFailures(1);
+
+    c.setCurrentHP(5);
+
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 0);
+    EXPECT_EQ(c.getDeathSaveFailures(), 0);
+}
+
+TEST(CharacterTest, DeathSavePassAddsOneSuccess) {
+    Character c = makeCharacter();
+    c.setCurrentHP(0);
+
+    const DeathSaveOutcome outcome = c.applyDeathSaveRoll(14);
+
+    EXPECT_EQ(outcome, DeathSaveOutcome::None);
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 1);
+    EXPECT_EQ(c.getDeathSaveFailures(), 0);
+}
+
+TEST(CharacterTest, DeathSaveFailureAddsOneFailure) {
+    Character c = makeCharacter();
+    c.setCurrentHP(0);
+
+    const DeathSaveOutcome outcome = c.applyDeathSaveRoll(7);
+
+    EXPECT_EQ(outcome, DeathSaveOutcome::None);
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 0);
+    EXPECT_EQ(c.getDeathSaveFailures(), 1);
+}
+
+TEST(CharacterTest, DeathSaveNaturalOneCountsAsTwoFailures) {
+    Character c = makeCharacter();
+    c.setCurrentHP(0);
+
+    const DeathSaveOutcome outcome = c.applyDeathSaveRoll(1);
+
+    EXPECT_EQ(outcome, DeathSaveOutcome::None);
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 0);
+    EXPECT_EQ(c.getDeathSaveFailures(), 2);
+}
+
+TEST(CharacterTest, DeathSaveNaturalTwentyRestoresOneHpAndResetsTracker) {
+    Character c = makeCharacter();
+    c.setCurrentHP(0);
+    c.setDeathSaveSuccesses(2);
+    c.setDeathSaveFailures(2);
+
+    const DeathSaveOutcome outcome = c.applyDeathSaveRoll(20);
+
+    EXPECT_EQ(outcome, DeathSaveOutcome::Revived);
+    EXPECT_EQ(c.getCurrentHP(), 1);
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 0);
+    EXPECT_EQ(c.getDeathSaveFailures(), 0);
+}
+
+TEST(CharacterTest, ThreeDeathSaveSuccessesCauseStableAndResetTracker) {
+    Character c = makeCharacter();
+    c.setCurrentHP(0);
+    c.setDeathSaveSuccesses(2);
+
+    const DeathSaveOutcome outcome = c.applyDeathSaveRoll(12);
+
+    EXPECT_EQ(outcome, DeathSaveOutcome::Stable);
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 0);
+    EXPECT_EQ(c.getDeathSaveFailures(), 0);
+}
+
+TEST(CharacterTest, ThreeDeathSaveFailuresCauseDeathAndResetTracker) {
+    Character c = makeCharacter();
+    c.setCurrentHP(0);
+    c.setDeathSaveFailures(2);
+
+    const DeathSaveOutcome outcome = c.applyDeathSaveRoll(4);
+
+    EXPECT_EQ(outcome, DeathSaveOutcome::Dead);
+    EXPECT_EQ(c.getDeathSaveSuccesses(), 0);
+    EXPECT_EQ(c.getDeathSaveFailures(), 0);
+}
+
+TEST(CharacterTest, ConditionsCanBeAddedAndRemoved) {
+    Character c = makeCharacter();
+    c.addCondition("Poisoned");
+    c.addCondition("Blinded");
+
+    ASSERT_EQ(c.getConditions().size(), 2u);
+    EXPECT_EQ(c.getConditions()[0], "Poisoned");
+    EXPECT_TRUE(c.removeCondition(1));
+    ASSERT_EQ(c.getConditions().size(), 1u);
+    EXPECT_EQ(c.getConditions()[0], "Blinded");
+}
+
+TEST(CharacterTest, PassivePerceptionUsesWisdomAndPerceptionProficiency) {
+    Character c = makeCharacter("Scout", "Elf", "Ranger", 5,
+                                /*str*/ 10, /*dex*/ 14, /*con*/ 12,
+                                /*int*/ 10, /*wis*/ 16, /*cha*/ 10);
+
+    EXPECT_EQ(c.getPassivePerception(), 13);
+
+    c.getFeatures().setSkillRank("Perception", SkillRank::Proficient);
+    EXPECT_EQ(c.getPassivePerception(), 16);
+
+    c.getFeatures().setSkillRank("Perception", SkillRank::Expertise);
+    EXPECT_EQ(c.getPassivePerception(), 19);
+}
+
 // ── Ability modifier formula: floor(score/2) - 5 ─────────────────────────────
 // D&D standard modifiers: 10→+0, 12→+1, 8→-1, 20→+5, 1→-5
 

@@ -5,13 +5,20 @@
 #include <fstream>
 #include <limits>
 #include <cmath>
-
+#include <vector>
 #include <memory>
 #include "H_Inventory.h"
 #include "H_SpellBook.h"
 #include "H_SpellSlots.h"
 #include "H_Wallet.h"
 #include "H_CharacterFeatures.h"
+
+enum class DeathSaveOutcome {
+    None = 0,
+    Stable = 1,
+    Dead = 2,
+    Revived = 3
+};
 
 class Character {
 private:
@@ -30,6 +37,9 @@ private:
     int current_hp;
     int max_hp;
     int temp_hp;
+    int deathSaveSuccesses;
+    int deathSaveFailures;
+    std::vector<std::string> conditions;
 
     //Hit die
     int hit_die_num;
@@ -78,6 +88,9 @@ public:
     int getCurrentHP() const;
     int getMaxHP() const;
     int getTempHP() const;
+    int getDeathSaveSuccesses() const;
+    int getDeathSaveFailures() const;
+    const std::vector<std::string>& getConditions() const;
     std::string getHitDice() const;
     int getHitDiceNum() const;
 
@@ -108,6 +121,13 @@ public:
     void setCurrentHP(int c_hp);
     void setMaxHP(int m_hp);
     void setTempHP(int t_hp);
+    void setDeathSaveSuccesses(int successes);
+    void setDeathSaveFailures(int failures);
+    void resetDeathSaves();
+    DeathSaveOutcome applyDeathSaveRoll(int roll);
+    void addCondition(const std::string& condition);
+    bool removeCondition(int index);
+    void clearConditions();
     void setHitDice(const std::string& new_hit_dice);
     void spendHitDice(int count);
     void recoverHitDice();
@@ -127,6 +147,7 @@ public:
 
     int getSpeed() const;
     void setSpeed(int spd);
+    int getPassivePerception() const;
 
     void setStats(int new_AS, int ability_to_change);
 

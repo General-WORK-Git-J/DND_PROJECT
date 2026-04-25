@@ -1,7 +1,7 @@
 #include "H_spells.h"
 
 //-----------------------------------------------------//
-// Constructors
+// Constructors for creating empty spells or fully-filled spell entries.
 
 Spell::Spell()
 {
@@ -31,7 +31,7 @@ Spell::Spell(std::string s_n, std::string s_t, std::string s_e, int s_l, std::st
     Spell_Description = s_de;
 }
 //-----------------------------------------------------//
-// Setters
+// Setters update individual spell fields after creation.
 void Spell::setSpellName(std::string s_n)
 {
     Spell_Name = s_n;
@@ -83,7 +83,7 @@ void Spell::setSpellDescription(std::string s_de)
 }
 
 //-----------------------------------------------------//
-// Getters
+// Getters return the stored spell data for display and menu logic.
 
 std::string Spell::getSpellName() const
 {
@@ -136,7 +136,7 @@ std::string Spell::getSpellDescription() const
 }
 
 //-----------------------------------------------------//
-// Display 
+// Print the full spell entry in a readable format.
 void Spell::DisplaySpellProperties() const
 {
     std::cout << "Spell Name: " << getSpellName() << std::endl;
@@ -151,7 +151,7 @@ void Spell::DisplaySpellProperties() const
     std::cout << "Spell Description: " << getSpellDescription() << std::endl;
 }
 //-----------------------------------------------------//
-// Save 
+// Write one spell entry to file in a fixed field order.
 void Spell::saveToFile(std::ofstream& outFile) const
 {
     outFile << Spell_Name << "\n";
@@ -169,7 +169,7 @@ void Spell::saveToFile(std::ofstream& outFile) const
 }
 
 //-----------------------------------------------------//
-// Load 
+// Read one spell entry back from file using the same field order.
 void Spell::loadFromFile(std::ifstream& inFile)
 {
     getline(inFile, Spell_Name);

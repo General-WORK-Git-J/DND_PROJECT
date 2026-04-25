@@ -2,6 +2,7 @@
 #include "H_Weapon.h"
 #include "H_Armor.h"
 #include "H_Gear.h"
+#include "H_DiceRoller.h"
 #include <iostream>
 #include <fstream>
 #include <cctype>
@@ -36,6 +37,27 @@ std::string toLowerCopy(const std::string& value)
 bool isWarlockClass(const Character& character)
 {
     return toLowerCopy(character.getClass()) == "warlock";
+}
+
+D20Mode promptD20Mode()
+{
+    int modeChoice = 0;
+    std::cout << "1. Normal\n";
+    std::cout << "2. Advantage\n";
+    std::cout << "3. Disadvantage\n";
+    std::cout << "Choice: ";
+    std::cin >> modeChoice;
+
+    if (std::cin.fail() || modeChoice < 1 || modeChoice > 3)
+    {
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        return D20Mode::Normal;
+    }
+
+    if (modeChoice == 2) return D20Mode::Advantage;
+    if (modeChoice == 3) return D20Mode::Disadvantage;
+    return D20Mode::Normal;
 }
 
 Spellbook loadGlobalSpellbook()
@@ -542,7 +564,7 @@ void CharacterManager::editCharacter() {
         {
             int health_edit_choice;
             std::cout << "What would you like to change? " << std::endl;
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 7; i++)
             {
                 std::cout << i + 1 << "." << EditHpArray[i] << std::endl;
             }
@@ -605,6 +627,132 @@ void CharacterManager::editCharacter() {
                     std::string new_hit_dice = getValidHitDiceInput();
                     c.setHitDice(new_hit_dice);
                     std::cout << "New hit dice set" << std::endl;
+                    break;
+                }
+                case 5: //Roll Death Save
+                {
+                    if (c.getCurrentHP() > 0)
+                    {
+                        std::cout << "Death saves are usually only needed at 0 HP.\n";
+                    }
+
+                    std::cout << "\n=== Death Save Roll ===\n";
+                    D20Mode mode = promptD20Mode();
+
+                    if (std::cin.fail())
+                    {
+                        std::cout << "Invalid roll mode.\n";
+                        break;
+                    }
+
+                    DiceRoller roller;
+                    const D20RollResult result = roller.rollD20(mode);
+
+                    if (mode == D20Mode::Normal)
+                    {
+                        std::cout << "Roll: " << result.chosenRoll << "\n";
+                    }
+                    else
+                    {
+                        std::cout << "Rolls: " << result.firstRoll << ", " << result.secondRoll << "\n";
+                        std::cout << "Chosen roll: " << result.chosenRoll << "\n";
+                    }
+
+                    if (result.chosenRoll >= 10)
+                    {
+                        std::cout << "Result: PASS\n";
+                    }
+                    else
+                    {
+                        std::cout << "Result: FAILURE\n";
+                    }
+
+                    const DeathSaveOutcome outcome = c.applyDeathSaveRoll(result.chosenRoll);
+
+                    if (outcome == DeathSaveOutcome::Revived)
+                    {
+                        std::cout << "Natural 20: character regains 1 HP.\n";
+                    }
+                    else if (result.chosenRoll == 1)
+                    {
+                        std::cout << "Natural 1: counts as two failed death saves.\n";
+                    }
+
+                    if (outcome == DeathSaveOutcome::Stable)
+                    {
+                        std::cout << "You are stable.\n";
+                    }
+                    else if (outcome == DeathSaveOutcome::Dead)
+                    {
+                        std::cout << "You have died.\n";
+                    }
+
+                    std::cout << "Death saves: "
+                              << c.getDeathSaveSuccesses() << " success, "
+                              << c.getDeathSaveFailures() << " failure\n";
+                    break;
+                }
+                case 6: //Reset Death Saves
+                {
+                    c.resetDeathSaves();
+                    std::cout << "Death saves reset.\n";
+                    break;
+                }
+                case 7: //Conditions
+                {
+                    int condition_choice = -1;
+                    do
+                    {
+                        std::cout << "\n=== Conditions ===\n";
+                        const auto& conditions = c.getConditions();
+                        if (conditions.empty())
+                        {
+                            std::cout << "No conditions recorded.\n";
+                        }
+                        else
+                        {
+                            for (size_t i = 0; i < conditions.size(); i++)
+                            {
+                                std::cout << i + 1 << ". " << conditions[i] << "\n";
+                            }
+                        }
+
+                        std::cout << "1. Add Condition\n";
+                        std::cout << "2. Remove Condition\n";
+                        std::cout << "3. Clear Conditions\n";
+                        std::cout << "0. Back\n";
+                        std::cout << "Choice: ";
+                        std::cin >> condition_choice;
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                        if (condition_choice == 1)
+                        {
+                            std::string condition = getValidStringInput("condition");
+                            c.addCondition(condition);
+                            std::cout << "Condition added.\n";
+                        }
+                        else if (condition_choice == 2)
+                        {
+                            int index = getValidIntegerInput("condition number");
+                            if (c.removeCondition(index))
+                            {
+                                std::cout << "Condition removed.\n";
+                            }
+                            else
+                            {
+                                std::cout << "Invalid condition number.\n";
+                            }
+                        }
+                        else if (condition_choice == 3)
+                        {
+                            c.clearConditions();
+                            std::cout << "All conditions cleared.\n";
+                        }
+                        else if (condition_choice != 0)
+                        {
+                            std::cout << "Invalid choice.\n";
+                        }
+                    } while (condition_choice != 0);
                     break;
                 }
             }
@@ -1415,7 +1563,8 @@ void CharacterManager::manageFeatures(Character& c)
         else if (choice == 11) // Toggle inspiration
         {
             c.toggleInspiration();
-            std::cout << "Inspiration: " << (c.getInspiration() ? "Yes" : "No") << "\n";
+            std::cout << "\n=== Inspiration ===\n";
+            std::cout << (c.getInspiration() ? "Yes" : "No") << "\n";
         }
     } while (choice != 0);
 }

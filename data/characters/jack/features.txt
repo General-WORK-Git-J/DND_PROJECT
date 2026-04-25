@@ -36,7 +36,7 @@ INT
 0
 Perception
 WIS
-0
+2
 Performance
 CHA
 0
@@ -54,6 +54,7 @@ DEX
 0
 Survival
 WIS
+0
 0
 0
 0
