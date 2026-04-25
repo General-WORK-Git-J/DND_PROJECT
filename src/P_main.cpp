@@ -74,15 +74,11 @@ int main() {
                 } while (characterMenuChoice != 0);
                 break;
             }
-            case 3:
-                manager.manageGlobalSpells();
-                break;
+            case 3: manager.manageGlobalSpells(); break;
             case 4: col_manager.ChangeColour(); break;
             case 5: diceRoller.promptAndRoll(); break;
             case 0: break;
-            default:
-                std::cout << "Invalid choice.\n";
-                break;
+            default: std::cout << "Invalid choice.\n"; break;
         }
 
     } while (choice != 0);
