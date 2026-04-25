@@ -31,6 +31,7 @@ Character::Character(std::string n, std::string r, std::string c, std::string b,
     proficiency = prof;
     equippedArmorIndex = -1;
     equippedShieldIndex = -1;
+    inspiration = false;
 }
 
 
@@ -49,7 +50,8 @@ void Character::saveToDirectory(const std::string& dir) const {
           << strength << " " << dexterity << " " << constitution << " "
           << intelligence << " " << wisdom << " " << charisma << " "
           << Initiative << " " << proficiency << "\n"
-          << equippedArmorIndex << " " << equippedShieldIndex << "\n";
+          << equippedArmorIndex << " " << equippedShieldIndex << "\n"
+          << (inspiration ? 1 : 0) << "\n";
     }
     {
         std::ofstream f((fs::path(dir) / "inventory.txt").string());
@@ -79,6 +81,7 @@ Character Character::loadFromDirectory(const std::string& dir) {
     int c_hp = 0, m_hp = 0, t_hp = 0, h_dice_num = 0;
     int str = 10, dex = 10, con = 10, intl = 10, wis = 10, cha = 10, init = 0, prof = 2;
     int armorIdx = -1, shieldIdx = -1;
+    int insp = 0;
 
     {
         std::ifstream f((fs::path(dir) / "character.txt").string());
@@ -92,6 +95,7 @@ Character Character::loadFromDirectory(const std::string& dir) {
         f >> h_dice >> h_dice_num;
         f >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         f >> armorIdx >> shieldIdx;
+        f >> insp;
     }
 
     Character c(name, race, characterClass, background, alignment,
@@ -100,6 +104,7 @@ Character Character::loadFromDirectory(const std::string& dir) {
     c.setHitDiceNum(h_dice_num);
     c.setEquippedArmorIndex(armorIdx);
     c.setEquippedShieldIndex(shieldIdx);
+    c.setInspiration(insp != 0);
 
     {
         std::ifstream f((fs::path(dir) / "inventory.txt").string());
@@ -159,8 +164,10 @@ void Character::display() const {
     std::cout << "CHA: " << charisma     << " (" << mod(charisma)     << ")\n";
     std::cout << "Initiative: +" << Initiative << "\n";
     std::cout << "Proficiency: +" << proficiency << "\n";
+    std::cout << "Inspiration: " << (inspiration ? "Yes" : "No") << "\n";
     std::cout << "Feats: " << features.getFeats().size() << "\n";
     std::cout << "Racial Traits: " << features.getRacialTraits().size() << "\n";
+    std::cout << "Languages: " << features.getLanguages().size() << "\n";
     std::cout << "Items: " << inventory.size() << " carried\n";
     std::cout << "Currency: ";
     wallet.display();
@@ -233,6 +240,10 @@ void Character::setWisdom(int wis) {wisdom = wis;}
 void Character::setCharisma(int cha) {charisma = cha;}
 void Character::setInitiative(int init) {Initiative = init;}
 void Character::setProficiency(int prof) {proficiency = prof;}
+
+bool Character::getInspiration() const { return inspiration; }
+void Character::setInspiration(bool value) { inspiration = value; }
+void Character::toggleInspiration() { inspiration = !inspiration; }
 
 
 
@@ -395,6 +406,11 @@ void Character::showFeatures() const
     features.displaySkills(strength, dexterity, constitution,
                            intelligence, wisdom, charisma,
                            proficiency);
+
+    std::cout << "\n=== Languages ===\n";
+    features.displayLanguages();
+
+    std::cout << "Inspiration: " << (inspiration ? "Yes" : "No") << "\n";
 }
 
 //-----------------------------------------------------//

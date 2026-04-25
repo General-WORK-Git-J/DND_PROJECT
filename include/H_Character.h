@@ -55,6 +55,8 @@ private:
     int equippedArmorIndex;   // 1-based inventory index, -1 = none
     int equippedShieldIndex;  // 1-based inventory index, -1 = none
 
+    bool inspiration;
+
 public:
     Character(std::string n, std::string r, std::string c, std::string b, std::string a,
          int lvl, int age, int weight,int c_hp, int m_hp, int t_hp, std::string h_dice, int str, int dex, int con, int intl, int wis, int cha, int init, int prof);
@@ -117,6 +119,10 @@ public:
     void setCharisma(int cha);
     void setInitiative(int init);
     void setProficiency(int prof);
+
+    bool getInspiration() const;
+    void setInspiration(bool value);
+    void toggleInspiration();
 
     void setStats(int new_AS, int ability_to_change);
 

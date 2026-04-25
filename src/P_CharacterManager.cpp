@@ -1251,6 +1251,9 @@ void CharacterManager::manageFeatures(Character& c)
         std::cout << "6. View skills\n";
         std::cout << "7. Edit skill proficiency\n";
         std::cout << "8. Edit saving throw proficiency\n";
+        std::cout << "9. Add language\n";
+        std::cout << "10. Remove language\n";
+        std::cout << "11. Toggle inspiration\n";
         std::cout << "0. Back\n";
         std::cout << "Choice: ";
         std::cin >> choice;
@@ -1379,7 +1382,35 @@ void CharacterManager::manageFeatures(Character& c)
                 else
                     std::cout << "Invalid ability. Use STR, DEX, CON, INT, WIS, or CHA.\n";
             }
-
+        }
+        else if (choice == 9) // Add language
+        {
+            std::string lang;
+            std::cout << "Language name: ";
+            std::getline(std::cin, lang);
+            if (!lang.empty())
+            {
+                c.getFeatures().addLanguage(lang);
+                std::cout << "Language added.\n";
+            }
+        }
+        else if (choice == 10) // Remove language
+        {
+            std::cout << "\n=== Languages ===\n";
+            c.getFeatures().displayLanguages();
+            std::cout << "Index to remove: ";
+            int index = 0;
+            std::cin >> index;
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            if (c.getFeatures().removeLanguage(index))
+                std::cout << "Language removed.\n";
+            else
+                std::cout << "Invalid index.\n";
+        }
+        else if (choice == 11) // Toggle inspiration
+        {
+            c.toggleInspiration();
+            std::cout << "Inspiration: " << (c.getInspiration() ? "Yes" : "No") << "\n";
         }
     } while (choice != 0);
 }

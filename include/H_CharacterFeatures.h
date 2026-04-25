@@ -27,6 +27,7 @@ class CharacterFeatures {
 private:
     std::vector<std::string> feats;
     std::vector<std::string> racialTraits;
+    std::vector<std::string> languages;
     // Fixed 5e skill list with editable proficiency/expertise state per skill.
     std::vector<SkillEntry> skills;
 
@@ -47,6 +48,11 @@ public:
     void addRacialTrait(const std::string& trait);
     bool removeRacialTrait(int index);
     const std::vector<std::string>& getRacialTraits() const;
+
+    void addLanguage(const std::string& language);
+    bool removeLanguage(int index);
+    const std::vector<std::string>& getLanguages() const;
+    void displayLanguages() const;
 
     bool setSkillRank(const std::string& skillName, SkillRank rank);
     SkillRank getSkillRank(const std::string& skillName) const;

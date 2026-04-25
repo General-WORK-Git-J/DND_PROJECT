@@ -190,6 +190,36 @@ const std::vector<std::string>& CharacterFeatures::getRacialTraits() const
     return racialTraits;
 }
 
+void CharacterFeatures::addLanguage(const std::string& language)
+{
+    if (!language.empty())
+        languages.push_back(language);
+}
+
+bool CharacterFeatures::removeLanguage(int index)
+{
+    if (index < 1 || index > static_cast<int>(languages.size()))
+        return false;
+    languages.erase(languages.begin() + index - 1);
+    return true;
+}
+
+const std::vector<std::string>& CharacterFeatures::getLanguages() const
+{
+    return languages;
+}
+
+void CharacterFeatures::displayLanguages() const
+{
+    if (languages.empty())
+    {
+        std::cout << "No languages recorded.\n";
+        return;
+    }
+    for (size_t i = 0; i < languages.size(); i++)
+        std::cout << i + 1 << ". " << languages[i] << "\n";
+}
+
 bool CharacterFeatures::setSkillRank(const std::string& skillName, SkillRank rank)
 {
     SkillEntry* skill = findSkill(skillName);
@@ -316,6 +346,10 @@ void CharacterFeatures::save(std::ofstream& file) const
     }
     for (const auto& s : savingThrows)
         file << (s.proficient ? 1 : 0) << "\n";
+
+    file << languages.size() << "\n";
+    for (const auto& lang : languages)
+        file << lang << "\n";
 }
 
 void CharacterFeatures::load(std::ifstream& file)
@@ -369,6 +403,17 @@ void CharacterFeatures::load(std::ifstream& file)
         file >> val;
         file.ignore();
         s.proficient = (val != 0);
+    }
+
+    languages.clear();
+    int langCount = 0;
+    if (file >> langCount) {
+        file.ignore();
+        for (int i = 0; i < langCount; i++) {
+            std::string lang;
+            std::getline(file, lang);
+            addLanguage(lang);
+        }
     }
 }
 
