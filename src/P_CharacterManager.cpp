@@ -444,7 +444,7 @@ void CharacterManager::editCharacter() {
         {
             int char_edit_choice;
             std::cout << "What would you like to change? " << std::endl;
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 9; i++)
             {
                 std::cout << i + 1 << "." << EditCharDetailsArray[i] << std::endl;
             }
@@ -516,7 +516,7 @@ void CharacterManager::editCharacter() {
                             c.setLevel(new_level);
                             level_set = true;
                         }
-                        else 
+                        else
                         {
                             Invalidinput();
                             std::cout << "Level must be between 1 and 20" << std::endl;
@@ -524,10 +524,15 @@ void CharacterManager::editCharacter() {
                     }
                     break;
                 }
-                
-                
 
-        
+            case 9: //Speed
+                {
+                    int new_speed = getValidIntegerInput("Speed (ft)");
+                    c.setSpeed(new_speed);
+                    std::cout << "Speed set to " << new_speed << " ft\n";
+                    break;
+                }
+
             }
 
             

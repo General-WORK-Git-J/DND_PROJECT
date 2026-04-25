@@ -32,6 +32,7 @@ Character::Character(std::string n, std::string r, std::string c, std::string b,
     equippedArmorIndex = -1;
     equippedShieldIndex = -1;
     inspiration = false;
+    speed = 30;
 }
 
 
@@ -51,7 +52,8 @@ void Character::saveToDirectory(const std::string& dir) const {
           << intelligence << " " << wisdom << " " << charisma << " "
           << Initiative << " " << proficiency << "\n"
           << equippedArmorIndex << " " << equippedShieldIndex << "\n"
-          << (inspiration ? 1 : 0) << "\n";
+          << (inspiration ? 1 : 0) << "\n"
+          << speed << "\n";
     }
     {
         std::ofstream f((fs::path(dir) / "inventory.txt").string());
@@ -81,7 +83,7 @@ Character Character::loadFromDirectory(const std::string& dir) {
     int c_hp = 0, m_hp = 0, t_hp = 0, h_dice_num = 0;
     int str = 10, dex = 10, con = 10, intl = 10, wis = 10, cha = 10, init = 0, prof = 2;
     int armorIdx = -1, shieldIdx = -1;
-    int insp = 0;
+    int insp = 0, spd = 30;
 
     {
         std::ifstream f((fs::path(dir) / "character.txt").string());
@@ -96,6 +98,7 @@ Character Character::loadFromDirectory(const std::string& dir) {
         f >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         f >> armorIdx >> shieldIdx;
         f >> insp;
+        f >> spd;
     }
 
     Character c(name, race, characterClass, background, alignment,
@@ -105,6 +108,7 @@ Character Character::loadFromDirectory(const std::string& dir) {
     c.setEquippedArmorIndex(armorIdx);
     c.setEquippedShieldIndex(shieldIdx);
     c.setInspiration(insp != 0);
+    c.setSpeed(spd);
 
     {
         std::ifstream f((fs::path(dir) / "inventory.txt").string());
@@ -164,6 +168,7 @@ void Character::display() const {
     std::cout << "CHA: " << charisma     << " (" << mod(charisma)     << ")\n";
     std::cout << "Initiative: +" << Initiative << "\n";
     std::cout << "Proficiency: +" << proficiency << "\n";
+    std::cout << "Speed: " << speed << " ft\n";
     std::cout << "Inspiration: " << (inspiration ? "Yes" : "No") << "\n";
     std::cout << "Feats: " << features.getFeats().size() << "\n";
     std::cout << "Racial Traits: " << features.getRacialTraits().size() << "\n";
@@ -244,6 +249,9 @@ void Character::setProficiency(int prof) {proficiency = prof;}
 bool Character::getInspiration() const { return inspiration; }
 void Character::setInspiration(bool value) { inspiration = value; }
 void Character::toggleInspiration() { inspiration = !inspiration; }
+
+int Character::getSpeed() const { return speed; }
+void Character::setSpeed(int spd) { if (spd > 0) speed = spd; }
 
 
 

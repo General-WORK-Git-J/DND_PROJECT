@@ -56,6 +56,7 @@ private:
     int equippedShieldIndex;  // 1-based inventory index, -1 = none
 
     bool inspiration;
+    int speed;
 
 public:
     Character(std::string n, std::string r, std::string c, std::string b, std::string a,
@@ -123,6 +124,9 @@ public:
     bool getInspiration() const;
     void setInspiration(bool value);
     void toggleInspiration();
+
+    int getSpeed() const;
+    void setSpeed(int spd);
 
     void setStats(int new_AS, int ability_to_change);
 
