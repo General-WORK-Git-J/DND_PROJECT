@@ -1,11 +1,13 @@
 #include "H_SpellBook.h"
 #include <fstream>
 
+// Add a spell to the current spell list.
 void Spellbook::addSpell(const Spell& spell)
 {
     knownSpells.push_back(spell);
 }
 
+// Remove the first spell whose name matches the requested one.
 void Spellbook::removeSpell(std::string name)
 {
     for (auto it = knownSpells.begin(); it != knownSpells.end(); ++it)
@@ -18,6 +20,7 @@ void Spellbook::removeSpell(std::string name)
     }
 }
 
+// Replace one stored spell without changing the rest of the spellbook.
 bool Spellbook::updateSpell(size_t index, const Spell& spell)
 {
     if (index >= knownSpells.size())
@@ -29,6 +32,7 @@ bool Spellbook::updateSpell(size_t index, const Spell& spell)
     return true;
 }
 
+// Show every spell and all of its saved details.
 void Spellbook::displayAllSpells() const
 {
     for (const auto& spell : knownSpells)
@@ -38,6 +42,7 @@ void Spellbook::displayAllSpells() const
     }
 }
 
+// Show a numbered spell list for menu selection.
 void Spellbook::displaySpellsWithIndex() const
 {
     if (knownSpells.empty())
@@ -54,6 +59,7 @@ void Spellbook::displaySpellsWithIndex() const
     }
 }
 
+// Return only spells that match a chosen spell level.
 std::vector<Spell> Spellbook::getSpellsByLevel(int level) const
 {
     std::vector<Spell> result;
@@ -69,13 +75,14 @@ std::vector<Spell> Spellbook::getSpellsByLevel(int level) const
     return result;
 }
 
+// Return a copy of all stored spells.
 std::vector<Spell> Spellbook::getAllSpells() const
 {
     return knownSpells;
 }
 
 //-----------------------------------------------------//
-// Save Spellbook to file
+// Save the full spellbook to disk.
 void Spellbook::saveSpellbook(const std::string& filename) const
 {
     std::ofstream outFile(filename);
@@ -97,7 +104,7 @@ void Spellbook::saveSpellbook(const std::string& filename) const
 }
 
 //-----------------------------------------------------//
-// Load Spellbook from file
+// Load the spellbook back from disk and replace the current list.
 void Spellbook::loadSpellbook(const std::string& filename)
 {
     std::ifstream inFile(filename);

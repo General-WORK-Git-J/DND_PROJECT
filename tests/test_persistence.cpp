@@ -2,12 +2,14 @@
 #include <fstream>
 #include <cstdio>
 #include <memory>
+#include <filesystem>
 #include "H_Item.h"
 #include "H_Weapon.h"
 #include "H_Armor.h"
 #include "H_Gear.h"
 #include "H_spells.h"
 #include "H_SpellBook.h"
+#include "H_Character.h"
 
 // RAII wrapper: removes a temp file on destruction, even if the test throws
 struct TempFile {
@@ -246,4 +248,32 @@ TEST(PersistenceTest, SpellbookLoadClearsExistingSpells) {
     auto spells = sb.getAllSpells();
     ASSERT_EQ(spells.size(), 1u);         // old spell replaced, not appended
     EXPECT_EQ(spells[0].getSpellName(), "Fireball");
+}
+
+TEST(PersistenceTest, CharacterDirectoryRoundtripPreservesStatusTracking) {
+    namespace fs = std::filesystem;
+    const fs::path dir = "dnd_test_character_dir";
+    fs::remove_all(dir);
+    fs::create_directories(dir);
+
+    Character original("Cleric", "Human", "Cleric", "Acolyte", "Lawful Good",
+                       4, 32, 170, 0, 28, 0, "d8",
+                       10, 12, 14, 10, 16, 12, 1, 2);
+    original.setDeathSaveSuccesses(2);
+    original.setDeathSaveFailures(1);
+    original.addCondition("Poisoned");
+    original.addCondition("Prone");
+    original.getFeatures().setSkillRank("Perception", SkillRank::Proficient);
+    original.saveToDirectory(dir.string());
+
+    Character loaded = Character::loadFromDirectory(dir.string());
+
+    EXPECT_EQ(loaded.getDeathSaveSuccesses(), 2);
+    EXPECT_EQ(loaded.getDeathSaveFailures(), 1);
+    ASSERT_EQ(loaded.getConditions().size(), 2u);
+    EXPECT_EQ(loaded.getConditions()[0], "Poisoned");
+    EXPECT_EQ(loaded.getConditions()[1], "Prone");
+    EXPECT_EQ(loaded.getPassivePerception(), 15);
+
+    fs::remove_all(dir);
 }

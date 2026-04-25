@@ -20,6 +20,8 @@ Character::Character(std::string n, std::string r, std::string c, std::string b,
     current_hp = c_hp;
     max_hp = m_hp;
     temp_hp = t_hp;
+    deathSaveSuccesses = 0;
+    deathSaveFailures = 0;
     hit_dice = h_dice;
     strength = str;
     dexterity = dex;
@@ -47,13 +49,19 @@ void Character::saveToDirectory(const std::string& dir) const {
           << background << "\n" << alignment << "\n"
           << level << " " << age << " " << weight << "\n"
           << current_hp << " " << max_hp << " " << temp_hp << "\n"
+          << deathSaveSuccesses << " " << deathSaveFailures << "\n"
           << hit_dice << " " << hit_die_num << "\n"
           << strength << " " << dexterity << " " << constitution << " "
           << intelligence << " " << wisdom << " " << charisma << " "
           << Initiative << " " << proficiency << "\n"
           << equippedArmorIndex << " " << equippedShieldIndex << "\n"
           << (inspiration ? 1 : 0) << "\n"
-          << speed << "\n";
+          << speed << "\n"
+          << conditions.size() << "\n";
+        for (const auto& condition : conditions)
+        {
+            f << condition << "\n";
+        }
     }
     {
         std::ofstream f((fs::path(dir) / "inventory.txt").string());
@@ -81,9 +89,12 @@ Character Character::loadFromDirectory(const std::string& dir) {
     std::string name, race, characterClass, background, alignment, h_dice;
     int lvl = 1, age = 0, weight = 0;
     int c_hp = 0, m_hp = 0, t_hp = 0, h_dice_num = 0;
+    int deathSuccesses = 0, deathFailures = 0;
     int str = 10, dex = 10, con = 10, intl = 10, wis = 10, cha = 10, init = 0, prof = 2;
     int armorIdx = -1, shieldIdx = -1;
     int insp = 0, spd = 30;
+    int conditionCount = 0;
+    std::vector<std::string> loadedConditions;
 
     {
         std::ifstream f((fs::path(dir) / "character.txt").string());
@@ -94,11 +105,25 @@ Character Character::loadFromDirectory(const std::string& dir) {
         std::getline(f, alignment);
         f >> lvl >> age >> weight;
         f >> c_hp >> m_hp >> t_hp;
+        f >> deathSuccesses >> deathFailures;
         f >> h_dice >> h_dice_num;
         f >> str >> dex >> con >> intl >> wis >> cha >> init >> prof;
         f >> armorIdx >> shieldIdx;
         f >> insp;
         f >> spd;
+        if (f >> conditionCount)
+        {
+            f.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            for (int i = 0; i < conditionCount; i++)
+            {
+                std::string condition;
+                std::getline(f, condition);
+                if (!condition.empty())
+                {
+                    loadedConditions.push_back(condition);
+                }
+            }
+        }
     }
 
     Character c(name, race, characterClass, background, alignment,
@@ -109,6 +134,12 @@ Character Character::loadFromDirectory(const std::string& dir) {
     c.setEquippedShieldIndex(shieldIdx);
     c.setInspiration(insp != 0);
     c.setSpeed(spd);
+    c.setDeathSaveSuccesses(deathSuccesses);
+    c.setDeathSaveFailures(deathFailures);
+    for (const auto& condition : loadedConditions)
+    {
+        c.addCondition(condition);
+    }
 
     {
         std::ifstream f((fs::path(dir) / "inventory.txt").string());
@@ -153,6 +184,8 @@ void Character::display() const {
     std::cout << "HP: "         << current_hp << "/" << max_hp;
     if (temp_hp > 0) std::cout << "  (+" << temp_hp << " temp)";
     std::cout << "\n";
+    std::cout << "Death Saves: " << deathSaveSuccesses << " success, "
+              << deathSaveFailures << " failure\n";
     std::cout << "AC: "         << getAC();
     if (equippedArmorIndex > 0 && equippedArmorIndex <= inventory.size())
         std::cout << "  [" << inventory.getItem(equippedArmorIndex).getName() << "]";
@@ -168,8 +201,26 @@ void Character::display() const {
     std::cout << "CHA: " << charisma     << " (" << mod(charisma)     << ")\n";
     std::cout << "Initiative: +" << Initiative << "\n";
     std::cout << "Proficiency: +" << proficiency << "\n";
+    std::cout << "Passive Perception: " << getPassivePerception() << "\n";
     std::cout << "Speed: " << speed << " ft\n";
     std::cout << "Inspiration: " << (inspiration ? "Yes" : "No") << "\n";
+    std::cout << "Conditions: ";
+    if (conditions.empty())
+    {
+        std::cout << "None\n";
+    }
+    else
+    {
+        for (size_t i = 0; i < conditions.size(); i++)
+        {
+            std::cout << conditions[i];
+            if (i + 1 < conditions.size())
+            {
+                std::cout << ", ";
+            }
+        }
+        std::cout << "\n";
+    }
     std::cout << "Feats: " << features.getFeats().size() << "\n";
     std::cout << "Racial Traits: " << features.getRacialTraits().size() << "\n";
     std::cout << "Languages: " << features.getLanguages().size() << "\n";
@@ -193,6 +244,9 @@ int Character::getWeight() const{return weight;}
 int Character::getCurrentHP() const{return current_hp;}
 int Character::getMaxHP() const{return max_hp;}
 int Character::getTempHP() const{return temp_hp;}
+int Character::getDeathSaveSuccesses() const { return deathSaveSuccesses; }
+int Character::getDeathSaveFailures() const { return deathSaveFailures; }
+const std::vector<std::string>& Character::getConditions() const { return conditions; }
 std::string Character::getHitDice() const{return hit_dice;}
 int Character::getStrength() const {return strength;}
 int Character::getDexterity() const {return dexterity;}
@@ -214,9 +268,90 @@ void Character::setAlignment(const std::string& a) {alignment = a;}
 void Character::setLevel(int lvl){level = lvl;}
 void Character::setAge(int a){age = a;}
 void Character::setWeight(int w){weight = w;}
-void Character::setCurrentHP(int c_hp){current_hp = c_hp;}
+void Character::setCurrentHP(int c_hp)
+{
+    current_hp = c_hp;
+    if (current_hp > 0)
+    {
+        resetDeathSaves();
+    }
+}
 void Character::setMaxHP(int m_hp){max_hp = m_hp;}
 void Character::setTempHP(int t_hp){temp_hp = t_hp;}
+void Character::setDeathSaveSuccesses(int successes)
+{
+    deathSaveSuccesses = (successes < 0 ? 0 : (successes > 3 ? 3 : successes));
+}
+void Character::setDeathSaveFailures(int failures)
+{
+    deathSaveFailures = (failures < 0 ? 0 : (failures > 3 ? 3 : failures));
+}
+void Character::resetDeathSaves()
+{
+    deathSaveSuccesses = 0;
+    deathSaveFailures = 0;
+}
+DeathSaveOutcome Character::applyDeathSaveRoll(int roll)
+{
+    if (roll <= 1)
+    {
+        setDeathSaveFailures(deathSaveFailures + 2);
+        if (deathSaveFailures >= 3)
+        {
+            resetDeathSaves();
+            return DeathSaveOutcome::Dead;
+        }
+        return DeathSaveOutcome::None;
+    }
+
+    if (roll == 20)
+    {
+        setCurrentHP(1);
+        return DeathSaveOutcome::Revived;
+    }
+
+    if (roll >= 10)
+    {
+        setDeathSaveSuccesses(deathSaveSuccesses + 1);
+        if (deathSaveSuccesses >= 3)
+        {
+            resetDeathSaves();
+            return DeathSaveOutcome::Stable;
+        }
+    }
+    else
+    {
+        setDeathSaveFailures(deathSaveFailures + 1);
+        if (deathSaveFailures >= 3)
+        {
+            resetDeathSaves();
+            return DeathSaveOutcome::Dead;
+        }
+    }
+
+    return DeathSaveOutcome::None;
+}
+void Character::addCondition(const std::string& condition)
+{
+    if (!condition.empty())
+    {
+        conditions.push_back(condition);
+    }
+}
+bool Character::removeCondition(int index)
+{
+    if (index < 1 || index > static_cast<int>(conditions.size()))
+    {
+        return false;
+    }
+
+    conditions.erase(conditions.begin() + index - 1);
+    return true;
+}
+void Character::clearConditions()
+{
+    conditions.clear();
+}
 void Character::setHitDice(const std::string& new_hit_dice){hit_dice = new_hit_dice;}
 int Character::getHitDiceNum() const { return hit_die_num; }
 void Character::setHitDiceNum(int n) { hit_die_num = (n < 0 ? 0 : (n > level ? level : n)); }
@@ -252,6 +387,13 @@ void Character::toggleInspiration() { inspiration = !inspiration; }
 
 int Character::getSpeed() const { return speed; }
 void Character::setSpeed(int spd) { if (spd > 0) speed = spd; }
+int Character::getPassivePerception() const
+{
+    return 10 + features.getSkillModifier("Perception",
+                                          strength, dexterity, constitution,
+                                          intelligence, wisdom, charisma,
+                                          proficiency);
+}
 
 
 

@@ -63,7 +63,7 @@ int scoreForAbility(const std::string& ability,
 }
 }
 
-// Skill, proficiency and saving throw management
+// Character features track skill ranks, saves, feats, traits, and languages.
 
 // Saving throws:
 
@@ -116,6 +116,7 @@ CharacterFeatures::CharacterFeatures()
 {
 }
 
+// Find a mutable skill entry by name so menus can edit it.
 SkillEntry* CharacterFeatures::findSkill(const std::string& skillName)
 {
     const std::string target = toLowerCopy(skillName);
@@ -129,6 +130,7 @@ SkillEntry* CharacterFeatures::findSkill(const std::string& skillName)
     return nullptr;
 }
 
+// Find a read-only skill entry by name for calculations and display.
 const SkillEntry* CharacterFeatures::findSkill(const std::string& skillName) const
 {
     const std::string target = toLowerCopy(skillName);
@@ -142,6 +144,7 @@ const SkillEntry* CharacterFeatures::findSkill(const std::string& skillName) con
     return nullptr;
 }
 
+// Feats are stored as simple text entries.
 void CharacterFeatures::addFeat(const std::string& feat)
 {
     if (!feat.empty())
@@ -166,6 +169,7 @@ const std::vector<std::string>& CharacterFeatures::getFeats() const
     return feats;
 }
 
+// Racial traits are tracked separately from general feats.
 void CharacterFeatures::addRacialTrait(const std::string& trait)
 {
     if (!trait.empty())
@@ -190,6 +194,7 @@ const std::vector<std::string>& CharacterFeatures::getRacialTraits() const
     return racialTraits;
 }
 
+// Languages are stored as a basic list for display and save/load.
 void CharacterFeatures::addLanguage(const std::string& language)
 {
     if (!language.empty())
@@ -220,6 +225,7 @@ void CharacterFeatures::displayLanguages() const
         std::cout << i + 1 << ". " << languages[i] << "\n";
 }
 
+// Skill ranks control whether a skill gets no bonus, proficiency, or expertise.
 bool CharacterFeatures::setSkillRank(const std::string& skillName, SkillRank rank)
 {
     SkillEntry* skill = findSkill(skillName);
@@ -243,6 +249,7 @@ const std::vector<SkillEntry>& CharacterFeatures::getSkills() const
     return skills;
 }
 
+// Calculate the final modifier for one skill check.
 int CharacterFeatures::getSkillModifier(const std::string& skillName,
                                         int strength, int dexterity, int constitution,
                                         int intelligence, int wisdom, int charisma,
@@ -322,6 +329,7 @@ void CharacterFeatures::displaySkills(int strength, int dexterity, int constitut
     
 }
 
+// Save all feature data so it can be restored with the character later.
 void CharacterFeatures::save(std::ofstream& file) const
 {
     // Save the two free-text lists first, then each skill's current rank.
@@ -352,6 +360,7 @@ void CharacterFeatures::save(std::ofstream& file) const
         file << lang << "\n";
 }
 
+// Load all saved feature data back into the built-in feature tables.
 void CharacterFeatures::load(std::ifstream& file)
 {
     feats.clear();
@@ -417,6 +426,7 @@ void CharacterFeatures::load(std::ifstream& file)
     }
 }
 
+// Saving throws are stored separately from the skill list.
 SaveEntry* CharacterFeatures::findSave(const std::string& ability)
 {
     for (auto& s : savingThrows)
@@ -450,6 +460,7 @@ const std::vector<SaveEntry>& CharacterFeatures::getSavingThrows() const
     return savingThrows;
 }
 
+// Calculate the final modifier for one saving throw.
 int CharacterFeatures::getSaveModifier(const std::string& ability,
                                         int strength, int dexterity, int constitution,
                                         int intelligence, int wisdom, int charisma,

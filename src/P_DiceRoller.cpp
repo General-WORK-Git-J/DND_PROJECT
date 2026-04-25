@@ -43,6 +43,7 @@ void showRollAnimation()
 }
 }
 
+// Set up one random engine for all rolls made during this run.
 DiceRoller::DiceRoller()
     // Seed from the current time so each run produces different rolls.
     : rng(static_cast<std::mt19937::result_type>(
@@ -50,6 +51,7 @@ DiceRoller::DiceRoller()
 {
 }
 
+// Roll a single die with the requested number of sides.
 int DiceRoller::rollDie(int sides)
 {
     // Produce one random result in the inclusive range [1, sides].
@@ -57,6 +59,7 @@ int DiceRoller::rollDie(int sides)
     return distribution(rng);
 }
 
+// Roll multiple copies of the same die and store each result.
 std::vector<int> DiceRoller::rollDice(int count, int sides)
 {
     std::vector<int> rolls;
@@ -68,12 +71,14 @@ std::vector<int> DiceRoller::rollDice(int count, int sides)
     return rolls;
 }
 
+// Add all rolled values together for a final total.
 int DiceRoller::totalRoll(const std::vector<int>& rolls) const
 {
     // Sum all individual dice into the final combined total.
     return std::accumulate(rolls.begin(), rolls.end(), 0);
 }
 
+// Handle normal, advantage, and disadvantage d20 rolls.
 D20RollResult DiceRoller::rollD20(D20Mode mode)
 {
     D20RollResult result{};
@@ -97,6 +102,7 @@ D20RollResult DiceRoller::rollD20(D20Mode mode)
     return result;
 }
 
+// Main interactive menu flow for the standalone dice roller.
 void DiceRoller::promptAndRoll()
 {
     int sides = 0;
