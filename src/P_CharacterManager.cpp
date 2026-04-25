@@ -459,7 +459,8 @@ void CharacterManager::editCharacter() {
 
     // Display edit menu
     do {
-        std::cout << "\n1.Character details \n2.Character health \n3.Inventory \n4.Ability scores \n5.Spells \n6.Features and skills \n0.Back \nChoice: ";
+        std::cout << "\n=== " << c.getName() << " Editor ===\n";
+        std::cout << "1. Character details \n2. Character health \n3. Inventory \n4. Ability scores \n5. Spells \n6. Features and skills \n0. Back \nChoice: ";
         std::cin >> choice;
 
         if (choice == 1) // Character details
