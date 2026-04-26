@@ -7,8 +7,10 @@
 #include "H_DiceRoller.h"
 #include "H_SpellBook.h"
 #include "H_Colours.h"
+#include "H_DndExceptions.h"
 
 int main() {
+  try {
 
     // Initialize character and colour manager objects
     CharacterManager manager;
@@ -17,7 +19,7 @@ int main() {
     DiceRoller diceRoller;
 
     int choice;
-    
+
     do {
 
         // Main menu
@@ -84,4 +86,12 @@ int main() {
     } while (choice != 0);
     col_manager.setColour(WHITE); // Set terminal colour back to white before closing program
     return 0;
+
+  } catch (const std::exception& e) {
+    std::cerr << "\nFatal error: " << e.what() << "\n";
+    return 1;
+  } catch (...) {
+    std::cerr << "\nUnknown fatal error.\n";
+    return 1;
+  }
 }

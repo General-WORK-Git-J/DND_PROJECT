@@ -1,4 +1,5 @@
 #include "H_Wallet.h"
+#include "H_DndExceptions.h"
 #include <iostream>
 
 
@@ -41,6 +42,7 @@ void Wallet::save(std::ofstream& file) const {
 }
 
 void Wallet::load(std::ifstream& file) {
-    file >> copper >> silver >> electrum >> gold >> platinum;
+    if (!(file >> copper >> silver >> electrum >> gold >> platinum))
+        throw LoadError("wallet data unreadable - file may be corrupt");
     file.ignore();
 }

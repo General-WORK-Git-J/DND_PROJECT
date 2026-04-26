@@ -3,6 +3,7 @@
 #include "H_Armor.h"
 #include "H_Gear.h"
 #include "H_DiceRoller.h"
+#include "H_DndExceptions.h"
 #include <iostream>
 #include <fstream>
 #include <cctype>
@@ -1199,9 +1200,15 @@ void CharacterManager::Invalidinput()
 void CharacterManager::saveCharacter(const Character& c) const {
     namespace fs = std::filesystem;
     fs::path dir = fs::path("data") / "characters" / c.getName();
-    fs::create_directories(dir);
-    c.saveToDirectory(dir.string());
-    std::cout << c.getName() << " saved.\n";
+    try {
+        fs::create_directories(dir);
+        c.saveToDirectory(dir.string());
+        std::cout << c.getName() << " saved.\n";
+    } catch (const SaveError& e) {
+        std::cout << "Failed to save " << c.getName() << ": " << e.what() << "\n";
+    } catch (const fs::filesystem_error& e) {
+        std::cout << "Filesystem error saving " << c.getName() << ": " << e.what() << "\n";
+    }
 }
 
 void CharacterManager::saveAll() const {
@@ -1224,11 +1231,20 @@ void CharacterManager::loadAll() {
 
     characters.clear();
     int loaded = 0;
-    for (const auto& entry : fs::directory_iterator(base)) {
-        if (entry.is_directory() && fs::exists(entry.path() / "character.txt")) {
-            characters.push_back(Character::loadFromDirectory(entry.path().string()));
-            loaded++;
+    try {
+        for (const auto& entry : fs::directory_iterator(base)) {
+            if (entry.is_directory() && fs::exists(entry.path() / "character.txt")) {
+                try {
+                    characters.push_back(Character::loadFromDirectory(entry.path().string()));
+                    loaded++;
+                } catch (const LoadError& e) {
+                    std::cout << "Skipped " << entry.path().filename().string()
+                              << ": " << e.what() << "\n";
+                }
+            }
         }
+    } catch (const fs::filesystem_error& e) {
+        std::cout << "Filesystem error reading character directory: " << e.what() << "\n";
     }
 
     if (loaded == 0)

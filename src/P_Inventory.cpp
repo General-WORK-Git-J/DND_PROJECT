@@ -1,4 +1,5 @@
 #include "H_Inventory.h"
+#include "H_DndExceptions.h"
 #include <iostream>
 
 void Inventory::addItem(std::unique_ptr<Item> item) {
@@ -40,7 +41,8 @@ void Inventory::save(std::ofstream& file) const {
 void Inventory::load(std::ifstream& file) {
     items.clear();
     int count;
-    file >> count;
+    if (!(file >> count))
+        throw LoadError("inventory count unreadable - file may be corrupt");
     file.ignore();
     for (int i = 0; i < count; i++) {
         items.push_back(Item::loadFromFile(file));

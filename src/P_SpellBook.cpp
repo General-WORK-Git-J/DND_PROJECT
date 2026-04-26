@@ -1,4 +1,5 @@
 #include "H_SpellBook.h"
+#include "H_DndExceptions.h"
 #include <fstream>
 
 // Add a spell to the current spell list.
@@ -88,10 +89,7 @@ void Spellbook::saveSpellbook(const std::string& filename) const
     std::ofstream outFile(filename);
 
     if (!outFile)
-    {
-        std::cout << "Error opening file for writing!\n";
-        return;
-    }
+        throw SaveError("cannot open '" + filename + "' for writing");
 
     outFile << knownSpells.size() << "\n";
 
@@ -110,10 +108,7 @@ void Spellbook::loadSpellbook(const std::string& filename)
     std::ifstream inFile(filename);
 
     if (!inFile)
-    {
-        std::cout << "Error opening file for reading!\n";
-        return;
-    }
+        throw LoadError("cannot open '" + filename + "' for reading");
 
     knownSpells.clear();
 

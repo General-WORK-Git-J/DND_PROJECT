@@ -2,6 +2,7 @@
 #include "H_Weapon.h"
 #include "H_Armor.h"
 #include "H_Gear.h"
+#include "H_DndExceptions.h"
 #include <iostream>
 #include <filesystem>
 
@@ -45,6 +46,7 @@ void Character::saveToDirectory(const std::string& dir) const {
 
     {
         std::ofstream f((fs::path(dir) / "character.txt").string());
+        if (!f) throw SaveError("cannot open character.txt in " + dir);
         f << name << "\n" << race << "\n" << characterClass << "\n"
           << background << "\n" << alignment << "\n"
           << level << " " << age << " " << weight << "\n"
@@ -65,19 +67,23 @@ void Character::saveToDirectory(const std::string& dir) const {
     }
     {
         std::ofstream f((fs::path(dir) / "inventory.txt").string());
+        if (!f) throw SaveError("cannot open inventory.txt in " + dir);
         inventory.save(f);
     }
     {
         std::ofstream f((fs::path(dir) / "wallet.txt").string());
+        if (!f) throw SaveError("cannot open wallet.txt in " + dir);
         wallet.save(f);
     }
     spellbook.saveSpellbook((fs::path(dir) / "spells.txt").string());
     {
         std::ofstream f((fs::path(dir) / "spellslots.txt").string());
+        if (!f) throw SaveError("cannot open spellslots.txt in " + dir);
         spellSlots.save(f);
     }
     {
         std::ofstream f((fs::path(dir) / "features.txt").string());
+        if (!f) throw SaveError("cannot open features.txt in " + dir);
         features.save(f);
     }
 }
@@ -98,6 +104,7 @@ Character Character::loadFromDirectory(const std::string& dir) {
 
     {
         std::ifstream f((fs::path(dir) / "character.txt").string());
+        if (!f) throw LoadError("cannot open character.txt in " + dir);
         std::getline(f, name);
         std::getline(f, race);
         std::getline(f, characterClass);
