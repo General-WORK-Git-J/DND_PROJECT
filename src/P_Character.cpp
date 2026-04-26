@@ -271,6 +271,7 @@ void Character::setWeight(int w){weight = w;}
 void Character::setCurrentHP(int c_hp)
 {
     current_hp = c_hp;
+    // Any healing above 0 HP clears the death save track.
     if (current_hp > 0)
     {
         resetDeathSaves();
@@ -288,11 +289,13 @@ void Character::setDeathSaveFailures(int failures)
 }
 void Character::resetDeathSaves()
 {
+    // Death save state is tracked separately from HP, so reset both counters together.
     deathSaveSuccesses = 0;
     deathSaveFailures = 0;
 }
 DeathSaveOutcome Character::applyDeathSaveRoll(int roll)
 {
+    // Natural 1 counts as two failed saves.
     if (roll <= 1)
     {
         setDeathSaveFailures(deathSaveFailures + 2);
@@ -304,12 +307,14 @@ DeathSaveOutcome Character::applyDeathSaveRoll(int roll)
         return DeathSaveOutcome::None;
     }
 
+    // Natural 20 immediately brings the character back to 1 HP.
     if (roll == 20)
     {
         setCurrentHP(1);
         return DeathSaveOutcome::Revived;
     }
 
+    // 10 or higher is a success; three total successes stabilizes the character.
     if (roll >= 10)
     {
         setDeathSaveSuccesses(deathSaveSuccesses + 1);
@@ -321,6 +326,7 @@ DeathSaveOutcome Character::applyDeathSaveRoll(int roll)
     }
     else
     {
+        // 9 or lower is a failed save; three total failures means death.
         setDeathSaveFailures(deathSaveFailures + 1);
         if (deathSaveFailures >= 3)
         {
@@ -333,6 +339,7 @@ DeathSaveOutcome Character::applyDeathSaveRoll(int roll)
 }
 void Character::addCondition(const std::string& condition)
 {
+    // Conditions are stored as free-form labels like "Poisoned" or "Stunned".
     if (!condition.empty())
     {
         conditions.push_back(condition);
@@ -340,6 +347,7 @@ void Character::addCondition(const std::string& condition)
 }
 bool Character::removeCondition(int index)
 {
+    // The UI shows conditions starting at 1, so convert that to the vector's 0-based index.
     if (index < 1 || index > static_cast<int>(conditions.size()))
     {
         return false;
@@ -350,6 +358,7 @@ bool Character::removeCondition(int index)
 }
 void Character::clearConditions()
 {
+    // Removes every active condition from the character at once.
     conditions.clear();
 }
 void Character::setHitDice(const std::string& new_hit_dice){hit_dice = new_hit_dice;}
