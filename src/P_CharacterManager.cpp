@@ -638,6 +638,15 @@ void CharacterManager::editCharacter() {
                         std::cout << "Death saves are usually only needed at 0 HP.\n";
                     }
 
+                    // Death saves explanation:
+                    // In D&D, when a character is at 0 hit points and not stabilized or dead,
+                    // they must make death saving throws to determine whether they move closer
+                    // to stability or death. A roll of 10 or higher is a success; below 10 is
+                    // a failure. Three successes means the character becomes stable. Three
+                    // failures means the character dies. A natural 20 often grants immediate
+                    // revival to 1 HP (handled by Character::applyDeathSaveRoll). A natural 1
+                    // counts as two failures.
+
                     std::cout << "\n=== Death Save Roll ===\n";
                     D20Mode mode = promptD20Mode();
 
@@ -650,6 +659,7 @@ void CharacterManager::editCharacter() {
                     DiceRoller roller;
                     const D20RollResult result = roller.rollD20(mode);
 
+                    // Show both rolls when advantage/disadvantage is used so the chosen result is clear.
                     if (mode == D20Mode::Normal)
                     {
                         std::cout << "Roll: " << result.chosenRoll << "\n";
@@ -705,8 +715,16 @@ void CharacterManager::editCharacter() {
                     int condition_choice = -1;
                     do
                     {
+                        // Conditions explanation:
+                        // Conditions represent temporary status effects applied to a character
+                        // (e.g., stunned, poisoned, restrained). They may alter a character's
+                        // capabilities, impose disadvantages, change movement, or have other
+                        // gameplay impacts. This block allows adding, removing, and clearing
+                        // those condition strings from the character's recorded list.
+
                         std::cout << "\n=== Conditions ===\n";
                         const auto& conditions = c.getConditions();
+                        // Conditions are displayed with 1-based numbering because that matches user input.
                         if (conditions.empty())
                         {
                             std::cout << "No conditions recorded.\n";
